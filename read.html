@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read Chapter — Spirit-Novel</title>
+  <meta name="description" content="Read novels on Spirit-Novel reading portal with focus music and customizable layouts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  <style>
+    :root {
+      /* Theme styles - Ethereal Dark default */
+      --bg:#120e0d; --bg-card:#1a1410; --text:#e8dfd6; --text-title:#fbf8f3;
+      --maroon:#6a1b29; --maroon2:#892837;
+      --gold:#c8a261; --gold2:#a88143; --gold3:#dfc290;
+      --border:rgba(200,162,97,0.18); --border-subtle:rgba(200,162,97,0.08);
+      --font-size:18px; --line-height:2.0;
+      --font-family:'Lora', serif;
+      --sw:300px;
+      --tr:all 0.3s cubic-bezier(0.16,1,0.3,1);
+      --glow:0 0 20px rgba(200,162,97,0.25);
+    }
+
+    /* Theme presets */
+    body.theme-parchment {
+      --bg:#f5efe6; --bg-card:#e8e0d5; --text:#2a1f1a; --text-title:#1a0f0a;
+      --border:rgba(106,27,41,0.15); --border-subtle:rgba(106,27,41,0.06);
+    }
+    body.theme-light {
+      --bg:#fafafa; --bg-card:#f0f0f0; --text:#222222; --text-title:#000000;
+      --border:rgba(0,0,0,0.12); --border-subtle:rgba(0,0,0,0.05);
+    }
+    body.theme-abyss {
+      --bg:#070505; --bg-card:#0f0b0a; --text:#a59c94; --text-title:#e8e0d7;
+      --border:rgba(200,162,97,0.12); --border-subtle:rgba(200,162,97,0.04);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      background:var(--bg); color:var(--text); min-height:100vh;
+      font-family:'Outfit', sans-serif; -webkit-font-smoothing:antialiased;
+      transition:background 0.4s ease, color 0.4s ease;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar{
+      height:62px; background:rgba(16,12,10,0.85); backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--border); display:flex; align-items:center;
+      padding:0 2rem; gap:1rem; position:sticky; top:0; z-index:100;
+    }
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .logo img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+    .logo-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--text-title);}
+    .topbar-sep{width:1px;height:24px;background:var(--border);margin:0 0.2rem;}
+    
+    .breadcrumb{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:var(--text);max-width:400px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .breadcrumb a{color:var(--text);transition:var(--tr);opacity:0.8;}
+    .breadcrumb a:hover{color:var(--gold);opacity:1;}
+    .breadcrumb .sep{color:var(--gold2);opacity:0.6;}
+    .breadcrumb .current{color:var(--gold);font-weight:500;overflow:hidden;text-overflow:ellipsis;}
+
+    .topbar-right{margin-left:auto;display:flex;gap:0.6rem;align-items:center;}
+    
+    .coins-pill{
+      display:flex;align-items:center;gap:6px;background:rgba(200,162,97,0.08);
+      border:1px solid var(--border);padding:5px 12px;border-radius:20px;
+      font-size:0.82rem;font-weight:600;color:var(--gold3);
+    }
+
+    .btn{
+      display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:8px;
+      font-size:0.82rem;font-weight:500;cursor:pointer;border:none;transition:var(--tr);
+      font-family:'Outfit',sans-serif;background:transparent;color:var(--text);border:1px solid var(--border);
+    }
+    .btn:hover{background:rgba(200,162,97,0.1);color:var(--gold);border-color:rgba(200,162,97,0.35);}
+    .btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a0f0a;font-weight:700;border:none;}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:var(--glow);color:#1a0f0a;}
+
+    /* ─── READING LAYOUT ─── */
+    .read-container{max-width:800px;margin:0 auto;padding:3rem 2rem 6rem;}
+    
+    /* ─── AUTHOR'S NOTE ─── */
+    .author-note-top{
+      background:var(--bg-card);border:1px solid var(--border-subtle);
+      border-radius:12px;padding:1rem 1.2rem;margin-bottom:2.2rem;
+      opacity:0.65;transition:var(--tr);font-size:0.85rem;line-height:1.6;
+    }
+    .author-note-top:hover{opacity:1;border-color:var(--border);}
+    .an-badge{
+      display:inline-block;font-size:0.65rem;text-transform:uppercase;
+      letter-spacing:1.5px;color:var(--gold);font-weight:700;margin-bottom:0.4rem;
+    }
+    
+    /* Chapter Headers */
+    .ch-meta-header{text-align:center;margin-bottom:3rem;}
+    .ch-label{
+      font-size:0.8rem;text-transform:uppercase;letter-spacing:3px;
+      color:var(--gold2);font-weight:600;margin-bottom:0.5rem;
+    }
+    .ch-title{
+      font-family:'Cormorant Garamond', serif;font-size:2.2rem;
+      color:var(--text-title);font-weight:700;line-height:1.2;
+    }
+
+    /* ─── MAIN TEXT ─── */
+    .reading-content{
+      font-family:var(--font-family);font-size:var(--font-size);
+      line-height:var(--line-height);transition:font-size 0.2s ease, font-family 0.2s ease;
+      margin-bottom:3rem;
+    }
+    .reading-content p{margin-bottom:1.5em;text-indent:1.5em;text-align:justify;}
+    .reading-content p:first-of-type{text-indent:0;}
+    
+    /* ─── BLUR & PAYWALL ─── */
+    .premium-lock-wrapper{display:none;margin-top:2rem;}
+    .premium-lock-wrapper.active{display:block;}
+    .blur-overlay{
+      height:120px;background:linear-gradient(to bottom,transparent,var(--bg) 90%);
+      margin-top:-120px;position:relative;pointer-events:none;z-index:2;
+    }
+    .paywall-box{
+      background:var(--bg-card);border:2px solid var(--gold);border-radius:18px;
+      padding:2rem;text-align:center;box-shadow:var(--shadow);position:relative;z-index:5;
+      animation:slideUp 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    @keyframes slideUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+    .paywall-icon{font-size:2.5rem;margin-bottom:0.8rem;}
+    .paywall-box h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--text-title);margin-bottom:0.5rem;}
+    .paywall-box p{font-size:0.88rem;color:var(--muted);line-height:1.5;margin-bottom:1.2rem;max-width:460px;margin-left:auto;margin-right:auto;}
+    .paywall-price{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--gold);margin-bottom:1.5rem;}
+
+    /* ─── CHAPTER NAV ─── */
+    .chapter-nav{display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:2rem;margin-top:2rem;}
+
+    /* ─── SETTINGS PANEL (POPUP) ─── */
+    .config-panel{
+      position:fixed;top:70px;right:2rem;width:280px;background:var(--bg-card);
+      border:1px solid var(--border);border-radius:16px;padding:1.2rem;
+      z-index:200;display:none;box-shadow:var(--shadow);
+      animation:slideDown 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    .config-panel.open{display:block;}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+    .config-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--border-subtle);padding-bottom:0.5rem;}
+    .config-hdr h4{font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);}
+    .config-sect{margin-bottom:1rem;}
+    .config-sect label{display:block;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:0.4rem;font-weight:600;}
+    
+    /* Font family selector */
+    .font-btns{display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;}
+    .font-btn{padding:6px;border:1px solid var(--border);border-radius:6px;font-size:0.78rem;cursor:pointer;background:rgba(0,0,0,0.15);transition:var(--tr);color:var(--text);}
+    .font-btn:hover,.font-btn.active{border-color:var(--gold);color:var(--gold3);}
+    
+    /* Size adjustment */
+    .size-controls{display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.15);border:1px solid var(--border);border-radius:8px;padding:4px 8px;}
+    .size-btn{width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700;font-size:1rem;color:var(--muted);transition:var(--tr);}
+    .size-btn:hover{color:var(--gold);background:rgba(200,162,97,0.08);}
+    
+    /* Background presets */
+    .bg-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;}
+    .bg-preset{
+      height:36px;border-radius:6px;cursor:pointer;border:2px solid transparent;
+      display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;
+    }
+    .bg-preset.active{border-color:var(--gold);}
+    
+    /* ─── MUSIC PANEL ─── */
+    .music-panel{
+      position:fixed;top:70px;right:2rem;width:280px;background:var(--bg-card);
+      border:1px solid var(--border);border-radius:16px;padding:1.2rem;
+      z-index:200;display:none;box-shadow:var(--shadow);
+      animation:slideDown 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    .music-panel.open{display:block;}
+    .music-track{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:8px 10px;background:rgba(0,0,0,0.15);border:1px solid var(--border-subtle);
+      border-radius:8px;margin-bottom:0.5rem;cursor:pointer;transition:var(--tr);font-size:0.82rem;
+    }
+    .music-track:hover,.music-track.active{border-color:var(--gold);background:rgba(200,162,97,0.06);}
+    .music-controls{display:flex;align-items:center;gap:10px;margin-top:1rem;border-top:1px solid var(--border-subtle);padding-top:0.8rem;}
+    .play-btn{width:36px;height:36px;border-radius:50%;background:var(--gold);color:#1a0f0a;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.9rem;font-weight:700;}
+    
+    /* Volume slider */
+    .vol-slider{flex:1;-webkit-appearance:none;background:rgba(200,162,97,0.15);height:4px;border-radius:2px;outline:none;}
+    .vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gold);cursor:pointer;}
+
+    /* Animated Audio waves */
+    .sound-waves{display:none;align-items:flex-end;gap:2px;height:14px;width:18px;}
+    .sound-waves.active{display:flex;}
+    .wave-bar{width:2px;background:var(--gold);animation:bounceWave 0.8s ease-in-out infinite alternate;}
+    .wave-bar:nth-child(2){animation-delay:0.15s;height:60%;}
+    .wave-bar:nth-child(3){animation-delay:0.3s;height:40%;}
+    .wave-bar:nth-child(4){animation-delay:0.45s;height:80%;}
+    @keyframes bounceWave { from{height:20%;} to{height:100%;} }
+
+    /* ─── TOAST ─── */
+    .toast{position:fixed;bottom:2rem;right:2rem;background:#1e1612;border:1px solid rgba(200,162,97,0.3);border-radius:10px;padding:0.8rem 1.2rem;color:var(--text);font-size:0.85rem;display:flex;align-items:center;gap:0.6rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;box-shadow:var(--shadow);}
+    .toast.show{transform:translateY(0);opacity:1;}
+  </style>
+</head>
+<body class="theme-dark" id="bodyTheme">
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="library.html" class="logo">
+    <img src="logomy.png" alt="Spirit-Novel">
+    <span class="logo-name">Spirit-Novel</span>
+  </a>
+  <div class="topbar-sep"></div>
+  <div class="breadcrumb">
+    <a href="library.html">Library</a>
+    <span class="sep">&#8250;</span>
+    <a href="book-detail.html" id="navBookTitle">Book Title</a>
+    <span class="sep">&#8250;</span>
+    <span class="current" id="navChTitle">Chapter Title</span>
+  </div>
+
+  <div class="topbar-right">
+    <div class="coins-pill">
+      <span>⚡ <span id="coinBalance">48,200</span></span>
+    </div>
+    <button class="btn" onclick="toggleMusicPanel()" id="musicBtn">&#127925; Focus Music</button>
+    <button class="btn" onclick="toggleConfigPanel()" id="configBtn">&#9881;&#65039; Display Settings</button>
+  </div>
+</header>
+
+<!-- CONFIG PANEL (SETTINGS) -->
+<div class="config-panel" id="configPanel">
+  <div class="config-hdr">
+    <h4>Display Settings</h4>
+    <button onclick="toggleConfigPanel()">✕</button>
+  </div>
+  
+  <!-- Font Type -->
+  <div class="config-sect">
+    <label>Font Family</label>
+    <div class="font-btns">
+      <button class="font-btn active" onclick="setFontFam('Lora', this)" style="font-family:'Lora',serif;">Lora</button>
+      <button class="font-btn" onclick="setFontFam('Cormorant Garamond', this)" style="font-family:'Cormorant Garamond',serif;">Cormorant</button>
+      <button class="font-btn" onclick="setFontFam('Outfit', this)" style="font-family:'Outfit',sans-serif;">Outfit</button>
+      <button class="font-btn" onclick="setFontFam('Georgia', this)" style="font-family:Georgia,serif;">Georgia</button>
+    </div>
+  </div>
+
+  <!-- Font Size -->
+  <div class="config-sect">
+    <label>Text Size</label>
+    <div class="size-controls">
+      <div class="size-btn" onclick="changeTextSize(-2)">A-</div>
+      <span id="textSizeDisplay" style="font-size:0.85rem; font-weight:600;">18px</span>
+      <div class="size-btn" onclick="changeTextSize(2)">A+</div>
+    </div>
+  </div>
+
+  <!-- Background presets -->
+  <div class="config-sect">
+    <label>Theme Background</label>
+    <div class="bg-presets">
+      <div class="bg-preset active" onclick="setTheme('dark', this)" style="background:#120e0d; color:#e8dfd6; border:1px solid var(--border);">Dark</div>
+      <div class="bg-preset" onclick="setTheme('parchment', this)" style="background:#f5efe6; color:#2a1f1a; border:1px solid rgba(0,0,0,0.15);">Sepia</div>
+      <div class="bg-preset" onclick="setTheme('light', this)" style="background:#fafafa; color:#222; border:1px solid rgba(0,0,0,0.15);">Light</div>
+      <div class="bg-preset" onclick="setTheme('abyss', this)" style="background:#070505; color:#a59c94; border:1px solid rgba(255,255,255,0.08);">Abyss</div>
+    </div>
+  </div>
+</div>
+
+<!-- MUSIC PANEL -->
+<div class="music-panel" id="musicPanel">
+  <div class="config-hdr">
+    <h4>Focus Soundscapes</h4>
+    <button onclick="toggleMusicPanel()">✕</button>
+  </div>
+  <div class="music-track active" onclick="selectTrack('zen', this)">
+    <span>⛩️ Celestial Bamboo Flute</span>
+    <div class="sound-waves" id="wave-zen"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+  </div>
+  <div class="music-track" onclick="selectTrack('lofi', this)">
+    <span>☕ Floating Academy Lo-Fi</span>
+    <div class="sound-waves" id="wave-lofi"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+  </div>
+  <div class="music-track" onclick="selectTrack('rain', this)">
+    <span>🌧️ Mt. Qi Mountain Rain</span>
+    <div class="sound-waves" id="wave-rain"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+  </div>
+  
+  <div class="music-controls">
+    <div class="play-btn" id="playBtn" onclick="togglePlay()">▶</div>
+    <span style="font-size:0.75rem; color:var(--muted);" id="trackStatus">Zen Flute (Paused)</span>
+    <input type="range" class="vol-slider" min="0" max="1" step="0.1" value="0.5" oninput="adjustVolume(this.value)" title="Volume">
+  </div>
+</div>
+
+<!-- MAIN READ CONTAINER -->
+<div class="read-container">
+
+  <!-- Author Notes (Dynamic & low opacity) -->
+  <div class="author-note-top" id="authorNotesContainer" style="display:none;">
+    <span class="an-badge">Author's Note</span>
+    <p id="authorNotesText">Loading author notes...</p>
+  </div>
+
+  <!-- Chapter Title Header -->
+  <div class="ch-meta-header">
+    <div class="ch-label" id="chapterNoLabel">Chapter 1</div>
+    <h1 class="ch-title" id="chapterTitle">The First Step into the Celestial Realm</h1>
+  </div>
+
+  <!-- Reading Body -->
+  <article class="reading-content" id="readingBody">
+    <!-- Chapter content injected here -->
+  </article>
+
+  <!-- paywall wrapper -->
+  <div class="premium-lock-wrapper" id="premiumPaywall">
+    <div class="blur-overlay"></div>
+    <div class="paywall-box">
+      <div class="paywall-icon">⚡</div>
+      <h3>Premium Chapter Locked</h3>
+      <p>Scribes lock exclusive scrolls. To cross the threshold and read the rest of this chapter, unlock it using your academy Spirit Coins.</p>
+      <div class="paywall-price" id="paywallPrice">⚡ 10 Spirit Coins</div>
+      <button class="btn btn-gold" style="padding:10px 24px; font-size:1rem;" onclick="unlockChapter()">Unlock Chapter Now</button>
+    </div>
+  </div>
+
+  <!-- Gifting and Commenting sections (hidden if chapter is locked) -->
+  <div id="unlockedControls" style="margin-top: 3rem; display: none;">
+    <!-- Gifting Panel -->
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; text-align:center; margin-bottom:2rem;">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--text-title); margin-bottom:0.4rem;">🎁 Support the Scribe</h3>
+      <p style="font-size:0.8rem; color:var(--muted); margin-bottom:1rem;">Gift Spirit Coins directly to the author to show your appreciation and help them unlock higher tiers.</p>
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.6rem; margin-bottom:1rem;">
+        <button onclick="giftCoins(10, 'Incense Cup')" class="btn" style="flex-direction:column; padding:0.8rem 0.5rem; gap:4px; background:rgba(0,0,0,0.15);">
+          <span style="font-size:1.3rem;">🪙</span>
+          <span style="font-weight:600; font-size:0.75rem;">Incense Cup</span>
+          <span style="font-size:0.68rem; color:var(--gold);">10 Coins</span>
+        </button>
+        <button onclick="giftCoins(50, 'Spirit Stone')" class="btn" style="flex-direction:column; padding:0.8rem 0.5rem; gap:4px; background:rgba(0,0,0,0.15);">
+          <span style="font-size:1.3rem;">🔮</span>
+          <span style="font-weight:600; font-size:0.75rem;">Spirit Stone</span>
+          <span style="font-size:0.68rem; color:var(--gold);">50 Coins</span>
+        </button>
+        <button onclick="giftCoins(200, 'Immortal Tea')" class="btn" style="flex-direction:column; padding:0.8rem 0.5rem; gap:4px; background:rgba(0,0,0,0.15);">
+          <span style="font-size:1.3rem;">🍵</span>
+          <span style="font-weight:600; font-size:0.75rem;">Immortal Tea</span>
+          <span style="font-size:0.68rem; color:var(--gold);">200 Coins</span>
+        </button>
+        <button onclick="giftCoins(1000, 'Emperor Crown')" class="btn" style="flex-direction:column; padding:0.8rem 0.5rem; gap:4px; background:rgba(0,0,0,0.15);">
+          <span style="font-size:1.3rem;">👑</span>
+          <span style="font-weight:600; font-size:0.75rem;">Emperor Crown</span>
+          <span style="font-size:0.68rem; color:var(--gold);">1,000 Coins</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Comment Box -->
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:2.5rem;">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--text-title); margin-bottom:0.8rem;">💬 Reader Discussion</h3>
+      <div style="margin-bottom:1rem;">
+        <textarea id="commentInput" placeholder="Leave your thoughts on this chapter..." style="width:100%; background:rgba(0,0,0,0.25); border:1px solid var(--border); border-radius:8px; padding:0.8rem; color:var(--text); font-family:'Outfit',sans-serif; font-size:0.85rem; min-height:80px; outline:none; resize:vertical;"></textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn btn-gold" onclick="postComment()" style="padding:7px 18px; font-size:0.82rem;">Post Comment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="chapter-nav">
+    <button class="btn" onclick="prevChapter()">&#8592; Previous Chapter</button>
+    <a href="book-detail.html" class="btn">Index</a>
+    <button class="btn" onclick="nextChapter()">Next Chapter &#8594;</button>
+  </nav>
+
+</div>
+
+<div class="toast" id="toast"><span id="tIco"></span><span id="tMsg"></span></div>
+
+<script>
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000/api'
+  : 'https://api.noverspirit.qd.je/api';
+let activeChapter = null;
+let siblingChapters = [];
+let currentNovel = null;
+
+// Payout & user economy stats
+let coinBalance = 0;
+loadCoins();
+
+function loadCoins() {
+  const userStr = localStorage.getItem('sn_user');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    coinBalance = user.coinsBalance || 0;
+  } else {
+    coinBalance = parseInt(localStorage.getItem('sn_user_coins') || '0');
+  }
+  const el = document.getElementById('coinBalance');
+  if (el) el.textContent = coinBalance.toLocaleString();
+}
+
+/* ─── RENDER CHAPTER FROM BACKEND ─── */
+async function renderChapter() {
+  let activeChId = localStorage.getItem('sn_active_chapter');
+  
+  // If activeChId is empty or is a number (remnant of offline mock), fetch the first seeded novel & chapter
+  if (!activeChId || !isNaN(activeChId)) {
+    try {
+      const novelsRes = await fetch(`${API_URL}/novels`);
+      const novelsData = await novelsRes.json();
+      if (novelsData.novels && novelsData.novels.length > 0) {
+        const firstNovel = novelsData.novels[0];
+        const novelDetailRes = await fetch(`${API_URL}/novels/${firstNovel.slug}`);
+        const novelDetail = await novelDetailRes.json();
+        if (novelDetail.novel.chapters && novelDetail.novel.chapters.length > 0) {
+          activeChId = novelDetail.novel.chapters[0].id;
+          localStorage.setItem('sn_active_chapter', activeChId);
+        }
+      }
+    } catch(err) {
+      console.error("Could not fetch fallback chapters", err);
+    }
+  }
+
+  if (!activeChId) {
+    showToast('❌', 'No chapters available.');
+    return;
+  }
+
+  const token = localStorage.getItem('sn_auth_token');
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/novels/chapters/${activeChId}`, { headers });
+    const data = await res.json();
+
+    const paywallEl = document.getElementById('premiumPaywall');
+    const bodyEl = document.getElementById('readingBody');
+    const controls = document.getElementById('unlockedControls');
+
+    if (res.status === 401 || (data.error && data.code === 'AUTH_REQUIRED')) {
+      // 2-Chapter Guest Preview Limit Hit
+      bodyEl.innerHTML = `<p style="text-align:center; font-style:italic; color:var(--muted); margin-top:2rem;">Preview content locked. Enrolled students only.</p>`;
+      document.querySelector('.paywall-icon').textContent = '👤';
+      document.querySelector('.paywall-box h3').textContent = 'Spirit Account Required';
+      document.querySelector('.paywall-box p').textContent = 'You have read the first 2 free preview chapters. Please sign in or create an account to read Chapter 3 and beyond!';
+      document.getElementById('paywallPrice').textContent = 'Free Registration Contract';
+      
+      const unlockBtn = document.getElementById('unlockBtn');
+      unlockBtn.textContent = 'Sign In / Register';
+      unlockBtn.onclick = () => { window.location.href = 'auth.html'; };
+      
+      paywallEl.classList.add('active');
+      if (controls) controls.style.display = 'none';
+      return;
+    }
+
+    if (res.status === 403 || (data.error && data.code === 'UNLOCK_REQUIRED')) {
+      // Premium Lock
+      bodyEl.innerHTML = `<p style="text-align:center; font-style:italic; color:var(--muted); margin-top:2rem;">Premium chapter locked...</p>`;
+      document.querySelector('.paywall-icon').textContent = '🔒';
+      document.querySelector('.paywall-box h3').textContent = 'Unlocked Chapter Scroll Required';
+      document.querySelector('.paywall-box p').textContent = 'This chapter is locked in the Academy archives. Unlock it using Spirit Coins to read the full text. The author receives 80% of spent coins.';
+      document.getElementById('paywallPrice').innerHTML = `⚡ ${data.coinCost || 5} Spirit Coins`;
+      
+      const unlockBtn = document.getElementById('unlockBtn');
+      unlockBtn.textContent = 'Unlock Chapter';
+      unlockBtn.onclick = () => { unlockPremiumChapter(activeChId, data.coinCost || 5); };
+      
+      paywallEl.classList.add('active');
+      if (controls) controls.style.display = 'none';
+      return;
+    }
+
+    if (data.error) {
+      showToast('❌', data.message || 'Error loading chapter.');
+      return;
+    }
+
+    // Successfully loaded
+    activeChapter = data.chapter;
+    
+    // Update breadcrumbs and titles
+    document.getElementById('navChTitle').textContent = activeChapter.title;
+    document.getElementById('chapterNoLabel').textContent = `Chapter ${activeChapter.chapterNumber}`;
+    document.getElementById('chapterTitle').textContent = activeChapter.title;
+    document.title = `${activeChapter.title} — Spirit-Novel`;
+    document.getElementById('navBookTitle').textContent = activeChapter.novelTitle;
+    document.getElementById('navBookTitle').href = `book-detail.html?slug=${activeChapter.novelSlug}`;
+
+    bodyEl.innerHTML = activeChapter.content;
+    paywallEl.classList.remove('active');
+    if (controls) controls.style.display = 'block';
+
+    // Fetch sibling chapters of this novel to populate navigation index
+    await loadSiblingChapters(activeChapter.novelSlug);
+
+    // Save progress locally
+    saveReadingProgress();
+  } catch (err) {
+    showToast('⚠️', 'Spirit Gate connection error. Unable to load chapter.');
+  }
+}
+
+async function loadSiblingChapters(novelSlug) {
+  try {
+    const res = await fetch(`${API_URL}/novels/${novelSlug}`);
+    const data = await res.json();
+    if (!data.error && data.novel) {
+      currentNovel = data.novel;
+      siblingChapters = data.novel.chapters || [];
+    }
+  } catch(e) {
+    console.error("Failed to load navigation siblings", e);
+  }
+}
+
+async function unlockPremiumChapter(chapterId, cost) {
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) {
+    window.location.href = 'auth.html';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/novels/chapters/${chapterId}/unlock`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      showToast('❌', data.message || 'Unlock failed.');
+    } else {
+      showToast('⚡', data.message);
+      
+      // Update local storage user coins representation
+      const userStr = localStorage.getItem('sn_user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        user.coinsBalance -= cost;
+        localStorage.setItem('sn_user', JSON.stringify(user));
+        localStorage.setItem('sn_user_coins', user.coinsBalance);
+      }
+      loadCoins();
+      
+      // Reload chapter content
+      renderChapter();
+    }
+  } catch(err) {
+    showToast('❌', 'Unlock failed. Backend offline.');
+  }
+}
+
+function prevChapter() {
+  if (siblingChapters.length === 0 || !activeChapter) return;
+  const idx = siblingChapters.findIndex(c => c.id === activeChapter.id);
+  if (idx > 0) {
+    const prevId = siblingChapters[idx - 1].id;
+    localStorage.setItem('sn_active_chapter', prevId);
+    renderChapter();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showToast('📖', 'This is the first chapter.');
+  }
+}
+
+function nextChapter() {
+  if (siblingChapters.length === 0 || !activeChapter) return;
+  const idx = siblingChapters.findIndex(c => c.id === activeChapter.id);
+  if (idx < siblingChapters.length - 1) {
+    const nextId = siblingChapters[idx + 1].id;
+    localStorage.setItem('sn_active_chapter', nextId);
+    renderChapter();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showToast('📖', 'You have reached the latest chapter.');
+  }
+}
+
+function saveReadingProgress() {
+  if (!currentNovel || !activeChapter) return;
+  const progressObj = {
+    bookId: currentNovel.id,
+    chapterId: activeChapter.chapterNumber,
+    totalChapters: siblingChapters.length,
+    title: currentNovel.title,
+    author: currentNovel.author ? currentNovel.author.username : 'Writer',
+    cover: currentNovel.coverImage || '📙',
+    progressPercent: Math.round((siblingChapters.findIndex(c => c.id === activeChapter.id) + 1) / siblingChapters.length * 100)
+  };
+  
+  let progressList = JSON.parse(localStorage.getItem('sn_reading_progress') || '[]');
+  const idx = progressList.findIndex(p => p.title === currentNovel.title);
+  if (idx !== -1) {
+    progressList[idx] = progressObj;
+  } else {
+    progressList.unshift(progressObj);
+  }
+  localStorage.setItem('sn_reading_progress', JSON.stringify(progressList));
+}
+
+/* ─── PAYWALL CONTROLLER (Fallback) ─── */
+function unlockChapter(){
+  // Handled dynamically above
+}
+
+/* ─── READER SUPPORT & COMMENTS ─── */
+async function giftCoins(amount, giftName) {
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) {
+    showToast('❌', 'Please login to gift coins.');
+    return;
+  }
+  if (coinBalance < amount) {
+    showToast('❌', 'Insufficient Spirit Coins. Recharge coins in your Profile.');
+    return;
+  }
+  
+  // Update locally (Simulated until backend wallet routes are built)
+  coinBalance -= amount;
+  localStorage.setItem('sn_user_coins', coinBalance);
+  const userStr = localStorage.getItem('sn_user');
+  if (userStr) {
+    const u = JSON.parse(userStr);
+    u.coinsBalance = coinBalance;
+    localStorage.setItem('sn_user', JSON.stringify(u));
+  }
+  document.getElementById('coinBalance').textContent = coinBalance.toLocaleString();
+  
+  showToast('🎁', `You gifted a ${giftName}! Writer received ${amount} Spirit Coins.`);
+}
+
+function postComment() {
+  const inp = document.getElementById('commentInput');
+  const txt = inp.value.trim();
+  if (!txt) {
+    alert("Please enter your comment.");
+    return;
+  }
+  
+  inp.value = '';
+  showToast('💬', 'Comment posted! Scribe will be notified.');
+}
+
+/* ─── CONFIG & DISPLAY CONTROLS ─── */
+function toggleConfigPanel(){
+  document.getElementById('musicPanel').classList.remove('open');
+  document.getElementById('configPanel').classList.toggle('open');
+}
+function setFontFam(font, btn){
+  document.documentElement.style.setProperty('--font-family', `'${font}', serif`);
+  document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+let currentSize = 18;
+function changeTextSize(diff){
+  currentSize = Math.max(12, Math.min(32, currentSize + diff));
+  document.documentElement.style.setProperty('--font-size', `${currentSize}px`);
+  document.getElementById('textSizeDisplay').textContent = `${currentSize}px`;
+}
+function setTheme(themeName, btn){
+  const body = document.getElementById('bodyTheme');
+  body.className = `theme-${themeName}`;
+  document.querySelectorAll('.bg-preset').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ─── SOUNDSCAPE FOCUS PLAYER ─── */
+let audioCtx = null;
+let currentOscillator = null;
+let gainNode = null;
+let isPlaying = false;
+let selectedTrackType = 'zen';
+
+function toggleMusicPanel(){
+  document.getElementById('configPanel').classList.remove('open');
+  document.getElementById('musicPanel').classList.toggle('open');
+}
+
+function selectTrack(type, el){
+  document.querySelectorAll('.music-track').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  selectedTrackType = type;
+  
+  if(isPlaying) {
+    stopSoundscape();
+    startSoundscape();
+  }
+  
+  document.getElementById('trackStatus').textContent = `${el.querySelector('span').textContent} (Select/Play)`;
+}
+
+function togglePlay(){
+  if(isPlaying){
+    stopSoundscape();
+    document.getElementById('playBtn').textContent = '▶';
+    document.getElementById('trackStatus').textContent = 'Music Paused';
+  } else {
+    startSoundscape();
+    document.getElementById('playBtn').textContent = '⏸';
+    document.getElementById('trackStatus').textContent = 'Music Playing';
+  }
+}
+
+function startSoundscape() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  
+  isPlaying = true;
+  document.querySelectorAll('.sound-waves').forEach(w => w.classList.remove('active'));
+  
+  const activeTrackEl = document.querySelector(`.music-track.active .sound-waves`);
+  if(activeTrackEl) activeTrackEl.classList.add('active');
+  
+  if (selectedTrackType === 'zen') {
+    gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(parseFloat(localStorage.getItem('focus_volume') || '0.5') * 0.15, audioCtx.currentTime);
+    
+    const oscPad = audioCtx.createOscillator();
+    oscPad.type = 'triangle';
+    oscPad.frequency.setValueAtTime(110, audioCtx.currentTime);
+    
+    const oscFlute = audioCtx.createOscillator();
+    oscFlute.type = 'sine';
+    oscFlute.frequency.setValueAtTime(440, audioCtx.currentTime);
+    
+    oscPad.connect(gainNode);
+    oscFlute.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    oscPad.start();
+    oscFlute.start();
+    
+    currentOscillator = [oscPad, oscFlute];
+  } else if (selectedTrackType === 'rain') {
+    const bufferSize = 2 * audioCtx.sampleRate;
+    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    
+    let lastOut = 0.0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      output[i] = (lastOut + (0.02 * white)) / 1.02;
+      lastOut = output[i];
+      output[i] *= 3.5;
+    }
+    
+    const whiteNoise = audioCtx.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
+    whiteNoise.loop = true;
+    
+    gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(parseFloat(localStorage.getItem('focus_volume') || '0.5') * 0.25, audioCtx.currentTime);
+    
+    whiteNoise.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    whiteNoise.start();
+    
+    currentOscillator = [whiteNoise];
+  } else {
+    gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(parseFloat(localStorage.getItem('focus_volume') || '0.5') * 0.2, audioCtx.currentTime);
+    
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+    
+    const oscChords = audioCtx.createOscillator();
+    oscChords.type = 'triangle';
+    oscChords.frequency.setValueAtTime(196, audioCtx.currentTime);
+    
+    osc.connect(gainNode);
+    oscChords.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.start();
+    oscChords.start();
+    
+    currentOscillator = [osc, oscChords];
+  }
+}
+
+function stopSoundscape() {
+  isPlaying = false;
+  document.querySelectorAll('.sound-waves').forEach(w => w.classList.remove('active'));
+  
+  if (currentOscillator) {
+    currentOscillator.forEach(o => {
+      try { o.stop(); } catch(e){}
+    });
+    currentOscillator = null;
+  }
+}
+
+function adjustVolume(val){
+  localStorage.setItem('focus_volume', val);
+  if(gainNode && isPlaying){
+    const mult = selectedTrackType === 'rain' ? 0.25 : (selectedTrackType === 'zen' ? 0.15 : 0.2);
+    gainNode.gain.setValueAtTime(val * mult, audioCtx.currentTime);
+  }
+}
+
+/* ─── TOAST ─── */
+let toastTimer;
+function showToast(ico,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('tIco').innerHTML=ico;
+  document.getElementById('tMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+document.addEventListener('click', e => {
+  if(!e.target.closest('#configPanel') && !e.target.closest('#configBtn')){
+    document.getElementById('configPanel').classList.remove('open');
+  }
+  if(!e.target.closest('#musicPanel') && !e.target.closest('#musicBtn')){
+    document.getElementById('musicPanel').classList.remove('open');
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderChapter();
+});
+</script>
+</body>
+</html>

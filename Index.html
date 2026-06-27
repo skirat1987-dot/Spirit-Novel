@@ -1,0 +1,2931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spirit-Novel — The Magical Academy of Storytelling</title>
+  <meta name="description" content="Read stories, listen to audiobooks, write web novels, and earn rewards at Spirit-Novel. Explore the interactive academy map, level up, and unlock revenue shares.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM & VARIABLES
+       ========================================================================== */
+    :root {
+      --bg-cream: #fbf8f3;
+      --bg-parchment: #f6efe2;
+      --bg-dark: #120e0d;
+      --bg-card-dark: #1e1715;
+      
+      --accent-maroon: #6a1b29;
+      --accent-maroon-light: #892837;
+      --accent-maroon-deep: #440e17;
+      --accent-gold: #c8a261;
+      --accent-gold-dark: #a88143;
+      --accent-gold-light: #dfc290;
+      --accent-rose: #d69f96;
+      --accent-rose-soft: #f4d8d2;
+      
+      --text-dark: #221c1a;
+      --text-muted: #5e524f;
+      --text-light: #fbf8f3;
+      --text-light-muted: #c9bcba;
+      
+      --border-light: rgba(106, 27, 41, 0.08);
+      --border-dark: rgba(200, 162, 97, 0.18);
+      
+      --shadow-soft: 0 10px 30px rgba(44, 25, 20, 0.06);
+      --shadow-premium: 0 20px 50px rgba(26, 12, 10, 0.12);
+      --shadow-glow: 0 0 20px rgba(200, 162, 97, 0.4);
+      --shadow-glow-maroon: 0 0 25px rgba(106, 27, 41, 0.3);
+      
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ==========================================================================
+       2. RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .serif-font {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      color: var(--accent-maroon-deep);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition-smooth);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    /* ==========================================================================
+       3. UTILITIES & REUSABLE LAYOUTS
+       ========================================================================== */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-padding {
+      padding: 7rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 4.5rem auto;
+      position: relative;
+    }
+
+    .section-header .eyebrow {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent-gold-dark);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-header .eyebrow::before,
+    .section-header .eyebrow::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background-color: var(--accent-gold);
+    }
+
+    .section-header h2 {
+      font-size: 3rem;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      color: var(--accent-maroon-deep);
+    }
+
+    .section-header p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* Premium Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0.9rem 2.2rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.4s ease;
+      z-index: -1;
+    }
+
+    .btn:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+      color: var(--text-light);
+      box-shadow: 0 8px 25px rgba(200, 162, 97, 0.25);
+    }
+
+    .btn-gold:hover {
+      box-shadow: 0 12px 30px rgba(200, 162, 97, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-maroon {
+      background: linear-gradient(135deg, var(--accent-maroon), var(--accent-maroon-deep));
+      color: var(--text-light);
+      box-shadow: 0 8px 25px rgba(106, 27, 41, 0.25);
+    }
+
+    .btn-maroon:hover {
+      box-shadow: 0 12px 30px rgba(106, 27, 41, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--accent-maroon-light);
+      color: var(--accent-maroon);
+      background-color: transparent;
+    }
+
+    .btn-outline:hover {
+      background-color: var(--accent-maroon);
+      color: var(--text-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: var(--text-light);
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .badge-gold {
+      background-color: rgba(200, 162, 97, 0.12);
+      color: var(--accent-gold-dark);
+      border: 1px solid rgba(200, 162, 97, 0.3);
+    }
+
+    .badge-maroon {
+      background-color: rgba(106, 27, 41, 0.08);
+      color: var(--accent-maroon-light);
+      border: 1px solid rgba(106, 27, 41, 0.15);
+    }
+
+    /* ==========================================================================
+       4. NAVIGATION BAR
+       ========================================================================== */
+    .header-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.5rem 0;
+      background: linear-gradient(to bottom, rgba(18, 14, 13, 0.8) 0%, rgba(18, 14, 13, 0) 100%);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent-gold);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .logo-text {
+      color: var(--text-light);
+    }
+
+    .logo-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .logo-tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent-gold-light);
+      text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-light-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      position: relative;
+      padding: 0.5rem 0;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    }
+
+    .nav-link:hover {
+      color: var(--text-light);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--accent-gold);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .wallet-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      padding: 0.4rem 1rem;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      font-weight: 500;
+      backdrop-filter: blur(5px);
+    }
+
+    .wallet-badge .coin-icon {
+      color: var(--accent-gold);
+      font-size: 1.1rem;
+      animation: rotateCoin 5s linear infinite;
+    }
+
+    @keyframes rotateCoin {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(360deg); }
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      color: var(--text-light);
+      font-size: 1.8rem;
+    }
+
+    /* Login Modal Styles */
+    .login-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 14, 13, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-smooth);
+    }
+    
+    .login-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .login-card {
+      background: rgba(30, 23, 21, 0.98);
+      border: 1px solid var(--accent-gold);
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), var(--shadow-glow);
+      text-align: center;
+      color: var(--text-light);
+      transform: scale(0.9);
+      transition: var(--transition-bounce);
+      position: relative;
+    }
+
+    .login-modal-overlay.active .login-card {
+      transform: scale(1);
+    }
+
+    .login-card h3 {
+      font-size: 2rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+    
+    .login-card p {
+      font-size: 0.9rem;
+      color: var(--text-light-muted);
+      margin-bottom: 1.8rem;
+    }
+
+    .login-form-group {
+      margin-bottom: 1.2rem;
+      text-align: left;
+    }
+
+    .login-form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-gold-light);
+      margin-bottom: 0.4rem;
+    }
+
+    .login-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 0.7rem 0.9rem;
+      color: var(--text-light);
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .login-input:focus {
+      border-color: var(--accent-gold);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 10px rgba(200, 162, 97, 0.2);
+    }
+
+    .login-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 1.8rem;
+    }
+
+    /* ==========================================================================
+       5. HERO SECTION & INTERACTIVE REALM MAP
+       ========================================================================== */
+    .hero-section {
+      background-color: var(--bg-dark);
+      position: relative;
+      padding: 7rem 0 5rem 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Subtle backdrop elements to blend visual styling */
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 250px;
+      background: linear-gradient(to top, var(--bg-cream) 0%, rgba(18, 14, 13, 0) 100%);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .hero-intro {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 3rem auto;
+      padding: 0 1rem;
+      z-index: 12;
+      position: relative;
+    }
+
+    .hero-intro .badge {
+      margin-bottom: 1.2rem;
+      background: rgba(200, 162, 97, 0.15);
+      color: var(--accent-gold-light);
+      border: 1px solid rgba(200, 162, 97, 0.35);
+      animation: pulseGlow 2.5s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(223, 194, 144, 0.2); }
+      70% { box-shadow: 0 0 0 10px rgba(223, 194, 144, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(223, 194, 144, 0); }
+    }
+
+    .hero-intro h1 {
+      font-size: clamp(3rem, 5.5vw, 5.2rem);
+      font-weight: 700;
+      color: var(--text-light);
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-intro h1 span {
+      background: linear-gradient(to right, var(--accent-gold-light), #fff, var(--accent-rose));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+    }
+
+    .hero-intro p {
+      font-size: 1.25rem;
+      color: var(--text-light-muted);
+      line-height: 1.65;
+      max-width: 720px;
+      margin: 0 auto 2.5rem auto;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-ctas {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Map Interface Container */
+    .map-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-radius: 20px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 40px rgba(106, 27, 41, 0.3);
+      border: 2px solid rgba(200, 162, 97, 0.25);
+      overflow: hidden;
+      z-index: 15;
+      background-color: #171110;
+    }
+
+    .map-image-wrapper {
+      position: relative;
+      width: 100%;
+      /* Aspect ratio of original image is roughly 3:2. We enforce aspect ratio container */
+      aspect-ratio: 1000 / 625;
+      overflow: hidden;
+    }
+
+    .map-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 8s ease;
+    }
+
+    .map-container:hover .map-image {
+      transform: scale(1.03);
+    }
+
+    /* Fog effect overlay */
+    .map-fog-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(18, 14, 13, 0) 30%, rgba(18, 14, 13, 0.5) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Interactive Pins/Hotspots */
+    .map-pin {
+      position: absolute;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+
+    .pin-pulse {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: var(--shadow-glow);
+      transition: var(--transition-bounce);
+    }
+
+    .pin-pulse::before {
+      content: '';
+      position: absolute;
+      width: 250%;
+      height: 250%;
+      border-radius: 50%;
+      border: 1px solid var(--accent-gold);
+      animation: pinWave 2s infinite ease-out;
+      opacity: 0.8;
+    }
+
+    .pin-pulse::after {
+      content: '';
+      position: absolute;
+      width: 400%;
+      height: 400%;
+      border-radius: 50%;
+      border: 1px solid var(--accent-rose);
+      animation: pinWave 2s infinite ease-out 0.8s;
+      opacity: 0.4;
+    }
+
+    .pin-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(255,255,255,0.8);
+      transition: var(--transition-smooth);
+    }
+
+    .pin-label {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(18, 14, 13, 0.85);
+      border: 1px solid var(--accent-gold);
+      border-radius: 6px;
+      padding: 0.35rem 0.8rem;
+      white-space: nowrap;
+      color: var(--text-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate(-50%, 10px);
+      transition: var(--transition-bounce);
+    }
+
+    /* Hotspot specific styles & positioning */
+    .map-pin:hover .pin-pulse {
+      transform: scale(1.2);
+      background: var(--accent-rose);
+    }
+
+    .map-pin:hover .pin-pulse::before,
+    .map-pin:hover .pin-pulse::after {
+      border-color: var(--accent-rose);
+    }
+
+    .map-pin:hover .pin-label {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0);
+    }
+
+    /* Pin Coordinates (Responsive percentages) */
+    .pin-library { left: 50%; top: 54%; }
+    .pin-honor { left: 76.5%; top: 48%; }
+    .pin-writer { left: 21%; top: 73%; }
+    .pin-community { left: 77.5%; top: 76%; }
+
+    /* Flying Islands pins (Different styling for genre tags) */
+    .pin-island {
+      position: absolute;
+      z-index: 8;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+
+    .island-tag {
+      background: rgba(106, 27, 41, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 30px;
+      padding: 0.45rem 1.1rem;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      font-weight: 500;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-bounce);
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .island-tag::before {
+      content: '✦';
+      color: var(--accent-gold);
+      font-size: 0.75rem;
+    }
+
+    .pin-island:hover .island-tag {
+      background: var(--accent-gold);
+      color: var(--text-dark);
+      border-color: var(--accent-gold-light);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-8px) scale(1.05);
+    }
+
+    /* Flying Islands Coordinates */
+    .island-fantasy { left: 11%; top: 16%; }
+    .island-cultivation { left: 36%; top: 20%; }
+    .island-scifi { left: 61%; top: 19%; }
+    .island-romance { left: 90%; top: 22%; }
+    .island-mystery { left: 12%; top: 43%; }
+    .island-urban { left: 91%; top: 46%; }
+
+    @keyframes pinWave {
+      0% { transform: scale(0.5); opacity: 1; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    /* Map Active Info Panel (Glassmorphism overlay on bottom of map) */
+    .map-info-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: rgba(18, 14, 13, 0.85);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(200, 162, 97, 0.2);
+      border-radius: 14px;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      z-index: 20;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: var(--transition-bounce);
+    }
+
+    .map-info-overlay.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .map-info-content h4 {
+      color: var(--accent-gold-light);
+      font-size: 1.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .map-info-content p {
+      color: var(--text-light-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .map-info-close {
+      color: var(--text-light-muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .map-info-close:hover {
+      color: var(--accent-rose);
+    }
+
+    /* ==========================================================================
+       6. THE ACADEMY HALLS Showcase (Cards Grid)
+       ========================================================================== */
+    .halls-section {
+      background-color: var(--bg-cream);
+      position: relative;
+    }
+
+    /* Decorative visual separation line */
+    .halls-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(to right, rgba(106, 27, 41, 0), rgba(106, 27, 41, 0.1) 20%, rgba(106, 27, 41, 0.1) 80%, rgba(106, 27, 41, 0));
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.2rem;
+      margin-top: 2rem;
+    }
+
+    .hall-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .hall-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-premium), var(--shadow-glow-maroon);
+      border-color: rgba(106, 27, 41, 0.15);
+    }
+
+    .card-img-wrapper {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      background-color: #efeae2;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 6s ease;
+    }
+
+    .hall-card:hover .card-img {
+      transform: scale(1.08);
+    }
+
+    .card-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(18, 14, 13, 0.75);
+      border: 1px solid var(--accent-gold);
+      backdrop-filter: blur(5px);
+      color: var(--accent-gold-light);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-content {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-content h3 {
+      font-size: 1.65rem;
+      margin-bottom: 0.8rem;
+      color: var(--accent-maroon-deep);
+      transition: var(--transition-smooth);
+    }
+
+    .hall-card:hover .card-content h3 {
+      color: var(--accent-maroon);
+    }
+
+    .card-content p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.8rem;
+      flex-grow: 1;
+    }
+
+    .card-cta {
+      align-self: flex-start;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent-maroon);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .card-cta .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .hall-card:hover .card-cta {
+      color: var(--accent-maroon-light);
+    }
+
+    .hall-card:hover .card-cta .arrow {
+      transform: translateX(5px);
+    }
+
+    /* Special style for the customized card (***) */
+    .hall-card-mystery {
+      border: 1px solid var(--accent-gold);
+      background: linear-gradient(to bottom, #fff 60%, var(--bg-parchment) 100%);
+    }
+
+    .hall-card-mystery::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, var(--accent-gold), var(--accent-rose), var(--accent-gold));
+    }
+
+    /* ==========================================================================
+       7. INTERACTIVE PROGRESSION CENTER (Levels System)
+       ========================================================================== */
+    .progression-section {
+      background-color: var(--bg-parchment);
+      background-image: radial-gradient(rgba(106, 27, 41, 0.03) 1px, transparent 0);
+      background-size: 24px 24px;
+      position: relative;
+    }
+
+    .progression-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: var(--shadow-premium);
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+    }
+
+    .progression-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-light);
+      background-color: #faf7f2;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 1.5rem 1rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      border-bottom: 3px solid transparent;
+      background: none;
+      transition: var(--transition-smooth);
+    }
+
+    .tab-btn:hover {
+      color: var(--accent-maroon);
+      background-color: rgba(106, 27, 41, 0.02);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-maroon-deep);
+      background-color: #fff;
+      border-bottom-color: var(--accent-maroon);
+    }
+
+    .tab-content {
+      padding: 3rem;
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Progression: Reader path layout */
+    .progression-grid-two {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3.5rem;
+      align-items: flex-start;
+    }
+
+    .progression-intro-text h3 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: var(--accent-maroon-deep);
+    }
+
+    .progression-intro-text p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      line-height: 1.65;
+    }
+
+    /* Range step slider styling */
+    .level-slider-wrapper {
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .level-slider-wrapper label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .level-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 10px;
+      background: var(--bg-cream);
+      outline: none;
+      border: 1px solid var(--border-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .level-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-maroon);
+      cursor: pointer;
+      border: 2px solid var(--accent-gold);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: var(--transition-smooth);
+    }
+
+    .level-slider::-webkit-slider-thumb:hover {
+      background: var(--accent-maroon-light);
+      transform: scale(1.15);
+    }
+
+    .level-ticks {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 5px;
+    }
+
+    .tick-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .tick-label.active {
+      color: var(--accent-maroon);
+      font-weight: 700;
+      transform: scale(1.08);
+    }
+
+    /* Coin details card */
+    .coin-rate-card {
+      background: var(--bg-cream);
+      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .coin-rate-card::before {
+      content: '✦';
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 2rem;
+      color: rgba(200, 162, 97, 0.15);
+    }
+
+    .coin-rate-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .coin-rate-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--accent-maroon-deep);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .coin-rate-value span {
+      font-size: 1.2rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .coin-requirements {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-light);
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .coin-requirements li {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .coin-requirements li::before {
+      content: '✓';
+      color: var(--accent-gold-dark);
+      font-weight: bold;
+    }
+
+    /* Coins calculator widget */
+    .calc-widget {
+      background: var(--bg-parchment);
+      border-radius: 16px;
+      border: 1px solid var(--accent-gold-dark);
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .calc-widget h4 {
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+      color: var(--accent-maroon-deep);
+      border-bottom: 1px solid rgba(168, 129, 67, 0.2);
+      padding-bottom: 0.6rem;
+    }
+
+    .calc-input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .calc-input-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .rupees-selector-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .rupee-btn {
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 0.6rem 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      transition: var(--transition-smooth);
+    }
+
+    .rupee-btn:hover {
+      border-color: var(--accent-gold);
+      background-color: var(--bg-cream);
+    }
+
+    .rupee-btn.active {
+      background-color: var(--accent-gold);
+      color: #fff;
+      border-color: var(--accent-gold-dark);
+      box-shadow: 0 4px 10px rgba(200, 162, 97, 0.2);
+    }
+
+    .calc-result {
+      text-align: center;
+      margin-top: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border-light);
+    }
+
+    .calc-result-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .calc-result-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--accent-maroon-deep);
+      line-height: 1;
+    }
+
+    /* Progression: Writer path layout */
+    .writer-progression-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .writer-interactive-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3.5rem;
+      align-items: flex-start;
+    }
+
+    /* List of writer ranks */
+    .writer-rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 15px;
+    }
+
+    /* Custom scrollbar for ranks list */
+    .writer-rank-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .writer-rank-list::-webkit-scrollbar-track {
+      background: var(--bg-cream);
+      border-radius: 4px;
+    }
+    .writer-rank-list::-webkit-scrollbar-thumb {
+      background: var(--accent-gold);
+      border-radius: 4px;
+    }
+
+    .rank-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.4rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+      background-color: var(--bg-cream);
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .rank-item:hover {
+      border-color: var(--accent-gold);
+      background-color: #fff;
+      transform: translateX(4px);
+    }
+
+    .rank-item.active {
+      border-color: var(--accent-maroon);
+      background-color: #fff;
+      box-shadow: 0 4px 15px rgba(106, 27, 41, 0.08);
+    }
+
+    .rank-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .rank-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--bg-parchment);
+      border: 1px solid rgba(168, 129, 67, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-gold-dark);
+      transition: var(--transition-smooth);
+    }
+
+    .rank-item.active .rank-num {
+      background-color: var(--accent-maroon);
+      color: #fff;
+      border-color: var(--accent-maroon-deep);
+    }
+
+    .rank-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .rank-share {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-maroon-light);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* Writer Details Display Box */
+    .writer-details-box {
+      background: var(--bg-cream);
+      border-radius: 18px;
+      border: 1px solid var(--border-light);
+      padding: 2.2rem;
+      box-shadow: var(--shadow-soft);
+      position: sticky;
+      top: 20px;
+    }
+
+    .writer-details-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .writer-details-name {
+      font-size: 1.8rem;
+      color: var(--accent-maroon-deep);
+    }
+
+    .writer-details-share-badge {
+      background: var(--accent-maroon);
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .writer-details-requirements h5 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .req-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      list-style: none;
+    }
+
+    .req-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .req-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .req-item.met {
+      color: var(--text-dark);
+    }
+    .req-item.met .req-icon {
+      color: #2e7d32;
+    }
+    .req-item.unmet .req-icon {
+      color: #c62828;
+    }
+
+    /* Calculator Widget for Writers */
+    .writer-calc-wrapper {
+      border-top: 1px solid var(--border-light);
+      padding-top: 2.5rem;
+    }
+
+    .writer-calc-wrapper h4 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      color: var(--accent-maroon-deep);
+    }
+
+    .writer-calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .w-slider-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .w-slider-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .w-slider-group label span.val {
+      color: var(--accent-maroon);
+      font-weight: 700;
+    }
+
+    .w-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 10px;
+      background: var(--bg-cream);
+      outline: none;
+      border: 1px solid var(--border-light);
+    }
+
+    .w-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-gold-dark);
+      cursor: pointer;
+      border: 1px solid #fff;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+
+    .checkbox-group input {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--accent-maroon);
+    }
+
+    .checkbox-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .w-calc-result-box {
+      background: var(--bg-cream);
+      border-radius: 16px;
+      border: 1px dashed var(--accent-gold);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .w-calc-result-rank {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-maroon-deep);
+      margin-bottom: 0.5rem;
+    }
+
+    .w-calc-result-share {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--accent-gold-dark);
+      line-height: 1;
+    }
+
+    .w-calc-next-tier {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ==========================================================================
+       8. AUDIOBOOKS & READING EXPERIENCE
+       ========================================================================== */
+    .media-section {
+      background-color: var(--bg-cream);
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    /* Audiobook Player styling */
+    .audiobook-showcase {
+      background: var(--bg-dark);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: var(--shadow-premium);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+      color: var(--text-light);
+    }
+
+    .audiobook-showcase::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      right: -150px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(106, 27, 41, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .player-cover-area {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 2.5rem;
+    }
+
+    .player-cover {
+      width: 90px;
+      height: 125px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background-color: var(--bg-card-dark);
+    }
+
+    .player-meta h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: var(--text-light);
+      margin-bottom: 0.4rem;
+    }
+
+    .player-meta p {
+      font-size: 0.9rem;
+      color: var(--text-light-muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* Waves visualizer */
+    .visualizer-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+      height: 60px;
+      margin-bottom: 2rem;
+    }
+
+    .visualizer-bar {
+      width: 4px;
+      height: 10%;
+      background: linear-gradient(to top, var(--accent-gold-dark), var(--accent-rose));
+      border-radius: 20px;
+      transition: height 0.1s ease;
+    }
+
+    /* Active animation helper using CSS */
+    .visualizer-container.playing .visualizer-bar:nth-child(even) {
+      animation: bounceBar 1.2s ease-in-out infinite alternate;
+    }
+    .visualizer-container.playing .visualizer-bar:nth-child(odd) {
+      animation: bounceBar 0.8s ease-in-out infinite alternate 0.2s;
+    }
+
+    @keyframes bounceBar {
+      0% { height: 10%; }
+      100% { height: 100%; }
+    }
+
+    .player-scrub {
+      margin-bottom: 2.2rem;
+    }
+
+    .scrub-time-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-light-muted);
+      margin-top: 0.5rem;
+    }
+
+    .scrub-bar-container {
+      position: relative;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .scrub-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 32%;
+      background: var(--accent-gold);
+      border-radius: 4px;
+      transition: width 0.2s linear;
+    }
+
+    .scrub-handle {
+      position: absolute;
+      top: 50%;
+      left: 32%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+      transition: left 0.2s linear;
+    }
+
+    .player-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2.2rem;
+    }
+
+    .control-btn {
+      color: var(--text-light-muted);
+      font-size: 1.3rem;
+      transition: var(--transition-smooth);
+    }
+
+    .control-btn:hover {
+      color: var(--text-light);
+    }
+
+    .control-btn-play {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--accent-maroon);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: var(--shadow-glow-maroon);
+    }
+
+    .control-btn-play:hover {
+      background: var(--accent-maroon-light);
+      transform: scale(1.08);
+      color: #fff;
+    }
+
+    /* E-Reader widget styling */
+    .reader-showcase-panel h3 {
+      font-size: 2.6rem;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      color: var(--accent-maroon-deep);
+    }
+
+    .reader-showcase-panel p.intro {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .e-reader-box {
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .reader-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.5rem;
+      background-color: var(--bg-cream);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .reader-control-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .reader-btn-text-size {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .reader-btn-text-size:hover {
+      border-color: var(--accent-gold);
+    }
+
+    .reader-theme-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: var(--transition-smooth);
+    }
+
+    .reader-theme-btn.active {
+      border-color: var(--accent-gold-dark);
+      transform: scale(1.1);
+    }
+
+    .reader-theme-btn-parchment { background-color: var(--bg-parchment); }
+    .reader-theme-btn-light { background-color: #fff; border-color: rgba(0,0,0,0.1); }
+    .reader-theme-btn-dark { background-color: var(--bg-dark); }
+
+    .reader-body-content {
+      padding: 2.2rem;
+      height: 240px;
+      overflow-y: auto;
+      font-size: 1rem;
+      color: var(--text-dark);
+      line-height: 1.8;
+      transition: var(--transition-smooth);
+    }
+
+    .reader-body-content.theme-parchment {
+      background-color: var(--bg-parchment);
+      color: #3e3327;
+    }
+    .reader-body-content.theme-light {
+      background-color: #fff;
+      color: var(--text-dark);
+    }
+    .reader-body-content.theme-dark {
+      background-color: var(--bg-dark);
+      color: var(--text-light-muted);
+    }
+
+    /* ==========================================================================
+       9. FOOTER SECTION
+       ========================================================================== */
+    .academy-footer {
+      background: linear-gradient(135deg, var(--bg-dark) 60%, #1e1210 100%);
+      color: var(--text-light);
+      padding: 5rem 0 3rem 0;
+      position: relative;
+    }
+
+    .academy-footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, rgba(200, 162, 97, 0), rgba(200, 162, 97, 0.25) 50%, rgba(200, 162, 97, 0));
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 3.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-brand h4 {
+      font-size: 2rem;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.95rem;
+      color: var(--text-light-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .footer-links-col h5 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    .footer-links-col h5::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 30px;
+      height: 1px;
+      background-color: var(--accent-gold);
+    }
+
+    .footer-links-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links-col a {
+      font-size: 0.9rem;
+      color: var(--text-light-muted);
+    }
+
+    .footer-links-col a:hover {
+      color: var(--text-light);
+      padding-left: 5px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-bottom p {
+      font-size: 0.85rem;
+      color: var(--text-light-muted);
+    }
+
+    .social-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      transition: var(--transition-smooth);
+    }
+
+    .social-icon:hover {
+      background: var(--accent-gold);
+      color: var(--text-dark);
+      transform: translateY(-3px);
+    }
+
+    /* ==========================================================================
+       10. RESPONSIVE DESIGN MEDIA QUERIES
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .map-info-overlay {
+        position: static;
+        transform: none;
+        opacity: 1;
+        margin-top: 1.5rem;
+        border-radius: 12px;
+      }
+      
+      .progression-grid-two,
+      .writer-interactive-row,
+      .media-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .writer-details-box {
+        position: static;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .header-nav {
+        padding: 1.2rem 0;
+      }
+
+      .nav-menu,
+      .nav-actions .btn {
+        display: none;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section-padding {
+        padding: 5rem 0;
+      }
+      
+      .section-header h2 {
+        font-size: 2.2rem;
+      }
+
+      .progression-tabs {
+        flex-direction: column;
+      }
+
+      .tab-content {
+        padding: 1.8rem;
+      }
+
+      .rupees-selector-btn-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .writer-calc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-intro h1 {
+        font-size: 2.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================
+       HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header-nav">
+    <div class="container nav-container">
+      <a href="#" class="logo">
+        <img src="logomy.png" alt="Spirit-Novel Logo" class="logo-img" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=60&auto=format&fit=crop'">
+        <div class="logo-text">
+          <h1 class="logo-title">Spirit-Novel</h1>
+          <span class="logo-tag">Read and dive into stories</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#realm-map" class="nav-link">Home</a></li>
+        <li><a href="library.html" class="nav-link">Library</a></li>
+        <li><a href="writer-hall.html" class="nav-link">Writer Hall</a></li>
+        <li><a href="community.html" class="nav-link">Community Hall</a></li>
+        <li><a href="tower.html" class="nav-link">Tower of Honor</a></li>
+        <!-- <li><a href="#progression" class="nav-link">Writer benefits</a></li>
+        <li><a href="#progression" class="nav-link">Reader Rewards</a></li> -->
+        <li><a href="multimedia.html" class="nav-link">E-Reader & Audio</a></li>
+        <li><a href="profile.html" class="nav-link">👤 Profile</a></li>
+        <li><a href="writer-hall.html" class="nav-link" style="color:var(--accent-gold);font-weight:600;">✍ Write Story</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="btn btn-glass" id="nav-login-btn" onclick="openLoginModal()" style="padding: 0.6rem 1.4rem; font-size: 0.85rem;">Log In</button>
+      </div>
+
+      <button class="mobile-menu-toggle" aria-label="Open menu">☰</button>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       LOGIN MODAL
+       ========================================== -->
+  <div class="login-modal-overlay" id="login-modal" onclick="closeLoginModalOutside(event)">
+    <div class="login-card">
+      <button onclick="closeLoginModal()" style="position: absolute; top: 15px; right: 20px; color: var(--text-light-muted); font-size: 1.2rem; cursor: pointer;">✕</button>
+      <h3>Account creation/Log in</h3>
+      <p>Log in to your Spirit-Novel account to access your library and dashboard.</p>
+      
+      <form onsubmit="handleLogin(event)">
+        <div class="login-form-group">
+          <label for="login-email">Scribe Email / ID</label>
+          <input type="email" id="login-email" class="login-input" placeholder="scribe@spiritnovel.com" required>
+        </div>
+        <div class="login-form-group">
+          <label for="login-password">Security Cipher</label>
+          <input type="password" id="login-password" class="login-input" placeholder="••••••••" required>
+        </div>
+        <div class="login-actions">
+          <button type="submit" class="btn btn-gold">Enter Academy</button>
+          <button type="button" class="btn btn-outline" onclick="closeLoginModal()" style="border-color: rgba(255,255,255,0.2); color: var(--text-light);">Stay Guest</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       HERO & INTERACTIVE REALM MAP
+       ========================================== -->
+  <section class="hero-section" id="realm-map">
+    <!--  -->
+
+    <div class="container">
+      <div class="map-container">
+        <div class="map-image-wrapper">
+          <img src="upscalemedia-transformed.png" alt="Magical Spirit Academy Landscape" class="map-image">
+          <div class="map-fog-overlay"></div>
+
+          <!-- Hotspots for Main Buildings -->
+          <div class="map-pin pin-library" onclick="selectMapHotspot('library')">
+            <div class="pin-pulse"><div class="pin-dot"></div></div>
+            <div class="pin-label">📖 Grand Library (Center Palace)</div>
+          </div>
+
+          <div class="map-pin pin-honor" onclick="selectMapHotspot('honor')">
+            <div class="pin-pulse"><div class="pin-dot"></div></div>
+            <div class="pin-label">♛ Tower of Honor (Tallest Tower)</div>
+          </div>
+
+          <div class="map-pin pin-writer" onclick="selectMapHotspot('writer')">
+            <div class="pin-pulse"><div class="pin-dot"></div></div>
+            <div class="pin-label">🖋️ Writer Hall (Left Dome)</div>
+          </div>
+
+          <div class="map-pin pin-community" onclick="selectMapHotspot('community')">
+            <div class="pin-pulse"><div class="pin-dot"></div></div>
+            <div class="pin-label">👥 Community Hall (Right Hall)</div>
+          </div>
+
+          <!-- Flying Island Hotspots (Genres Links) -->
+          <div class="pin-island island-fantasy" onclick="selectGenreHotspot('Fantasy')">
+            <div class="island-tag">Fantasy</div>
+          </div>
+          <div class="pin-island island-cultivation" onclick="selectGenreHotspot('Cultivation')">
+            <div class="island-tag">Cultivation</div>
+          </div>
+          <div class="pin-island island-scifi" onclick="selectGenreHotspot('Sci-Fi')">
+            <div class="island-tag">Sci-Fi</div>
+          </div>
+          <div class="pin-island island-romance" onclick="selectGenreHotspot('Romance')">
+            <div class="island-tag">Romance</div>
+          </div>
+          <div class="pin-island island-mystery" onclick="selectGenreHotspot('Mystery')">
+            <div class="island-tag">Mystery</div>
+          </div>
+          <div class="pin-island island-urban" onclick="selectGenreHotspot('Urban')">
+            <div class="island-tag">Urban</div>
+          </div>
+        </div>
+
+        <!-- Dynamic Overlay detail display -->
+        <div class="map-info-overlay" id="map-info-panel">
+          <div class="map-info-content">
+            <h4 id="map-info-title">Interactive Academy Hotspot</h4>
+            <p id="map-info-desc">Hover over or click on any of the pins or floating islands to learn about its significance and link directly to it.</p>
+            <a href="#" id="map-info-link" class="btn btn-gold" style="margin-top:0.8rem; display:none; font-size:0.75rem; padding:4px 10px;">Enter Portal →</a>
+          </div>
+          <div class="map-info-close" onclick="closeMapPanel()">✕ Close</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="hero-intro">
+      <!-- <span class="badge">Ethereal Realm Open</span> -->
+      <h1>Welcome to <span>Spirit-Novel</span></h1>
+      <p>Embark on a mythical journey. Read thousands of web stories, listen to narrated audiobooks, draft your novels, and earn reader gifts inside the floating academy grounds.</p>
+      <div class="hero-ctas">
+        <a href="#progression" class="btn btn-gold">Read Now</a>
+        <a href="multimedia.html" class="btn btn-glass">🎧 Enter Audiobook Lounge</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       ACADEMY PILLARS (Halls Cards Section)
+       ========================================== -->
+  <section class="halls-section section-padding" id="halls">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Spirit Novel Provides</span>
+        <h2>The Four benefits for writers and readers</h2>
+        <p>Discover the unique advantages that Spirit-Novel offers to both aspiring writers and dedicated readers.</p>
+      </div>
+
+      <div class="cards-grid">
+        <!-- Library Card -->
+        <article class="hall-card">
+          <div class="card-img-wrapper">
+            <img src="Library.png" alt="Grand Library Book storage" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=500&auto=format&fit=crop'">
+            <div class="card-img-overlay"></div>
+            <span class="card-badge">Tome Vault</span>
+          </div>
+          <div class="card-content">
+            <h3>Grand Library</h3>
+            <p>The core storage of all books. Access thousands of magical stories across multiple genres, or listen to high-quality audiobooks narrated by academy guides.</p>
+            <a href="library.html" class="card-cta">Browse Books <span class="arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- Writer Hall Card -->
+        <article class="hall-card">
+          <div class="card-img-wrapper">
+            <img src="Writerhall.png" alt="Scribes drafting stories" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=500&auto=format&fit=crop'">
+            <div class="card-img-overlay"></div>
+            <span class="card-badge">9 Mastery Tiers</span>
+          </div>
+          <div class="card-content">
+            <h3>Writer Hall</h3>
+            <p>Forge new worlds, gain loyal readers, and collect precious reader gifts. Progress through 9 writer ranks to earn up to 50% revenue share on your publications.</p>
+            <a href="writer-hall.html" class="card-cta" onclick="setActiveTab('writer-tab')">Write & Earn <span class="arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- Community Hall Card -->
+        <article class="hall-card">
+          <div class="card-img-wrapper">
+            <img src="Acommunitythatfeelslikehome.png" alt="Readers and writers gathering" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=500&auto=format&fit=crop'">
+            <div class="card-img-overlay"></div>
+            <span class="card-badge">Guild System</span>
+          </div>
+          <div class="card-content">
+            <h3>Community Hall</h3>
+            <p>Connect with authors, share strategies, and form fan guilds. High-level writers can open mentoring cohorts to guide apprentices and teach aspiring students.</p>
+            <a href="community.html" class="card-cta">Join Discussion <span class="arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- Custom Slot named *** Card -->
+        <article class="hall-card hall-card-mystery">
+          <div class="card-img-wrapper">
+            <img src="Towerofhonor.png" alt="Tower of Honor and Spirit Coins" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500&auto=format&fit=crop'">
+            <div class="card-img-overlay"></div>
+            <span class="card-badge">Secret Vault</span>
+          </div>
+          <div class="card-content">
+            <h3>Spirit Coin Exchange</h3>
+            <p>A place where you can exchange your hard-earned Spirit Coins in real world currency and purchase Spirit coins with real money.</p>
+            <a href="exchange.html" class="card-cta">Open Exchange <span class="arrow">→</span></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PROGRESSION & LEVEL SYSTEMS
+       ========================================== -->
+  <section class="progression-section section-padding" id="progression">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Spirit Novel also provides various</span>
+        <h2>Writer and Reader benefits</h2>
+        <p>Whether you Write stories or read them, your ranking within the academy dictates your benefits. Explore the benefits for Readers and Writers.</p>
+      </div>
+
+      <div class="progression-wrap">
+        <div class="progression-tabs">
+          <button class="tab-btn active" id="reader-tab-btn" onclick="switchProgressionTab('reader')">📖 Readers Level (5 levels)</button>
+          <button class="tab-btn" id="writer-tab-btn" onclick="switchProgressionTab('writer')">🖋️ Writer level (9 Levels)</button>
+        </div>
+
+        <!-- READER PROGRESSION TAB -->
+        <div class="tab-content active" id="reader-tab-content">
+          <div class="progression-grid-two">
+            <div class="progression-intro-text">
+              <h3>Unlock Spirit Coin benefits</h3>
+              <p>Ascend from Beginner to Scholar by logging daily reading minutes and completing advertising roles. Higher reader tiers grant significantly more Spirit Coins for the same rate.</p>
+              
+              <div class="level-slider-wrapper">
+                <label for="reader-level-range">Select Reader Rank: <span id="reader-rank-badge-display" style="color: var(--accent-maroon); font-weight:700;">Beginner</span></label>
+                <input type="range" class="level-slider" id="reader-level-range" min="1" max="5" value="1" oninput="updateReaderLevel(this.value)">
+                <div class="level-ticks">
+                  <span class="tick-label active" onclick="clickReaderTick(1)">Lvl 1</span>
+                  <span class="tick-label" onclick="clickReaderTick(2)">Lvl 2</span>
+                  <span class="tick-label" onclick="clickReaderTick(3)">Lvl 3</span>
+                  <span class="tick-label" onclick="clickReaderTick(4)">Lvl 4</span>
+                  <span class="tick-label" onclick="clickReaderTick(5)">Lvl 5</span>
+                </div>
+              </div>
+
+              <div class="coin-rate-card">
+                <div class="coin-rate-title">Exchange Rate</div>
+                <div class="coin-rate-value" id="coin-rate-output">100 <span>Spirit Coins</span></div>
+                <ul class="coin-requirements">
+                  <li id="req-read-time">Requirement: 0 minutes daily reading</li>
+                  <li id="req-ads">Role: Watched 0 advertisement slots</li>
+                  <li style="color: var(--accent-gold-dark);">Rate: manifested for 75 Rupees (INR)</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Interactive Currency Calculator -->
+            <div class="calc-widget">
+              <h4>Spirit Treasury Exchange</h4>
+              <div class="calc-input-group">
+                <label>Deposit Rupees (INR)</label>
+                <div class="rupees-selector-btn-grid">
+                  <button class="rupee-btn active" onclick="selectRupees(75)">₹75</button>
+                  <button class="rupee-btn" onclick="selectRupees(150)">₹150</button>
+                  <button class="rupee-btn" onclick="selectRupees(300)">₹300</button>
+                  <button class="rupee-btn" onclick="selectRupees(750)">₹750</button>
+                </div>
+              </div>
+
+              <div class="calc-result">
+                <div class="calc-result-title">You Will Manifest</div>
+                <div class="calc-result-value" id="calc-manifest-result">100 Spirit Coins</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WRITER PROGRESSION TAB -->
+        <div class="tab-content" id="writer-tab-content">
+          <div class="writer-progression-panel">
+            <div class="writer-interactive-row">
+              <div>
+                <h3>Guild Revenue Sharing</h3>
+                <p>Writers earn an expanding revenue share corresponding to their active writer tier. Progress through the 9 ranks from Student (10%) to the legendary Saint (50%) level.</p>
+                <p>On this platform, Exchange will be in spirit coins. Which can be exchanged to real-world currency.</p>
+                
+                <div class="writer-rank-list" id="writer-ranks-container">
+                  <!-- Generated via JS for cleaner, flexible integration -->
+                </div>
+              </div>
+
+              <!-- Writer rank details card -->
+              <div class="writer-details-box">
+                <div class="writer-details-head">
+                  <h4 class="writer-details-name" id="w-detail-name">Student Writer</h4>
+                  <span class="writer-details-share-badge" id="w-detail-share">10% Rev Share</span>
+                </div>
+                <div class="writer-details-requirements">
+                  <h5>Promotion Criteria</h5>
+                  <ul class="req-list" id="w-detail-reqs">
+                    <!-- Dynamic -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Writer Rank Calculator -->
+            <div class="writer-calc-wrapper">
+              <h4>Check Your Writer Promotion Status</h4>
+              <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom: 1.5rem;">Input your novel's current performance metrics to find your rank and revenue share.</p>
+              
+              <div class="writer-calc-grid">
+                <div>
+                  <div class="w-slider-group">
+                    <label for="calc-views">Views <span class="val" id="val-views">0</span></label>
+                    <input type="range" class="w-slider" id="calc-views" min="0" max="120000000" step="500000" value="0" oninput="calculateWriterRank()">
+                  </div>
+                  
+                  <div class="w-slider-group">
+                    <label for="calc-likes">Likes <span class="val" id="val-likes">0</span></label>
+                    <input type="range" class="w-slider" id="calc-likes" min="0" max="2500000" step="10000" value="0" oninput="calculateWriterRank()">
+                  </div>
+
+                  <div class="w-slider-group">
+                    <label for="calc-followers">Followers <span class="val" id="val-followers">0</span></label>
+                    <input type="range" class="w-slider" id="calc-followers" min="0" max="3000000" step="10000" value="0" oninput="calculateWriterRank()">
+                  </div>
+
+                  <div class="checkbox-group" onclick="toggleMentorship()">
+                    <input type="checkbox" id="calc-mentorship" onchange="calculateWriterRank()">
+                    <label for="calc-mentorship">Participate as Mentor in Community teaching program</label>
+                  </div>
+                </div>
+
+                <div class="w-calc-result-box">
+                  <div class="calc-result-title">Projected Guild Rank</div>
+                  <div class="w-calc-result-rank" id="w-calc-rank-output">Student Writer</div>
+                  <div class="w-calc-result-share" id="w-calc-share-output">10%</div>
+                  <div class="calc-result-title" style="margin-top:0.8rem;">Revenue Share</div>
+                  <div class="w-calc-next-tier" id="w-calc-missing-output">Needs 100M views, 1M likes, 2M followers & 1 mentoring program for Saint level.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       AUDIOBOOKS & DIGITAL READING EXPERIENCE
+       ========================================== -->
+  <section class="media-section section-padding" id="multimedia">
+    <div class="container">
+      <div class="media-grid">
+        <!-- Interactive Audiobook Player widget -->
+        <div class="audiobook-showcase">
+          <div class="player-cover-area">
+            <img src="Library.png" alt="Audiobook Cover Art" class="player-cover" onerror="this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=200&auto=format&fit=crop'">
+            <div class="player-meta">
+              <h4>Ascension of the Sage</h4>
+              <p>Vol. 1: The Broken Spirit Core</p>
+              <span class="badge badge-gold" style="padding: 0.15rem 0.6rem; font-size: 0.65rem; margin-top: 0.5rem;">Audiobook</span>
+            </div>
+          </div>
+
+          <!-- Dynamic visualizer bars -->
+          <div class="visualizer-container" id="visualizer">
+            <div class="visualizer-bar" style="height: 10%;"></div>
+            <div class="visualizer-bar" style="height: 15%;"></div>
+            <div class="visualizer-bar" style="height: 25%;"></div>
+            <div class="visualizer-bar" style="height: 45%;"></div>
+            <div class="visualizer-bar" style="height: 60%;"></div>
+            <div class="visualizer-bar" style="height: 80%;"></div>
+            <div class="visualizer-bar" style="height: 95%;"></div>
+            <div class="visualizer-bar" style="height: 60%;"></div>
+            <div class="visualizer-bar" style="height: 40%;"></div>
+            <div class="visualizer-bar" style="height: 25%;"></div>
+            <div class="visualizer-bar" style="height: 15%;"></div>
+            <div class="visualizer-bar" style="height: 10%;"></div>
+          </div>
+
+          <div class="player-scrub">
+            <div class="scrub-bar-container" onclick="seekAudio(event)">
+              <div class="scrub-progress" id="scrub-progress"></div>
+              <div class="scrub-handle" id="scrub-handle"></div>
+            </div>
+            <div class="scrub-time-labels">
+              <span id="player-current-time">04:12</span>
+              <span>12:45</span>
+            </div>
+          </div>
+
+          <div class="player-controls">
+            <button class="control-btn" title="Previous chapter">⏮</button>
+            <button class="control-btn-play" id="audio-play-btn" onclick="toggleAudio()" title="Play/Pause">▶</button>
+            <button class="control-btn" title="Next chapter">⏭</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Reading Mode Showcase -->
+        <div class="reader-showcase-panel">
+          <span class="eyebrow" style="justify-content: flex-start; margin-bottom: 0.5rem;">Digital Scholar Vault</span>
+          <h3>Premium Reading Interface</h3>
+          <p class="intro">Adjust your environment to align with your focus. Choose layouts, font sizes, and custom ambient modes designed to minimize strain during marathon reading sessions.</p>
+          
+          <div class="e-reader-box">
+            <div class="reader-controls-bar">
+              <div class="reader-control-group">
+                <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">FONT SIZE</span>
+                <button class="reader-btn-text-size" onclick="adjustReaderFont('decrease')">A-</button>
+                <button class="reader-btn-text-size" onclick="adjustReaderFont('increase')">A+</button>
+              </div>
+              <div class="reader-control-group">
+                <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-right: 4px;">THEME</span>
+                <button class="reader-theme-btn reader-theme-btn-parchment active" onclick="setReaderTheme('parchment', this)" title="Parchment Mode"></button>
+                <button class="reader-theme-btn reader-theme-btn-light" onclick="setReaderTheme('light', this)" title="Day Mode"></button>
+                <button class="reader-theme-btn reader-theme-btn-dark" onclick="setReaderTheme('dark', this)" title="Night Mode"></button>
+              </div>
+            </div>
+            <div class="reader-body-content theme-parchment" id="reader-text-body">
+              <h4 style="font-family:'Outfit'; font-size:1.1rem; margin-bottom: 1rem; color:inherit;">Chapter 47: The Awakening</h4>
+              <p>The central spire of the Grand Library hummed with ancient energy, sending low vibrations down the spiral staircases. Master Alden stood at the balcony, watching the flying islands slowly spin in their celestial orbits. "Each island contains the essence of a different world," he whispered to the initiate. "One of action and metal, another of hearts and romance. To write is to bind them together. To read is to unlock their gates."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="academy-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h4>Spirit-Novel</h4>
+          <p>A platform where writers can start their journey. Readers can explore a vast collection of stories.</p>
+          <div class="social-row">
+            <a href="#" class="social-icon">𝕏</a>
+            <a href="#" class="social-icon">💬</a>
+            <a href="#" class="social-icon">📺</a>
+          </div>
+        </div>
+
+        <div class="footer-links-col">
+          <h5>The Campus</h5>
+          <ul>
+            <li><a href="#realm-map">Interactive Map</a></li>
+            <li><a href="#halls">Grand Library</a></li>
+            <li><a href="#halls">Writer Hall</a></li>
+            <li><a href="#halls">Community Guilds</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <h5>Progression</h5>
+          <ul>
+            <li><a href="#progression">Reader Tiers</a></li>
+            <li><a href="#progression">Writer Guilds</a></li>
+            <li><a href="#progression">Spirit Coins Exchange</a></li>
+            <li><a href="#progression">Mentorship Program</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <h5>Support</h5>
+          <ul>
+            <li><a href="#">Academy Guidelines</a></li>
+            <li><a href="#">Author Help Desk</a></li>
+            <li><a href="#">Advertising Roles</a></li>
+            <li><a href="#">Report Malpractice</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Spirit-Novel Inc. All rights reserved on the material plane.</p>
+        <p>Powered by the Google DeepMind Advanced Agentic Coding team.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       11. JAVASCRIPT LOGIC
+       ========================================== -->
+  <script>
+    /* ==========================================
+       Map Interactivity Logic
+       ========================================== */
+    const mapInfoPanel = document.getElementById('map-info-panel');
+    const mapInfoTitle = document.getElementById('map-info-title');
+    const mapInfoDesc = document.getElementById('map-info-desc');
+
+    const hotspotDetails = {
+      library: {
+        title: "🏛️ The Grand Library",
+        desc: "The large red-domed palace in the center of the academy grounds. It houses the sacred tome vaults, where thousands of web novels are stored and organized for scholars and seekers."
+      },
+      honor: {
+        title: "♛ The Tower of Honor",
+        desc: "The tallest tower soaring on the center-right. It stands as a monument to the academy's most outstanding works and creators, hosting active rankings for most-loved stories."
+      },
+      writer: {
+        title: "🖋️ The Writer Hall",
+        desc: "Located on the left, the Writer Hall is the forge where scribes create their manuscripts. Writers earn gifts, build followers, and earn up to 50% revenue share based on their rank."
+      },
+      community: {
+        title: "👥 The Community Hall",
+        desc: "Located on the right, this hall is the central forum where readers and writers form guilds. High-level writers conduct community mentoring classes here."
+      }
+    };
+
+    function selectMapHotspot(key) {
+      if (key === 'library') {
+        window.location.href = 'library.html';
+      } else if (key === 'honor') {
+        window.location.href = 'tower.html';
+      } else if (key === 'writer') {
+        window.location.href = 'writer-hall.html';
+      } else if (key === 'community') {
+        window.location.href = 'community.html';
+      }
+    }
+
+    function selectGenreHotspot(genreName) {
+      window.location.href = `library.html?genre=${encodeURIComponent(genreName)}`;
+    }
+
+    function closeMapPanel() {
+      mapInfoPanel.classList.remove('active');
+    }
+
+    /* ==========================================
+       Reader Levels Progression logic
+       ========================================== */
+    const readerLevels = [
+      { level: 1, name: "Beginner Reader", coinsRate: 100, readTime: 0, ads: 0 },
+      { level: 2, name: "Apprentice Reader", coinsRate: 150, readTime: 15, ads: 1 },
+      { level: 3, name: "Acolyte Reader", coinsRate: 200, readTime: 45, ads: 3 },
+      { level: 4, name: "Sage Reader", coinsRate: 250, readTime: 90, ads: 5 },
+      { level: 5, name: "Scholar Reader", coinsRate: 300, readTime: 180, ads: 10 }
+    ];
+
+    let currentSelectedRupees = 75;
+    let currentSelectedReaderLvl = 1;
+
+    function updateReaderLevel(val) {
+      currentSelectedReaderLvl = parseInt(val);
+      const levelData = readerLevels.find(l => l.level === currentSelectedReaderLvl);
+      
+      // Update UI displays
+      document.getElementById('reader-rank-badge-display').innerText = levelData.name;
+      document.getElementById('coin-rate-output').innerHTML = `${levelData.coinsRate} <span>Spirit Coins</span>`;
+      document.getElementById('req-read-time').innerText = `Requirement: ${levelData.readTime} minutes daily reading`;
+      document.getElementById('req-ads').innerText = `Role: Watched ${levelData.ads} advertisement slots`;
+
+      // Update slider active tick style
+      const labels = document.querySelectorAll('.level-ticks .tick-label');
+      labels.forEach((label, idx) => {
+        if (idx === currentSelectedReaderLvl - 1) {
+          label.classList.add('active');
+        } else {
+          label.classList.remove('active');
+        }
+      });
+
+      calculateManifestedCoins();
+    }
+
+    function clickReaderTick(levelVal) {
+      document.getElementById('reader-level-range').value = levelVal;
+      updateReaderLevel(levelVal);
+    }
+
+    function selectRupees(val) {
+      currentSelectedRupees = val;
+      
+      // Update buttons style
+      const buttons = document.querySelectorAll('.rupees-selector-btn-grid .rupee-btn');
+      buttons.forEach(btn => {
+        if (btn.innerText === `₹${val}`) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      calculateManifestedCoins();
+    }
+
+    function calculateManifestedCoins() {
+      const levelData = readerLevels.find(l => l.level === currentSelectedReaderLvl);
+      // Math calculation base 75 INR = rate
+      const conversion = (currentSelectedRupees / 75) * levelData.coinsRate;
+      document.getElementById('calc-manifest-result').innerText = `${Math.floor(conversion)} Spirit Coins`;
+    }
+
+    /* ==========================================
+       Writer Levels Progression logic
+       ========================================= */
+    const writerLevels = [
+      { level: 1, name: "Student Writer", share: 10, views: 0, likes: 0, followers: 0, mentor: false },
+      { level: 2, name: "Novice Writer", share: 15, views: 50000, likes: 500, followers: 100, mentor: false },
+      { level: 3, name: "Apprentice Writer", share: 20, views: 200000, likes: 2000, followers: 500, mentor: false },
+      { level: 4, name: "Journeyman Writer", share: 25, views: 1000000, likes: 10000, followers: 2000, mentor: false },
+      { level: 5, name: "Expert Writer", share: 30, views: 5000000, likes: 50000, followers: 10000, mentor: false },
+      { level: 6, name: "Master Writer", share: 35, views: 15000000, likes: 150000, followers: 30000, mentor: false },
+      { level: 7, name: "Grandmaster Writer", share: 40, views: 40000000, likes: 400000, followers: 100000, mentor: false },
+      { level: 8, name: "Ancestral Writer", share: 45, views: 80000000, likes: 800000, followers: 500000, mentor: false },
+      { level: 9, name: "Saint Writer", share: 50, views: 100000000, likes: 1000000, followers: 2000000, mentor: true }
+    ];
+
+    let activeWriterListRank = 1;
+
+    function renderWriterRanksList() {
+      const container = document.getElementById('writer-ranks-container');
+      container.innerHTML = '';
+      writerLevels.forEach(w => {
+        const item = document.createElement('div');
+        item.className = `rank-item ${w.level === activeWriterListRank ? 'active' : ''}`;
+        item.setAttribute('onclick', `selectWriterRankListItem(${w.level})`);
+        item.innerHTML = `
+          <div class="rank-meta">
+            <span class="rank-num">${w.level}</span>
+            <span class="rank-name">${w.name}</span>
+          </div>
+          <span class="rank-share">${w.share}% Share</span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function selectWriterRankListItem(level) {
+      activeWriterListRank = level;
+      renderWriterRanksList();
+      
+      const wData = writerLevels.find(w => w.level === level);
+      document.getElementById('w-detail-name').innerText = wData.name;
+      document.getElementById('w-detail-share').innerText = `${wData.share}% Rev Share`;
+      
+      const reqsList = document.getElementById('w-detail-reqs');
+      reqsList.innerHTML = '';
+
+      if (level === 1) {
+        reqsList.innerHTML = `<li class="req-item met"><span class="req-icon">✓</span> Start your novel manuscript inside the Academy guild.</li>`;
+        return;
+      }
+
+      // Views
+      reqsList.appendChild(createReqDOMItem(`Accumulate ${formatNumber(wData.views)} views`, true));
+      // Likes
+      reqsList.appendChild(createReqDOMItem(`Accumulate ${formatNumber(wData.likes)} likes`, true));
+      // Followers
+      reqsList.appendChild(createReqDOMItem(`Reach ${formatNumber(wData.followers)} followers`, true));
+      
+      if (wData.mentor) {
+        reqsList.appendChild(createReqDOMItem("Engage in at least 1 community teaching program to mentor aspiring scribes", true));
+      }
+    }
+
+    function createReqDOMItem(text, isMet) {
+      const li = document.createElement('li');
+      li.className = `req-item ${isMet ? 'met' : 'unmet'}`;
+      li.innerHTML = `<span class="req-icon">${isMet ? '✓' : '✗'}</span> ${text}`;
+      return li;
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(0) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(0) + 'K';
+      return num;
+    }
+
+    function toggleMentorship() {
+      const chk = document.getElementById('calc-mentorship');
+      chk.checked = !chk.checked;
+      calculateWriterRank();
+    }
+
+    function calculateWriterRank() {
+      const viewsVal = parseInt(document.getElementById('calc-views').value);
+      const likesVal = parseInt(document.getElementById('calc-likes').value);
+      const followersVal = parseInt(document.getElementById('calc-followers').value);
+      const mentorVal = document.getElementById('calc-mentorship').checked;
+
+      // Update values labels
+      document.getElementById('val-views').innerText = formatNumber(viewsVal);
+      document.getElementById('val-likes').innerText = formatNumber(likesVal);
+      document.getElementById('val-followers').innerText = formatNumber(followersVal);
+
+      // Find highest rank qualified
+      let qualifiedRank = writerLevels[0];
+      for (let i = writerLevels.length - 1; i >= 0; i--) {
+        const w = writerLevels[i];
+        if (viewsVal >= w.views && likesVal >= w.likes && followersVal >= w.followers) {
+          if (!w.mentor || (w.mentor && mentorVal)) {
+            qualifiedRank = w;
+            break;
+          }
+        }
+      }
+
+      // Display rank
+      document.getElementById('w-calc-rank-output').innerText = qualifiedRank.name;
+      document.getElementById('w-calc-share-output').innerText = `${qualifiedRank.share}%`;
+
+      // Next tier details
+      if (qualifiedRank.level === 9) {
+        document.getElementById('w-calc-missing-output').innerText = "Congratulations! You have ascended to the legendary Saint level. 50% revenue share unlocked!";
+      } else {
+        const next = writerLevels[qualifiedRank.level];
+        let missing = `Next rank: ${next.name} (${next.share}%). Needs: `;
+        let reqs = [];
+        if (viewsVal < next.views) reqs.push(`${formatNumber(next.views - viewsVal)} more views`);
+        if (likesVal < next.likes) reqs.push(`${formatNumber(next.likes - likesVal)} more likes`);
+        if (followersVal < next.followers) reqs.push(`${formatNumber(next.followers - followersVal)} more followers`);
+        if (next.mentor && !mentorVal) reqs.push("engagement in 1 community program to teach aspiring writers");
+        
+        document.getElementById('w-calc-missing-output').innerText = missing + reqs.join(', ');
+      }
+    }
+
+    /* ==========================================
+       Tab Switch Logic
+       ========================================== */
+    function switchProgressionTab(tabName) {
+      const readerBtn = document.getElementById('reader-tab-btn');
+      const writerBtn = document.getElementById('writer-tab-btn');
+      const readerContent = document.getElementById('reader-tab-content');
+      const writerContent = document.getElementById('writer-tab-content');
+
+      if (tabName === 'reader') {
+        readerBtn.classList.add('active');
+        writerBtn.classList.remove('active');
+        readerContent.classList.add('active');
+        writerContent.classList.remove('active');
+      } else {
+        writerBtn.classList.add('active');
+        readerBtn.classList.remove('active');
+        writerContent.classList.add('active');
+        readerContent.classList.remove('active');
+      }
+    }
+
+    function setActiveTab(tabId) {
+      if (tabId === 'writer-tab') {
+        switchProgressionTab('writer');
+      } else {
+        switchProgressionTab('reader');
+      }
+      setTimeout(() => {
+        document.getElementById('progression').scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    }
+
+    /* ==========================================
+       Audiobook Player Widget Mock logic
+       ========================================== */
+    let audioPlaying = false;
+    let audioProgressInterval;
+    let scrubProgressPercent = 32;
+
+    function toggleAudio() {
+      const playBtn = document.getElementById('audio-play-btn');
+      const visualizer = document.getElementById('visualizer');
+      
+      audioPlaying = !audioPlaying;
+      
+      if (audioPlaying) {
+        playBtn.innerText = '⏸';
+        visualizer.classList.add('playing');
+        
+        audioProgressInterval = setInterval(() => {
+          if (scrubProgressPercent < 100) {
+            scrubProgressPercent += 0.2;
+            updateAudioProgressUI();
+          } else {
+            clearInterval(audioProgressInterval);
+            audioPlaying = false;
+            playBtn.innerText = '▶';
+            visualizer.classList.remove('playing');
+            scrubProgressPercent = 0;
+            updateAudioProgressUI();
+          }
+        }, 300);
+      } else {
+        playBtn.innerText = '▶';
+        visualizer.classList.remove('playing');
+        clearInterval(audioProgressInterval);
+      }
+    }
+
+    function updateAudioProgressUI() {
+      document.getElementById('scrub-progress').style.width = `${scrubProgressPercent}%`;
+      document.getElementById('scrub-handle').style.left = `${scrubProgressPercent}%`;
+      
+      // Calculate current time label
+      const totalSeconds = 765; // 12m 45s
+      const currentSeconds = Math.floor((scrubProgressPercent / 100) * totalSeconds);
+      const minutes = Math.floor(currentSeconds / 60);
+      const seconds = currentSeconds % 60;
+      document.getElementById('player-current-time').innerText = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function seekAudio(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      scrubProgressPercent = (clickX / width) * 100;
+      updateAudioProgressUI();
+      
+      // Force visualizer bar height updates for interactive polish
+      const bars = document.querySelectorAll('.visualizer-bar');
+      bars.forEach(b => {
+        const randH = Math.floor(Math.random() * 85) + 15;
+        b.style.height = `${randH}%`;
+      });
+    }
+
+    /* ==========================================
+       E-Reader Style Adjustments Logic
+       ========================================== */
+    let currentReaderFontSize = 1; // em base
+
+    function adjustReaderFont(direction) {
+      const textBody = document.getElementById('reader-text-body');
+      if (direction === 'increase' && currentReaderFontSize < 1.35) {
+        currentReaderFontSize += 0.08;
+      } else if (direction === 'decrease' && currentReaderFontSize > 0.85) {
+        currentReaderFontSize -= 0.08;
+      }
+      textBody.style.fontSize = `${currentReaderFontSize}em`;
+    }
+
+    function setReaderTheme(themeName, btnEl) {
+      const textBody = document.getElementById('reader-text-body');
+      textBody.className = `reader-body-content theme-${themeName}`;
+      
+      // Update theme selection buttons
+      const buttons = document.querySelectorAll('.reader-theme-btn');
+      buttons.forEach(btn => {
+        if (btn === btnEl) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    /* ==========================================
+       Login Modal Logic (Unified Redirect)
+       ========================================== */
+    function openLoginModal() {
+      window.location.href = 'auth.html';
+    }
+
+    function closeLoginModal() {}
+    function closeLoginModalOutside(e) {}
+    function handleLogin(e) {}
+
+    /* ==========================================
+       Initialize State
+       ========================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      // Init reader levels calculator
+      updateReaderLevel(1);
+      
+      // Init writer ranks detail & calc values
+      renderWriterRanksList();
+      selectWriterRankListItem(1);
+      calculateWriterRank();
+      
+      // Check session to update topbar Log In button dynamically
+      const userStr = localStorage.getItem('sn_user');
+      const token = localStorage.getItem('sn_auth_token');
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          const loginBtn = document.getElementById('nav-login-btn');
+          if (loginBtn) {
+            loginBtn.innerText = `Hi, ${user.username}`;
+            loginBtn.style.background = 'var(--accent-maroon)';
+            loginBtn.style.color = '#fff';
+            loginBtn.style.borderColor = 'var(--accent-maroon-light)';
+            loginBtn.onclick = () => {
+              window.location.href = 'profile.html';
+            };
+          }
+        } catch(e){}
+      }
+
+      // Setup mobile menu fallback trigger
+      document.querySelector('.mobile-menu-toggle').addEventListener('click', () => {
+        alert("Entering Spirit Menu: In a production portal, this reveals a magical slide-out navigation map!");
+      });
+    });
+  </script>
+</body>
+</html>

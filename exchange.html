@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secret Vault Exchange — Spirit-Novel</title>
+  <meta name="description" content="Exchange your Spirit Coins for Rupees or purchase custom amounts of coins at the Spirit-Novel Academy Secret Vault.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  <style>
+    :root {
+      --bg:#0e0b09; --bg-card:#15110f;
+      --maroon:#6a1b29; --maroon2:#892837; --maroon-subtle:#2a1015;
+      --gold:#c8a261; --gold2:#a88143; --gold3:#dfc290;
+      --border:rgba(200,162,97,0.16); --border-subtle:rgba(200,162,97,0.06);
+      --text:#e8dfd6; --text-title:#fbf8f3; --muted:#a59c94;
+      --green:#4caf50; --shadow:0 12px 32px rgba(0,0,0,0.6);
+      --tr:all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      background:var(--bg); color:var(--text); font-family:'Outfit', sans-serif;
+      min-height:100vh; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar{
+      height:62px; background:rgba(14,11,9,0.95); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; padding:0 2rem;
+      flex-shrink:0; z-index:100; backdrop-filter:blur(8px);
+    }
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .logo img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+    .logo-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--text-title);}
+    
+    .nav-menu{display:flex;list-style:none;gap:1.5rem;}
+    .nav-link{text-decoration:none;color:var(--text);font-size:0.85rem;font-weight:500;transition:var(--tr);opacity:0.85;padding:6px 0;position:relative;}
+    .nav-link:hover,.nav-link.active{color:var(--gold);opacity:1;}
+    .nav-link.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);border-radius:2px;}
+    
+    .coins-pill{
+      display:flex;align-items:center;gap:6px;background:rgba(200,162,97,0.08);
+      border:1px solid var(--border);padding:5px 12px;border-radius:20px;
+      font-size:0.82rem;font-weight:600;color:var(--gold3);
+    }
+
+    /* ─── MAIN LAYOUT ─── */
+    .exchange-container{
+      max-width:960px; margin:3rem auto; width:90%;
+      display:flex; flex-direction:column; gap:2.5rem;
+    }
+    
+    .exchange-hdr{
+      text-align:center; border-bottom:1px solid var(--border); padding-bottom:1.5rem;
+    }
+    .exchange-hdr h1{
+      font-family:'Cormorant Garamond',serif; font-size:2.5rem; color:var(--text-title);
+    }
+    .exchange-hdr p{
+      font-size:0.9rem; color:var(--muted); margin-top:0.4rem;
+    }
+
+    .panels-grid{
+      display:grid; grid-template-columns:1fr 1fr; gap:2rem;
+    }
+    .vault-card{
+      background:var(--bg-card); border:1px solid var(--border); border-radius:18px;
+      padding:2rem; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:1.2rem;
+    }
+    .vault-card h2{
+      font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--gold3);
+      border-bottom:1px solid var(--border-subtle); padding-bottom:0.6rem;
+    }
+    
+    .form-group{display:flex; flex-direction:column; gap:0.4rem;}
+    .form-group label{
+      font-size:0.72rem; text-transform:uppercase; letter-spacing:1px;
+      color:var(--gold2); font-weight:600;
+    }
+    .input-wrap{position:relative; display:flex; align-items:center;}
+    .input-wrap input{
+      width:100%; background:rgba(0,0,0,0.25); border:1px solid var(--border);
+      border-radius:8px; padding:10px 12px; color:var(--text); font-size:0.9rem;
+      font-family:'Outfit',sans-serif; outline:none; transition:var(--tr);
+    }
+    .input-wrap input:focus{border-color:var(--gold);}
+    .input-unit{position:absolute; right:12px; font-size:0.8rem; color:var(--gold3); font-weight:600;}
+
+    .calc-box{
+      background:rgba(200,162,97,0.04); border:1px dashed var(--border);
+      border-radius:10px; padding:1rem; text-align:center;
+    }
+    .calc-val{font-size:1.6rem; font-weight:700; color:var(--text-title); font-family:'Cormorant Garamond',serif;}
+
+    .btn-action{
+      width:100%; padding:10px; border-radius:8px; font-weight:700; font-size:0.88rem;
+      cursor:pointer; border:none; transition:var(--tr); font-family:'Outfit',sans-serif;
+    }
+    .btn-gold{background:linear-gradient(135deg, var(--gold2), var(--gold)); color:#1a0f0a;}
+    .btn-gold:hover{transform:translateY(-2px); box-shadow:0 4px 15px rgba(200,162,97,0.25);}
+    .btn-maroon{background:linear-gradient(135deg, var(--maroon), var(--maroon2)); color:var(--text);}
+    .btn-maroon:hover{transform:translateY(-2px);}
+
+    /* ─── RECENT TRANSACTIONS ─── */
+    .history-card{
+      background:var(--bg-card); border:1px solid var(--border); border-radius:18px;
+      padding:1.5rem 2rem; box-shadow:var(--shadow);
+    }
+    .history-card h3{
+      font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--text-title);
+      margin-bottom:1rem;
+    }
+    .history-table{width:100%; border-collapse:collapse; text-align:left; font-size:0.82rem;}
+    .history-table th{
+      padding:8px 12px; font-size:0.7rem; text-transform:uppercase; color:var(--gold2);
+      border-bottom:1px solid var(--border);
+    }
+    .history-table td{padding:10px 12px; border-bottom:1px solid var(--border-subtle);}
+    .status-badge{font-size:0.68rem; padding:1px 6px; border-radius:4px; font-weight:600;}
+    .status-badge.success{background:rgba(76,175,80,0.1); color:#4caf50;}
+    .status-badge.pending{background:rgba(255,152,0,0.1); color:#ff9800;}
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="Index.html" class="logo">
+    <img src="logomy.png" alt="Spirit-Novel">
+    <span class="logo-name">Spirit-Novel</span>
+  </a>
+
+  <ul class="nav-menu">
+    <li><a href="Index.html" class="nav-link">Home</a></li>
+    <li><a href="library.html" class="nav-link">Library</a></li>
+    <li><a href="writer-hall.html" class="nav-link">Writer Hall</a></li>
+    <li><a href="tower.html" class="nav-link">Tower of Honor</a></li>
+    <li><a href="community.html" class="nav-link">Community Hall</a></li>
+    <li><a href="profile.html" class="nav-link">Profile</a></li>
+  </ul>
+
+  <div class="topbar-right">
+    <div class="coins-pill">
+      <span>⚡ <span id="exchangeBalance">48,200</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="exchange-container">
+  
+  <div class="exchange-hdr">
+    <h1>The Secret Vault</h1>
+    <p>⚡ Custom coin purchase shop & writer payout conversion center ⚡</p>
+  </div>
+
+  <div class="panels-grid">
+    <!-- PANEL 1: BUY COINS -->
+    <div class="vault-card">
+      <h2>Buy Spirit Coins</h2>
+      <p style="font-size:0.78rem; color:var(--muted); line-height:1.4;">Enter any custom amount of Spirit Coins you need. The Rupee price is calculated dynamically.</p>
+      
+      <div class="form-group">
+        <label>Spirit Coins to Purchase</label>
+        <div class="input-wrap">
+          <input type="number" id="buyCoinsInp" value="1000" min="100" max="100000" oninput="calcBuyPrice()">
+          <span class="input-unit">SC</span>
+        </div>
+      </div>
+
+      <div class="calc-box">
+        <span style="font-size:0.72rem; color:var(--muted); text-transform:uppercase; display:block; margin-bottom:0.25rem;">Total Price</span>
+        <div class="calc-val" id="buyPriceLabel">₹550.00</div>
+        <span style="font-size:0.68rem; color:var(--muted);">Rate: ₹550 per 1,000 SC (Scholar level rate)</span>
+      </div>
+
+      <button class="btn-action btn-gold" onclick="purchaseCustomCoins()">Confirm Payment</button>
+    </div>
+
+    <!-- PANEL 2: WITHDRAW COINS -->
+    <div class="vault-card">
+      <h2>Exchange for Cash</h2>
+      <p style="font-size:0.78rem; color:var(--muted); line-height:1.4;">Exchange your hard-earned writing revenue and tips back into real-world currency (INR).</p>
+      
+      <div class="form-group">
+        <label>Coins to Withdraw</label>
+        <div class="input-wrap">
+          <input type="number" id="withdrawCoinsInp" value="1000" min="1000" max="100000" oninput="calcWithdrawPayout()">
+          <span class="input-unit">SC</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Payout Destination (UPI ID or Bank Account)</label>
+        <div class="input-wrap">
+          <input type="text" id="payoutIdInp" placeholder="e.g. lin.feng@upi">
+        </div>
+      </div>
+
+      <div class="calc-box">
+        <span style="font-size:0.72rem; color:var(--muted); text-transform:uppercase; display:block; margin-bottom:0.25rem;">You Will Receive</span>
+        <div class="calc-val" id="withdrawPayoutLabel">₹175.00</div>
+        <span style="font-size:0.68rem; color:var(--muted);">Rate: ₹175 per 1,000 SC (Min 1,000 SC)</span>
+      </div>
+
+      <button class="btn-action btn-maroon" onclick="withdrawCustomCoins()">Submit Payout Request</button>
+    </div>
+  </div>
+
+  <!-- RECENT LOG -->
+  <div class="history-card">
+    <h3>Transaction History</h3>
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Details</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="transactionHistoryBody">
+        <!-- Loaded dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- SPIRIT PAY GATE MODAL -->
+<div id="payGateModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; z-index:9999;">
+  <div style="background:#15110f; border:1px solid var(--border); border-radius:20px; max-width:460px; width:90%; padding:2.5rem 2rem; box-shadow:var(--shadow); position:relative;">
+    <div style="position:absolute; right:1.5rem; top:1.5rem; font-size:1.2rem; cursor:pointer; color:var(--muted);" onclick="closePayGate()">✕</div>
+    
+    <div style="text-align:center; margin-bottom:1.5rem;">
+      <div style="font-size:2rem; margin-bottom:0.5rem;">🔒</div>
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--text-title); font-weight:700;">Spirit Pay Gate</h3>
+      <p style="font-size:0.78rem; color:var(--muted);">Independent Secure Payment Processor</p>
+    </div>
+
+    <!-- Payout details -->
+    <div style="background:rgba(200,162,97,0.04); border:1px solid var(--border); padding:0.8rem 1rem; border-radius:10px; font-size:0.85rem; margin-bottom:1.5rem; display:flex; justify-content:space-between;">
+      <div>Recharge: <strong id="payGateCoins" style="color:var(--gold3);">0 SC</strong></div>
+      <div>Payable: <strong id="payGateRupees" style="color:var(--green);">₹0.00</strong></div>
+    </div>
+
+    <!-- Tab options -->
+    <div style="display:flex; border-bottom:1px solid var(--border); margin-bottom:1.2rem; gap:1rem;">
+      <div class="pay-tab" id="tabUPI" onclick="switchPayTab('UPI')" style="cursor:pointer; padding-bottom:6px; font-size:0.8rem; font-weight:600; color:var(--gold); border-bottom:2px solid var(--gold);">UPI Handle</div>
+      <div class="pay-tab" id="tabCARD" onclick="switchPayTab('CARD')" style="cursor:pointer; padding-bottom:6px; font-size:0.8rem; font-weight:600; color:var(--muted); border-bottom:2px solid transparent;">Debit/Credit Card</div>
+      <div class="pay-tab" id="tabBANK" onclick="switchPayTab('BANK')" style="cursor:pointer; padding-bottom:6px; font-size:0.8rem; font-weight:600; color:var(--muted); border-bottom:2px solid transparent;">Bank Account</div>
+    </div>
+
+    <form id="payGateForm" onsubmit="executePayment(event)">
+      <!-- UPI Section -->
+      <div id="paySectUPI" class="pay-sect">
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label style="font-size: 0.7rem; color: var(--gold); text-transform: uppercase; font-weight:600; display:block; margin-bottom:6px;">UPI ID (VPA)</label>
+          <input type="text" id="payUpiId" placeholder="e.g. name@okhdfcbank" required style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); outline:none;">
+          <span style="font-size:0.65rem; color:var(--muted); margin-top:5px; display:block;">Enter your virtual payment address (VPA) to send confirmation request.</span>
+        </div>
+      </div>
+
+      <!-- Card Section -->
+      <div id="paySectCARD" class="pay-sect" style="display:none;">
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label style="font-size: 0.7rem; color: var(--gold); text-transform: uppercase; font-weight:600; display:block; margin-bottom:4px;">Cardholder Name</label>
+          <input type="text" id="payCardName" placeholder="e.g. Lin Feng" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); outline:none; margin-bottom:0.8rem;">
+          
+          <label style="font-size: 0.7rem; color: var(--gold); text-transform: uppercase; font-weight:600; display:block; margin-bottom:4px;">Card Number</label>
+          <input type="text" id="payCardNumber" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); outline:none; font-family:monospace; margin-bottom:0.8rem;">
+          
+          <div style="display:flex; gap:1rem;">
+            <div style="flex:1;">
+              <label style="font-size: 0.7rem; color: var(--gold); text-transform: uppercase; font-weight:600; display:block; margin-bottom:4px;">Expiry Date</label>
+              <input type="text" id="payCardExpiry" placeholder="MM/YY" maxlength="5" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); outline:none; font-family:monospace;">
+            </div>
+            <div style="flex:1;">
+              <label style="font-size: 0.7rem; color: var(--gold); text-transform: uppercase; font-weight:600; display:block; margin-bottom:4px;">CVV</label>
+              <input type="password" id="payCardCvv" placeholder="•••" maxlength="3" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); outline:none; font-family:monospace;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bank Linkage Section -->
+      <div id="paySectBANK" class="pay-sect" style="display:none;">
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label style="font-size: 0.7rem; color: var(--gold); text-transform: uppercase; font-weight:600; display:block; margin-bottom:4px;">Select Bank</label>
+          <select id="payBankSelect" style="width:100%; background:#15110f; border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); outline:none; margin-bottom:0.8rem;">
+            <option value="SBI">State Bank of India</option>
+            <option value="HDFC">HDFC Bank</option>
+            <option value="ICICI">ICICI Bank</option>
+            <option value="AXIS">Axis Bank</option>
+          </select>
+          
+          <label style="font-size: 0.7rem; color: var(--gold); text-transform: uppercase; font-weight:600; display:block; margin-bottom:4px;">Account Number</label>
+          <input type="text" id="payBankAccount" placeholder="e.g. 100028945672" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); outline:none; margin-bottom:0.8rem;">
+
+          <label style="font-size: 0.7rem; color: var(--gold); text-transform: uppercase; font-weight:600; display:block; margin-bottom:4px;">IFSC Code</label>
+          <input type="text" id="payBankIfsc" placeholder="e.g. SBIN0001234" maxlength="11" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); outline:none; font-family:monospace; text-transform:uppercase;">
+        </div>
+      </div>
+
+      <div id="payGateMessage" style="display:none; font-size:0.8rem; color:#ff8b9e; margin-bottom:1rem; text-align:left;"></div>
+
+      <button type="submit" id="payGateSubmitBtn" class="btn-action btn-gold" style="margin-top:0.8rem; justify-content:center; display:flex; align-items:center; gap:8px;">
+        <span id="payGateBtnText">Authorize Safe Transaction</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+let coinBalance = parseInt(localStorage.getItem('sn_user_coins') || '48200');
+document.getElementById('exchangeBalance').textContent = coinBalance.toLocaleString();
+
+const defaultHistory = [
+  {date: '2026-06-25', type: 'Purchase', details: 'Beginner Pack (Custom)', amount: '+1,500 SC', status: 'Success'},
+  {date: '2026-06-24', type: 'Withdrawal', details: 'UPI lin.feng@upi', amount: '-10,000 SC', status: 'Success'},
+  {date: '2026-06-20', type: 'Purchase', details: 'Scholar Pack', amount: '+900 SC', status: 'Success'}
+];
+
+let transactionHistory = JSON.parse(localStorage.getItem('sn_transaction_history') || 'null');
+if(!transactionHistory) {
+  transactionHistory = defaultHistory;
+  localStorage.setItem('sn_transaction_history', JSON.stringify(transactionHistory));
+}
+
+function calcBuyPrice() {
+  const sc = parseInt(document.getElementById('buyCoinsInp').value) || 0;
+  const rate = 0.55; // ₹550 per 1000 SC i.e. 0.55 INR per SC
+  const price = sc * rate;
+  document.getElementById('buyPriceLabel').textContent = '₹' + price.toLocaleString('en-IN', {minimumFractionDigits: 2});
+}
+
+function calcWithdrawPayout() {
+  const sc = parseInt(document.getElementById('withdrawCoinsInp').value) || 0;
+  const rate = 0.175; // ₹175 per 1000 SC i.e. 0.175 INR per SC
+  const payout = sc * rate;
+  document.getElementById('withdrawPayoutLabel').textContent = '₹' + payout.toLocaleString('en-IN', {minimumFractionDigits: 2});
+}
+
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000/api'
+  : 'https://api.noverspirit.qd.je/api';
+let currentRechargeCoins = 0;
+let currentRechargeRupees = 0;
+let activePayMethod = 'UPI';
+
+function openPayGate(coins, rupees) {
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) {
+    alert("Please sign in to your Spirit Account to buy coins.");
+    window.location.href = 'auth.html';
+    return;
+  }
+  
+  currentRechargeCoins = coins;
+  currentRechargeRupees = rupees;
+  
+  document.getElementById('payGateCoins').textContent = coins.toLocaleString() + ' SC';
+  document.getElementById('payGateRupees').textContent = '₹' + rupees.toLocaleString('en-IN', {minimumFractionDigits: 2});
+  document.getElementById('payGateModal').style.display = 'flex';
+  
+  switchPayTab('UPI');
+}
+
+function closePayGate() {
+  document.getElementById('payGateModal').style.display = 'none';
+  document.getElementById('payGateForm').reset();
+}
+
+function switchPayTab(method) {
+  activePayMethod = method;
+  
+  const tabs = ['UPI', 'CARD', 'BANK'];
+  tabs.forEach(t => {
+    const el = document.getElementById('tab' + t);
+    const sect = document.getElementById('paySect' + t);
+    if (t === method) {
+      el.style.color = 'var(--gold)';
+      el.style.borderBottom = '2px solid var(--gold)';
+      sect.style.display = 'block';
+      sect.querySelectorAll('input').forEach(inp => inp.required = true);
+    } else {
+      el.style.color = 'var(--muted)';
+      el.style.borderBottom = '2px solid transparent';
+      sect.style.display = 'none';
+      sect.querySelectorAll('input').forEach(inp => inp.required = false);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cardInput = document.getElementById('payCardNumber');
+  if (cardInput) {
+    cardInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '');
+      let formatted = val.match(/.{1,4}/g)?.join('-') || val;
+      e.target.value = formatted;
+    });
+  }
+
+  const expiryInput = document.getElementById('payCardExpiry');
+  if (expiryInput) {
+    expiryInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '');
+      if (val.length > 2) {
+        e.target.value = val.substring(0, 2) + '/' + val.substring(2, 4);
+      } else {
+        e.target.value = val;
+      }
+    });
+  }
+});
+
+async function executePayment(e) {
+  e.preventDefault();
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+
+  const submitBtn = document.getElementById('payGateSubmitBtn');
+  const btnText = document.getElementById('payGateBtnText');
+  const msgBox = document.getElementById('payGateMessage');
+  
+  submitBtn.disabled = true;
+  msgBox.style.display = 'none';
+  
+  let paymentDetails = "";
+  if (activePayMethod === 'UPI') {
+    paymentDetails = document.getElementById('payUpiId').value.trim();
+  } else if (activePayMethod === 'CARD') {
+    const cardNum = document.getElementById('payCardNumber').value.trim();
+    paymentDetails = `Card ending in ${cardNum.slice(-4)}`;
+  } else if (activePayMethod === 'BANK') {
+    const bank = document.getElementById('payBankSelect').value;
+    const acc = document.getElementById('payBankAccount').value.trim();
+    paymentDetails = `${bank} Acc: ...${acc.slice(-4)}`;
+  }
+
+  btnText.textContent = "Securing transaction tunnel...";
+  
+  try {
+    const response = await fetch(`${API_URL}/payment/recharge`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        amount: currentRechargeRupees,
+        paymentMethod: activePayMethod,
+        paymentDetails
+      })
+    });
+    const data = await response.json();
+
+    if (data.error) {
+      msgBox.textContent = data.message || 'Payment authentication failed.';
+      msgBox.style.display = 'block';
+      submitBtn.disabled = false;
+      btnText.textContent = "Authorize Safe Transaction";
+    } else {
+      btnText.textContent = "Vault Credit Approved! Syncing...";
+      
+      localStorage.setItem('sn_user_coins', data.newBalance);
+      document.getElementById('exchangeBalance').textContent = data.newBalance.toLocaleString();
+      if(window.setCoinsBalance) window.setCoinsBalance(data.newBalance);
+      
+      alert(`Recharge successful! Unlocked ${currentRechargeCoins.toLocaleString()} Spirit Coins.`);
+      closePayGate();
+      await syncUserSession();
+      
+      submitBtn.disabled = false;
+      btnText.textContent = "Authorize Safe Transaction";
+    }
+  } catch (err) {
+    msgBox.textContent = 'Spirit Pay Gate timed out. Please check your bank status.';
+    msgBox.style.display = 'block';
+    submitBtn.disabled = false;
+    btnText.textContent = "Authorize Safe Transaction";
+  }
+}
+
+function purchaseCustomCoins() {
+  const sc = parseInt(document.getElementById('buyCoinsInp').value) || 0;
+  if(sc < 100) {
+    alert("Minimum purchase is 100 Spirit Coins.");
+    return;
+  }
+  const rate = 0.55; 
+  const price = Math.round(sc * rate);
+  
+  openPayGate(sc, price);
+}
+
+async function withdrawCustomCoins() {
+  const sc = parseInt(document.getElementById('withdrawCoinsInp').value) || 0;
+  const destination = document.getElementById('payoutIdInp').value.trim();
+  const token = localStorage.getItem('sn_auth_token');
+
+  if(!token) {
+    alert("Please sign in to submit payout requests.");
+    window.location.href = 'auth.html';
+    return;
+  }
+  if(sc < 1000) {
+    alert("Minimum withdrawal size is 1,000 Spirit Coins.");
+    return;
+  }
+  if(!destination) {
+    alert("Please enter a valid destination UPI ID or bank account number.");
+    return;
+  }
+
+  const withdrawBtn = document.querySelector('.btn-maroon');
+  withdrawBtn.disabled = true;
+  withdrawBtn.textContent = 'Initiating Secure Vault Connection...';
+
+  try {
+    const response = await fetch(`${API_URL}/payment/withdraw`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        amountCoins: sc,
+        paymentMethod: destination.includes('@') ? 'UPI' : 'BANK_TRANSFER',
+        paymentDetails: destination
+      })
+    });
+    const data = await response.json();
+
+    if (data.error) {
+      alert(data.message || 'Withdrawal failed.');
+      withdrawBtn.disabled = false;
+      withdrawBtn.textContent = 'Submit Payout Request';
+    } else {
+      alert(data.message);
+      document.getElementById('withdrawCoinsInp').value = 1000;
+      document.getElementById('payoutIdInp').value = "";
+      
+      withdrawBtn.disabled = false;
+      withdrawBtn.textContent = 'Submit Payout Request';
+      
+      await syncUserSession();
+    }
+  } catch (err) {
+    alert('Failed to connect to independent payout gateway. Server offline.');
+    withdrawBtn.disabled = false;
+    withdrawBtn.textContent = 'Submit Payout Request';
+  }
+}
+
+async function syncUserSession() {
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+
+  try {
+    const responseMe = await fetch(`${API_URL}/auth/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const dataMe = await responseMe.json();
+    
+    if (dataMe.user) {
+      localStorage.setItem('sn_user', JSON.stringify(dataMe.user));
+      localStorage.setItem('sn_user_coins', dataMe.user.coinsBalance);
+      document.getElementById('exchangeBalance').textContent = dataMe.user.coinsBalance.toLocaleString();
+    }
+
+    const responseTx = await fetch(`${API_URL}/payment/transactions`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const dataTx = await responseTx.json();
+
+    const tbody = document.getElementById('transactionHistoryBody');
+    if(tbody && (dataTx.transactions || dataTx.withdrawals)) {
+      let combined = [];
+      
+      if (dataTx.transactions) {
+        dataTx.transactions.forEach(t => {
+          combined.push({
+            date: new Date(t.createdAt).toISOString().slice(0, 10),
+            type: t.type === 'RECHARGE' ? 'Purchase' : t.type === 'WITHDRAW' ? 'Withdrawal' : t.type,
+            details: t.description,
+            amount: `${t.amount > 0 ? '+' : ''}${t.amount.toLocaleString()} SC`,
+            status: 'Success'
+          });
+        });
+      }
+
+      if (dataTx.withdrawals) {
+        dataTx.withdrawals.forEach(w => {
+          combined.push({
+            date: new Date(w.createdAt).toISOString().slice(0, 10),
+            type: 'Withdrawal Request',
+            details: `${w.paymentMethod}: ${w.paymentDetails}`,
+            amount: `-${w.amountCoins.toLocaleString()} SC (₹${w.amountRupees.toLocaleString()})`,
+            status: w.status
+          });
+        });
+      }
+
+      combined.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      tbody.innerHTML = combined.map(h => {
+        const statusClean = h.status.toLowerCase();
+        const badgeClass = statusClean === 'success' || statusClean === 'approved' ? 'success' : 'pending';
+        const color = h.amount.startsWith('+') ? '#4caf50' : '#f44336';
+        return `
+          <tr>
+            <td>${h.date}</td>
+            <td><strong>${h.type}</strong></td>
+            <td>${h.details}</td>
+            <td style="color:${color}; font-weight:700;">${h.amount}</td>
+            <td><span class="status-badge ${badgeClass}">${h.status}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+  } catch (err) {
+    console.error('Failed to sync session transactions', err);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  calcBuyPrice();
+  calcWithdrawPayout();
+  await syncUserSession();
+});
+</script>
+
+</body>
+</html>

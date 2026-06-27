@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Spirit-Novel</title>
+  <meta name="description" content="Your Spirit-Novel profile — reading progress, writer earnings, spirit coins, communities and rankings.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  <style>
+    :root{
+      --bg:#100c0a;--bg2:#180f0c;--bg3:#1e1410;--bg4:#241812;
+      --maroon:#6a1b29;--maroon2:#892837;--maroon3:#440e17;
+      --gold:#c8a261;--gold2:#a88143;--gold3:#dfc290;--gold4:#eeddb5;
+      --green:#4caf50;--blue:#7b9cff;--purple:#b07fff;
+      --text:#fbf8f3;--muted:#c9bcba;--subtle:#7a6e6b;
+      --border:rgba(200,162,97,0.16);--border2:rgba(200,162,97,0.08);
+      --glow:0 0 24px rgba(200,162,97,0.25);
+      --shadow:0 8px 32px rgba(0,0,0,0.4);
+      --tr:all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    img{display:block;}
+
+    /* ─── TOPBAR ─── */
+    .topbar{height:62px;background:linear-gradient(135deg,#0a0705,#16100d);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem;position:sticky;top:0;z-index:100;}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .logo img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+    .logo-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--text);}
+    .sep{width:1px;height:28px;background:var(--border);margin:0 0.3rem;}
+    .topbar-right{margin-left:auto;display:flex;gap:0.6rem;align-items:center;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-size:0.85rem;font-weight:500;cursor:pointer;border:none;transition:var(--tr);font-family:'Outfit',sans-serif;}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+    .btn-ghost:hover{background:rgba(200,162,97,0.08);color:var(--gold);border-color:rgba(200,162,97,0.3);}
+    .btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a0f0a;font-weight:700;}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:var(--glow);}
+    .btn-maroon{background:linear-gradient(135deg,var(--maroon),var(--maroon2));color:var(--text);}
+    .btn-maroon:hover{transform:translateY(-1px);}
+
+    /* ─── LAYOUT ─── */
+    .page{max-width:1280px;margin:0 auto;padding:2rem 2rem 5rem;}
+
+    /* ─── PROFILE HERO ─── */
+    .profile-hero{background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:1.5rem;position:relative;}
+    .hero-banner{height:140px;background:linear-gradient(135deg,#1a0810,#3a1020,#6a1b29,#a88143,#c8a261);position:relative;overflow:hidden;}
+    .hero-banner::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8a261' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+    .hero-body{padding:0 2rem 1.8rem;display:flex;align-items:flex-end;gap:1.5rem;margin-top:-50px;flex-wrap:wrap;}
+    .avatar-wrap{position:relative;flex-shrink:0;}
+    .avatar{width:100px;height:100px;border-radius:50%;border:4px solid var(--bg2);background:linear-gradient(135deg,var(--maroon3),var(--maroon2));display:flex;align-items:center;justify-content:center;font-size:2.8rem;overflow:hidden;box-shadow:var(--shadow);}
+    .avatar img{width:100%;height:100%;object-fit:cover;}
+    .avatar-level{position:absolute;bottom:2px;right:2px;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),var(--gold));border:2px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#1a0f0a;}
+    .profile-info{flex:1;min-width:200px;padding-top:50px;}
+    .profile-name{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;line-height:1.1;margin-bottom:0.3rem;}
+    .profile-handle{font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;}
+    .profile-badges{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.6rem;}
+    .badge{font-size:0.68rem;padding:2px 10px;border-radius:12px;border:1px solid;}
+    .badge-reader{background:rgba(123,156,255,0.1);border-color:rgba(123,156,255,0.3);color:var(--blue);}
+    .badge-writer{background:rgba(200,162,97,0.1);border-color:rgba(200,162,97,0.3);color:var(--gold);}
+    .badge-mentor{background:rgba(176,127,255,0.1);border-color:rgba(176,127,255,0.3);color:var(--purple);}
+    .profile-bio{font-size:0.82rem;color:var(--muted);line-height:1.5;max-width:500px;}
+    .profile-actions{display:flex;gap:0.5rem;align-items:center;padding-top:50px;margin-left:auto;flex-shrink:0;}
+    .follow-stats{display:flex;gap:1.5rem;padding:0.8rem 2rem;border-top:1px solid var(--border2);background:rgba(0,0,0,0.15);}
+    .fstat{text-align:center;}
+    .fstat .fv{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--text);}
+    .fstat .fl{font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--subtle);}
+
+    /* ─── MODE TOGGLE ─── */
+    .mode-toggle{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:4px;gap:4px;margin-bottom:1.5rem;}
+    .mode-btn{flex:1;padding:9px 1rem;border-radius:8px;font-size:0.88rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:var(--tr);font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;}
+    .mode-btn.active{background:linear-gradient(135deg,var(--maroon),var(--maroon2));color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+    .mode-btn.active.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a0f0a;}
+
+    /* ─── GRID LAYOUTS ─── */
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .section-gap{margin-bottom:1.5rem;}
+
+    /* ─── SECTION HEADER ─── */
+    .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+    .sec-hdr h2{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;}
+    .sec-hdr .eyebrow{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold2);margin-bottom:0.15rem;}
+    .see-all{font-size:0.78rem;color:var(--gold);cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;transition:var(--tr);}
+    .see-all:hover{color:var(--gold3);}
+
+    /* ─── CARDS ─── */
+    .card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.2rem;transition:var(--tr);}
+    .card:hover{border-color:rgba(200,162,97,0.28);}
+
+    /* ─── STAT MINI ─── */
+    .stat-mini{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;transition:var(--tr);}
+    .stat-mini:hover{border-color:rgba(200,162,97,0.28);transform:translateY(-2px);}
+    .stat-mini .lbl{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--subtle);margin-bottom:0.4rem;}
+    .stat-mini .val{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;line-height:1;}
+    .stat-mini .sub{font-size:0.7rem;color:var(--muted);margin-top:0.25rem;}
+    .stat-mini .trend{font-size:0.7rem;color:var(--green);margin-top:0.2rem;}
+    .gold-val{color:var(--gold);}
+    .green-val{color:var(--green);}
+    .blue-val{color:var(--blue);}
+
+    /* ─── BOOK CARD (reading) ─── */
+    .reading-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;gap:1rem;align-items:flex-start;transition:var(--tr);cursor:pointer;}
+    .reading-card:hover{border-color:rgba(200,162,97,0.3);transform:translateY(-2px);}
+    .rc-cover{width:52px;height:72px;border-radius:5px;flex-shrink:0;background:linear-gradient(135deg,var(--maroon3),var(--maroon));display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;border:1px solid var(--border);}
+    .rc-cover img{width:100%;height:100%;object-fit:cover;}
+    .rc-info{flex:1;min-width:0;}
+    .rc-title{font-size:0.88rem;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .rc-author{font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;}
+    .progress-bar{height:4px;background:rgba(200,162,97,0.1);border-radius:2px;overflow:hidden;margin-bottom:0.3rem;}
+    .progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold2),var(--gold));}
+    .rc-progress-label{font-size:0.67rem;color:var(--subtle);}
+    .rc-genre{font-size:0.65rem;padding:2px 7px;background:rgba(106,27,41,0.3);border:1px solid rgba(200,162,97,0.18);border-radius:10px;color:var(--gold3);display:inline-block;margin-bottom:0.4rem;}
+
+    /* ─── HISTORY BOOK ─── */
+    .history-book{display:flex;gap:0.8rem;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border2);cursor:pointer;transition:var(--tr);}
+    .history-book:last-child{border-bottom:none;}
+    .history-book:hover .hb-title{color:var(--gold);}
+    .hb-cover{width:38px;height:52px;border-radius:4px;flex-shrink:0;background:linear-gradient(135deg,var(--maroon3),var(--maroon));display:flex;align-items:center;justify-content:center;font-size:1rem;}
+    .hb-info{flex:1;min-width:0;}
+    .hb-title{font-size:0.82rem;font-weight:500;color:var(--text);transition:var(--tr);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .hb-meta{font-size:0.68rem;color:var(--subtle);margin-top:1px;}
+    .hb-rating{font-size:0.75rem;color:var(--gold);}
+
+    /* ─── COMMUNITY CARD ─── */
+    .community-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem;display:flex;gap:0.8rem;align-items:flex-start;transition:var(--tr);cursor:pointer;}
+    .community-card:hover{border-color:rgba(200,162,97,0.3);transform:translateY(-1px);}
+    .comm-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .comm-name{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+    .comm-meta{font-size:0.7rem;color:var(--muted);}
+    .comm-role{font-size:0.65rem;padding:2px 7px;border-radius:8px;display:inline-block;margin-top:4px;}
+
+    /* ─── SPIRIT COIN PANEL ─── */
+    .coin-panel{background:linear-gradient(135deg,#1a0d08,#2a1610);border:1px solid rgba(200,162,97,0.3);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;}
+    .coin-panel::before{content:'\u26A1';position:absolute;right:1.5rem;top:1rem;font-size:4rem;opacity:0.06;line-height:1;}
+    .coin-balance{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:0.2rem;}
+    .coin-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold2);margin-bottom:1rem;}
+    .coin-breakdown{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6rem;margin-bottom:1.2rem;}
+    .coin-source{background:rgba(0,0,0,0.2);border-radius:8px;padding:0.6rem 0.8rem;}
+    .coin-source .cv{font-size:1.1rem;font-weight:700;color:var(--text);font-family:'Cormorant Garamond',serif;}
+    .coin-source .cl{font-size:0.62rem;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;margin-top:1px;}
+    .exchange-row{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;}
+    .exchange-input{background:rgba(255,255,255,0.06);border:1px solid rgba(200,162,97,0.25);border-radius:8px;padding:8px 12px;color:var(--text);font-size:0.9rem;font-family:'Outfit',sans-serif;outline:none;width:140px;transition:var(--tr);}
+    .exchange-input:focus{border-color:rgba(200,162,97,0.5);}
+    .exchange-arrow{color:var(--gold);font-size:1.2rem;}
+    .exchange-result{font-size:1rem;font-weight:600;color:var(--green);font-family:'Cormorant Garamond',serif;}
+    .exchange-rate-note{font-size:0.7rem;color:var(--subtle);margin-top:0.5rem;}
+
+    /* ─── EXCHANGE RATES TABLE ─── */
+    .rate-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+    .rate-table th{font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--subtle);padding:0.5rem 0.8rem;text-align:left;border-bottom:1px solid var(--border);}
+    .rate-table td{padding:0.65rem 0.8rem;border-bottom:1px solid var(--border2);color:var(--muted);vertical-align:middle;}
+    .rate-table tr:last-child td{border-bottom:none;}
+    .rate-table tr:hover td{background:rgba(200,162,97,0.04);}
+    .rate-table .highlight td{color:var(--text);}
+    .rate-table .gold-text{color:var(--gold);font-weight:600;}
+    .rate-table .green-text{color:var(--green);}
+    .level-pill{display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;padding:2px 8px;border-radius:10px;}
+
+    /* ─── BOOK RANKING ─── */
+    .rank-book{display:flex;align-items:center;gap:0.8rem;padding:0.7rem 0;border-bottom:1px solid var(--border2);transition:var(--tr);cursor:pointer;}
+    .rank-book:last-child{border-bottom:none;}
+    .rank-book:hover{background:rgba(200,162,97,0.03);}
+    .rank-num{width:30px;font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--subtle);flex-shrink:0;text-align:center;}
+    .rank-num.top{color:var(--gold);}
+    .rank-cover{width:40px;height:54px;border-radius:4px;flex-shrink:0;background:linear-gradient(135deg,var(--maroon3),var(--maroon));display:flex;align-items:center;justify-content:center;font-size:1rem;}
+    .rank-info{flex:1;min-width:0;}
+    .rank-title{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .rank-meta{font-size:0.68rem;color:var(--subtle);}
+    .rank-stat{text-align:right;flex-shrink:0;}
+    .rank-stat .rv{font-size:0.88rem;font-weight:600;color:var(--text);font-family:'Cormorant Garamond',serif;}
+    .rank-stat .rl{font-size:0.62rem;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;}
+    .rank-badge{font-size:0.65rem;padding:2px 7px;background:rgba(200,162,97,0.08);border:1px solid rgba(200,162,97,0.2);border-radius:8px;color:var(--gold);white-space:nowrap;}
+
+    /* ─── TEACHING ─── */
+    .teach-item{display:flex;gap:0.8rem;align-items:flex-start;padding:0.8rem 0;border-bottom:1px solid var(--border2);}
+    .teach-item:last-child{border-bottom:none;}
+    .teach-icon{width:40px;height:40px;border-radius:10px;background:rgba(176,127,255,0.1);border:1px solid rgba(176,127,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+    .teach-text{flex:1;}
+    .teach-title{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+    .teach-desc{font-size:0.73rem;color:var(--muted);line-height:1.4;}
+    .teach-badge{font-size:0.65rem;padding:2px 7px;background:rgba(176,127,255,0.1);border:1px solid rgba(176,127,255,0.2);border-radius:8px;color:var(--purple);margin-top:4px;display:inline-block;}
+
+    /* ─── PROGRESS RING ─── */
+    .progress-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:0.6rem;}
+    .ring-svg{transform:rotate(-90deg);}
+    .ring-bg{fill:none;stroke:rgba(200,162,97,0.1);stroke-width:6;}
+    .ring-fg{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+    .ring-label{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;}
+    .ring-sub{font-size:0.7rem;color:var(--muted);text-align:center;max-width:100px;}
+
+    /* ─── MODAL ─── */
+    .moverlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+    .moverlay.open{opacity:1;pointer-events:all;}
+    .modal{background:#1e1612;border:1px solid var(--border);border-radius:18px;padding:1.8rem;width:90%;max-width:500px;transform:scale(0.95);transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);max-height:88vh;overflow-y:auto;}
+    .moverlay.open .modal{transform:scale(1);}
+    .modal::-webkit-scrollbar{width:4px;}
+    .modal::-webkit-scrollbar-thumb{background:rgba(200,162,97,0.18);border-radius:2px;}
+    .modal h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--text);margin-bottom:0.3rem;}
+    .modal p{font-size:0.82rem;color:var(--muted);margin-bottom:1.3rem;}
+    .mf{margin-bottom:0.9rem;}
+    .mf label{display:block;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold2);margin-bottom:0.35rem;font-weight:600;}
+    .mf input,.mf select{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-size:0.88rem;font-family:'Outfit',sans-serif;outline:none;transition:var(--tr);}
+    .mf input:focus,.mf select:focus{border-color:rgba(200,162,97,0.4);}
+    .mf select option{background:#1e1410;}
+    .mactions{display:flex;gap:0.7rem;justify-content:flex-end;margin-top:1.3rem;}
+    .confirm-box{background:rgba(76,175,80,0.07);border:1px solid rgba(76,175,80,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;}
+    .confirm-box .cv{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--green);}
+    .confirm-box .cl{font-size:0.75rem;color:var(--muted);}
+
+    /* ─── TOAST ─── */
+    .toast{position:fixed;bottom:2rem;right:2rem;background:#1e1612;border:1px solid rgba(200,162,97,0.3);border-radius:10px;padding:0.8rem 1.2rem;color:var(--text);font-size:0.85rem;display:flex;align-items:center;gap:0.6rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;box-shadow:var(--shadow);}
+    .toast.show{transform:translateY(0);opacity:1;}
+
+    /* ─── DIVIDER ─── */
+    .divider{height:1px;background:var(--border2);margin:1.2rem 0;}
+
+    /* ─── COIN ICON ─── */
+    .sc-icon{display:inline-flex;align-items:center;gap:4px;color:var(--gold);}
+    .sc-icon::before{content:'\u26A1';font-size:0.9em;}
+
+    /* ─── LEVEL METER ─── */
+    .level-meter{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.2rem;}
+    .lm-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;}
+    .lm-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;}
+    .lm-next{font-size:0.75rem;color:var(--muted);}
+    .lm-bar{height:8px;background:rgba(200,162,97,0.08);border-radius:4px;overflow:hidden;margin-bottom:0.5rem;}
+    .lm-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width 1s cubic-bezier(0.16,1,0.3,1);}
+    .lm-req{display:flex;gap:1rem;flex-wrap:wrap;}
+    .lm-req-item{font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:4px;}
+    .lm-req-item .tick{color:var(--green);}
+    .lm-req-item .cross{color:#e88;}
+
+    @media(max-width:1024px){.grid-4{grid-template-columns:1fr 1fr;}}
+    @media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr;}.grid-4{grid-template-columns:1fr 1fr;}.profile-actions{padding-top:0;}}
+    @media(max-width:500px){.grid-4{grid-template-columns:1fr;}.follow-stats{gap:1rem;}.coin-breakdown{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar" id="topbarHeader">
+  <a href="Index.html" class="logo">
+    <img src="logomy.png" alt="Spirit-Novel">
+    <span class="logo-name">Spirit-Novel</span>
+  </a>
+  <div class="sep"></div>
+  <span style="font-size:0.85rem;color:var(--muted);">&#128100; Profile</span>
+  <div class="topbar-right" id="topbarRight">
+    <a href="Index.html" class="btn btn-ghost">&#127968; Home</a>
+    <a href="writer-hall.html" class="btn btn-ghost">&#9999;&#65039; Writer Hall</a>
+    <button class="btn btn-gold" onclick="openExchange()">&#9889; Exchange Coins</button>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ADMIN VERIFICATION PANEL (Visible only to ADMIN role / Head Master) -->
+  <div id="adminVerificationConsole" class="card section-gap" style="display:none; border-color: #ff8b9e; background: rgba(106, 27, 41, 0.08);">
+    <div class="sec-hdr" style="margin-bottom: 0.5rem;">
+      <div>
+        <div class="eyebrow" style="color: #ff8b9e;">Head Master Controls</div>
+        <h2 style="color: var(--text);">Pending Writer Verifications</h2>
+      </div>
+      <span class="badge" style="background: rgba(255, 139, 158, 0.2); border-color: rgba(255, 139, 158, 0.4); color: #ff8b9e; font-weight:700;" id="pendingAdminCount">0 Pending</span>
+    </div>
+    <p style="font-size:0.8rem; color: var(--muted); margin-bottom: 1rem;">
+      As the Academy Manager, review and approve identity registrations to promote Readers to Writers.
+    </p>
+    <div id="adminPendingList" style="display: flex; flex-direction: column; gap: 0.8rem;">
+      <!-- Loaded dynamically -->
+    </div>
+  </div>
+
+  <!-- ADMIN WITHDRAWALS PANEL (Visible only to ADMIN role / Head Master) -->
+  <div id="adminWithdrawalsConsole" class="card section-gap" style="display:none; border-color: var(--gold); background: rgba(200, 162, 97, 0.05); margin-top: 1.5rem;">
+    <div class="sec-hdr" style="margin-bottom: 0.5rem;">
+      <div>
+        <div class="eyebrow" style="color: var(--gold);">Head Master Vault Audit</div>
+        <h2 style="color: var(--text);">Pending Writer Payouts</h2>
+      </div>
+      <span class="badge" style="background: rgba(200, 162, 97, 0.15); border-color: var(--gold); color: var(--gold3); font-weight:700;" id="pendingWithdrawCount">0 Pending</span>
+    </div>
+    <p style="font-size:0.8rem; color: var(--muted); margin-bottom: 1rem;">
+      Approve or reject creator payout withdrawal requests. Rejected payouts will automatically refund locked coins to the writer's wallet.
+    </p>
+    <div id="adminWithdrawList" style="display: flex; flex-direction: column; gap: 0.8rem;">
+      <!-- Loaded dynamically -->
+    </div>
+  </div>
+
+  <!-- ADMIN REPORTS PANEL (Visible only to ADMIN role / Head Master) -->
+  <div id="adminReportsConsole" class="card section-gap" style="display:none; border-color: #7b9cff; background: rgba(123, 156, 255, 0.05); margin-top: 1.5rem;">
+    <div class="sec-hdr" style="margin-bottom: 0.5rem;">
+      <div>
+        <div class="eyebrow" style="color: #7b9cff;">Head Master Ledgers</div>
+        <h2 style="color: var(--text);">Export Platform Excel Reports</h2>
+      </div>
+    </div>
+    <p style="font-size:0.8rem; color: var(--muted); margin-bottom: 1.2rem;">
+      Compile and download real-world platform spreadsheets including registered writers, verified document numbers, and Sect memberships.
+    </p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <button class="btn btn-gold" onclick="downloadWritersReport()" style="background: #1d72b8; border-color: #2b8cc4; color: #fff; display: inline-flex; align-items: center; gap: 8px;">📊 Download Writers Report (.xlsx)</button>
+      <button class="btn btn-gold" onclick="downloadGuildsReport()" style="background: #1d72b8; border-color: #2b8cc4; color: #fff; display: inline-flex; align-items: center; gap: 8px;">🏰 Download Sects/Guilds Report (.xlsx)</button>
+    </div>
+  </div>
+
+  <!-- PROFILE HERO -->
+  <div class="profile-hero section-gap">
+    <div class="hero-banner"></div>
+    <div class="hero-body">
+      <div class="avatar-wrap">
+        <div class="avatar">&#128084;</div>
+        <div class="avatar-level" id="avatarLevel">1</div>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Loading Profile...</div>
+        <div class="profile-handle" id="profileHandle">@loading &bull; Spirit Account</div>
+        <div class="profile-badges" id="profileBadges">
+          <span class="badge badge-reader">&#128214; Scholar Reader</span>
+        </div>
+        <div class="profile-bio" id="profileBio">Initializing your magical profile page...</div>
+      </div>
+      <div class="profile-actions" style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-ghost" onclick="editProfile()">&#9998; Edit Bio</button>
+        <button class="btn btn-ghost" onclick="deleteAccount()" style="border-color: rgba(232, 136, 136, 0.4); color: #ff8888; background: rgba(232, 136, 136, 0.04);">❌ Delete Account</button>
+      </div>
+    </div>
+    <div class="follow-stats">
+      <div class="fstat"><div class="fv">0</div><div class="fl">Followers</div></div>
+      <div class="fstat"><div class="fv">0</div><div class="fl">Following</div></div>
+      <div class="fstat"><div class="fv">0</div><div class="fl">Books</div></div>
+      <div class="fstat"><div class="fv">0</div><div class="fl">Chapters</div></div>
+      <div class="fstat"><div class="fv">0</div><div class="fl">Total Views</div></div>
+      <div class="fstat"><div class="fv">0</div><div class="fl">Communities</div></div>
+      <div class="fstat"><div class="fv" style="color:var(--gold)" id="heroCoinsDisplay">&#9889; 0</div><div class="fl">Spirit Coins</div></div>
+    </div>
+  </div>
+
+  <!-- MODE TOGGLE -->
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="readerModeBtn" onclick="switchMode('reader')">&#128214; Reader View</button>
+    <button class="mode-btn gold" id="writerModeBtn" onclick="switchMode('writer')">&#9999;&#65039; Writer View</button>
+  </div>
+
+  <!-- ═══════════ READER VIEW ═══════════ -->
+  <div id="readerView">
+
+    <!-- Stats row -->
+    <div class="grid-4 section-gap">
+      <div class="stat-mini"><div class="lbl">Spirit Coins</div><div class="val gold-val" id="statsCoinsDisplay">&#9889; 0</div><div class="sub">&#8377;0 equivalent</div></div>
+      <div class="stat-mini"><div class="lbl">Books Read</div><div class="val">14</div><div class="sub">3 this month</div></div>
+      <div class="stat-mini"><div class="lbl">Reading Streak</div><div class="val green-val">&#128293; 5</div><div class="sub">days in a row</div></div>
+      <div class="stat-mini"><div class="lbl">Chapters Read</div><div class="val blue-val">42</div><div class="trend">&#8593; +8 this week</div></div>
+    </div>
+
+    <!-- Level Meter -->
+    <div class="level-meter section-gap">
+      <div class="lm-top">
+        <div>
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold2);margin-bottom:0.2rem;">Reader Level</div>
+          <div class="lm-name">&#128081; Scholar Reader <span style="font-size:0.75rem;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:400;">(Level 1 of 5)</span></div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.75rem;color:var(--muted);">Next: <strong style="color:var(--gold)">Apprentice Reader</strong></div>
+          <div style="font-size:0.7rem;color:var(--subtle);">58 more chapters to unlock</div>
+        </div>
+      </div>
+      <div class="lm-bar"><div class="lm-fill" style="width:42%"></div></div>
+      <div class="lm-req">
+        <div class="lm-req-item"><span class="tick">&#10003;</span> 42 / 100 chapters read</div>
+        <div class="lm-req-item"><span class="tick">&#10003;</span> 5-day streak achieved</div>
+        <div class="lm-req-item"><span class="cross">&#10005;</span> 5 novels completed (1/5)</div>
+        <div class="lm-req-item"><span class="cross">&#10005;</span> Join 1 more community</div>
+      </div>
+    </div>
+
+    <div class="grid-2 section-gap">
+      <!-- Currently Reading -->
+      <div>
+        <div class="sec-hdr"><div><div class="eyebrow">In Progress</div><h2>Currently Reading</h2></div><button class="see-all">See all &#8250;</button></div>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;" id="currentlyReadingList"></div>
+      </div>
+
+      <!-- Reading History -->
+      <div class="card">
+        <div class="sec-hdr"><div><div class="eyebrow">Archive</div><h2>Reading History</h2></div><button class="see-all">See all &#8250;</button></div>
+        <div id="readingHistoryList"></div>
+      </div>
+    </div>
+
+    <!-- Spirit Coin Rates for Readers -->
+    <div class="card section-gap">
+      <div class="sec-hdr"><div><div class="eyebrow">Economy</div><h2>&#9889; Spirit Coin Purchase Rates by Reader Level</h2></div></div>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;">Higher reader levels unlock better coin rates — same money, more coins. Earned coins can be spent on premium chapters or gifted to your favourite writers.</p>
+      <table class="rate-table" id="readerRateTable"></table>
+    </div>
+
+    <!-- Communities -->
+    <div class="section-gap">
+      <div class="sec-hdr"><div><div class="eyebrow">Social</div><h2>&#127968; Communities</h2></div><button class="see-all">Browse all &#8250;</button></div>
+      <div class="grid-3" id="communitiesGrid"></div>
+    </div>
+
+  </div><!-- #readerView -->
+
+
+  <!-- ═══════════ WRITER VIEW ═══════════ -->
+  <div id="writerView" style="display:none;">
+
+    <!-- 1. UNREGISTERED WRITER FORM (Visible to READER status) -->
+    <div id="writerConsoleRegister" style="display:none; max-width:640px; margin: 0 auto;">
+      <div class="card" style="padding: 2.5rem; text-align: center; border-color: var(--gold);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">✍️</div>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-size: 2rem; margin-bottom: 0.5rem; color: var(--gold-light);">Register a Writer Account</h2>
+        <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 2.2rem; line-height: 1.6;">
+          Join the ranks of Academy Creators! To publish stories, receive Spirit Coins gifts from readers, and unlock revenue sharing, you must complete your identity registration.
+        </p>
+        
+        <div id="verifyAlertBox" class="alert-box" style="display:none; text-align:left; margin-bottom:1.5rem; padding: 12px 16px; border-radius: 8px;"></div>
+
+        <form id="writerRegisterForm" onsubmit="submitWriterApplication(event)" style="text-align: left;">
+          <div class="mf" style="margin-bottom: 1.2rem;">
+            <label style="color: var(--gold); font-size: 0.8rem; letter-spacing: 1.5px; font-weight: 600;">Select Identity Document</label>
+            <select id="regIdType" onchange="handleIdTypeChange()" required style="padding: 12px 15px; width: 100%; background: rgba(0,0,0,0.35); border: 1px solid var(--border); border-radius: 8px; color: var(--text); outline: none;">
+              <option value="AADHAR">Aadhar Card (12 digits: XXXX-XXXX-XXXX)</option>
+              <option value="PAN">PAN Card (10 chars: AAAAA9999A)</option>
+              <option value="VOTER_ID">Voter ID Card (10 chars: AAA1234567)</option>
+            </select>
+          </div>
+          <div class="mf" style="margin-bottom: 1.2rem;">
+            <label id="idNumberLabel" style="color: var(--gold); font-size: 0.8rem; letter-spacing: 1.5px; font-weight: 600;">Document Number</label>
+            <input type="text" id="regIdCard" placeholder="e.g. 1234-5678-9012" required style="padding: 12px 15px;" maxlength="14">
+          </div>
+          <div class="mf" style="margin-bottom: 1.8rem;">
+            <label style="color: var(--gold); font-size: 0.8rem; letter-spacing: 1.5px; font-weight: 600; display: block; margin-bottom: 6px;">Upload ID Photo</label>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+              <input type="file" id="regIdPhotoInput" accept="image/*" required onchange="handleIdPhotoUpload(this)" style="display: none;">
+              <button type="button" class="btn btn-ghost" onclick="document.getElementById('regIdPhotoInput').click()" style="padding: 10px 16px; font-size: 0.82rem;">
+                Choose Image...
+              </button>
+              <span id="photoFileName" style="font-size: 0.78rem; color: var(--muted);">No photo selected</span>
+            </div>
+            <div id="idPhotoPreviewWrap" style="display: none; margin-top: 1rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; max-width: 200px; max-height: 120px;">
+              <img id="idPhotoPreviewImg" src="" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 14px; font-weight: 700; font-size: 0.95rem;">
+            Submit Identity Verification Contract
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 2. PENDING VERIFICATION STATE -->
+    <div id="writerConsolePending" style="display:none; max-width:640px; margin: 0 auto; text-align: center;">
+      <div class="card" style="padding: 3rem 2rem; border-color: var(--gold);">
+        <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: pulse 2s infinite;">⏳</div>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--gold-light);">Verification Pending</h2>
+        <p style="font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem;">
+          Your Writer Identity Card registration has been received and is currently under review by the Head Master (Manager).
+        </p>
+        <div style="background: rgba(200, 162, 97, 0.05); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; font-size: 0.85rem; color: var(--gold); display: flex; flex-direction: column; gap: 0.8rem; align-items: center; max-width: 400px; margin: 0 auto; text-align: left;">
+          <div>Document Type: <span id="pendingIdType" style="font-weight: 600; color: var(--text);"></span></div>
+          <div>Document Number: <span id="pendingIdLabel" style="font-weight: 600; color: var(--text);"></span></div>
+          <div style="margin-top: 4px; font-weight: 600;">Uploaded ID Image:</div>
+          <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; width: 100%; max-height: 180px; background: rgba(0,0,0,0.2);">
+            <img id="pendingIdPhoto" src="" style="width: 100%; height: 100%; object-fit: contain; display: block;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. NORMAL WRITER CONSOLE (APPROVED WRITER) -->
+    <div id="writerConsoleApproved" style="display:none;">
+      <!-- Stats row -->
+      <div class="grid-4 section-gap">
+        <div class="stat-mini"><div class="lbl">Total Earnings</div><div class="val gold-val">&#8377;1.82L</div><div class="sub">30% revenue share</div><div class="trend">&#8593; &#8377;14,280 this month</div></div>
+        <div class="stat-mini"><div class="lbl">Spirit Coins Earned</div><div class="val gold-val" id="writerCoinsEarned">&#9889; 48,200</div><div class="sub">From gifts &amp; bonuses</div></div>
+        <div class="stat-mini"><div class="lbl">Writing Streak</div><div class="val green-val">&#9997;&#65039; 42</div><div class="sub">consecutive days</div></div>
+        <div class="stat-mini"><div class="lbl">Total Words</div><div class="val blue-val">1.24M</div><div class="trend">&#8593; +12,400 this week</div></div>
+      </div>
+
+      <!-- Writer Level Meter -->
+      <div class="level-meter section-gap">
+        <div class="lm-top">
+          <div>
+            <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold2);margin-bottom:0.2rem;">Writer Level</div>
+            <div class="lm-name">&#128081; Expert Writer <span style="font-size:0.75rem;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:400;">(Level 5 of 9 &bull; 30% Revenue Share)</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.75rem;color:var(--muted);">Next: <strong style="color:var(--gold)">Master Writer</strong> &bull; 35% Share</div>
+            <div style="font-size:0.7rem;color:var(--subtle);">Need 10M more views</div>
+          </div>
+        </div>
+        <div class="lm-bar"><div class="lm-fill" style="width:50%"></div></div>
+        <div class="lm-req">
+          <div class="lm-req-item"><span class="tick">&#10003;</span> 8.7M / 15M total views</div>
+          <div class="lm-req-item"><span class="cross">&#10005;</span> 250K / 150K likes &#10003;</div>
+          <div class="lm-req-item"><span class="tick">&#10003;</span> 24.6K / 30K followers</div>
+          <div class="lm-req-item"><span class="cross">&#10005;</span> Mentored 3 writers (1/3)</div>
+        </div>
+      </div>
+
+      <div class="grid-2 section-gap">
+        <!-- Spirit Coin Wallet -->
+        <div>
+          <div class="sec-hdr"><div><div class="eyebrow">Wallet</div><h2>Spirit Coin Earnings</h2></div></div>
+          <div class="coin-panel">
+            <div class="coin-label">Available Spirit Coins</div>
+            <div class="coin-balance" id="walletCoinsDisplay">&#9889; 48,200</div>
+            <div class="coin-breakdown">
+              <div class="coin-source"><div class="cv">32,400</div><div class="cl">From Reader Gifts</div></div>
+              <div class="coin-source"><div class="cv">12,800</div><div class="cl">Chapter Bonuses</div></div>
+              <div class="coin-source"><div class="cv">3,000</div><div class="cl">Community Events</div></div>
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.8rem;">&#9889; 1,000 Spirit Coins = <strong style="color:var(--green);">&#8377;175</strong> &nbsp;&bull;&nbsp; Min. withdrawal: 5,000 SC</div>
+            <div class="exchange-row">
+              <input type="number" class="exchange-input" id="coinInput" placeholder="Enter SC amount" min="5000" step="1000" oninput="calcExchange(this.value)" value="10000">
+              <span class="exchange-arrow">&#8594;</span>
+              <span class="exchange-result" id="exchangeResult">&#8377;1,750</span>
+              <button class="btn btn-gold" onclick="openExchange()">Withdraw &#8594;</button>
+            </div>
+            <div class="exchange-rate-note" id="exchangeNote">Rate: 1,000 SC = &#8377;175 (Expert Writer) &bull; Min 5,000 SC &bull; Processing 3-5 days</div>
+          </div>
+        </div>
+
+        <!-- Writer coin rate table -->
+        <div class="card">
+          <div class="sec-hdr"><div><div class="eyebrow">Rate Card</div><h2>&#9889; Writer Cash-Out Rates</h2></div></div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.8rem;">Higher writer levels earn bonus multipliers on coin cash-out. Revenue share &amp; coin rates both increase as you level up.</p>
+          <table class="rate-table" id="writerRateTable"></table>
+        </div>
+      </div>
+
+      <!-- Best Performing Books -->
+      <div class="card section-gap">
+        <div class="sec-hdr"><div><div class="eyebrow">Rankings</div><h2>&#127942; Best Performing Books</h2></div><a href="writer-hall.html" class="see-all">All Books &#8250;</a></div>
+        <div id="rankingList"></div>
+      </div>
+
+      <!-- Teaching Activities + Communities -->
+      <div class="grid-2 section-gap">
+        <div class="card">
+          <div class="sec-hdr"><div><div class="eyebrow">Mentor</div><h2>&#127979; Teaching Activities</h2></div></div>
+          <div id="teachingList"></div>
+          <div class="divider"></div>
+          <div style="background:rgba(176,127,255,0.06);border:1px solid rgba(176,127,255,0.18);border-radius:10px;padding:0.9rem;margin-top:0.5rem;">
+            <div style="font-size:0.78rem;color:var(--purple);font-weight:600;margin-bottom:0.3rem;">&#127775; Mentor Status</div>
+            <div style="font-size:0.75rem;color:var(--muted);line-height:1.5;">You have mentored <strong style="color:var(--text)">1 of 3</strong> required aspiring writers to qualify for <strong style="color:var(--gold)">Master Writer</strong> level. Each mentored writer must publish at least 10 chapters.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-hdr"><div><div class="eyebrow">Social</div><h2>&#127968; Writer Communities</h2></div><button class="see-all">Browse &#8250;</button></div>
+          <div id="writerCommunitiesGrid"></div>
+        </div>
+      </div>
+    </div><!-- #writerConsoleApproved -->
+
+  </div><!-- #writerView -->
+
+</div><!-- .page -->
+
+<!-- EXCHANGE MODAL -->
+<div class="moverlay" id="exchangeModal">
+  <div class="modal">
+    <h3>&#9889; Exchange Spirit Coins</h3>
+    <p>Convert your earned Spirit Coins to real-world currency. Processed via UPI / Bank Transfer within 3–5 working days.</p>
+    <div class="mf">
+      <label>Spirit Coins to Exchange</label>
+      <input type="number" id="modalCoinInput" min="5000" step="1000" value="10000" oninput="updateModalCalc()">
+    </div>
+    <div class="confirm-box" id="confirmBox">
+      <div class="cl">You will receive</div>
+      <div class="cv" id="modalReceiveAmt">&#8377;1,750</div>
+      <div class="cl" style="margin-top:4px;">After platform processing (Expert Writer rate: 1,000 SC = &#8377;175)</div>
+    </div>
+    <div class="mf">
+      <label>Payout Method</label>
+      <select id="payoutMethod">
+        <option>UPI (Instant after approval)</option>
+        <option>Bank Transfer (IMPS)</option>
+        <option>Paytm Wallet</option>
+        <option>PhonePe</option>
+      </select>
+    </div>
+    <div class="mf">
+      <label>UPI ID / Account Number</label>
+      <input type="text" id="payoutId" placeholder="yourname@upi">
+    </div>
+    <div style="font-size:0.72rem;color:var(--subtle);margin-top:0.3rem;line-height:1.5;">&#9889; Minimum withdrawal: 5,000 SC. TDS deducted as per Indian Income Tax rules (10% above &#8377;10,000). Spirit Coins are non-refundable once exchanged.</div>
+    <div class="mactions">
+      <button class="btn btn-ghost" onclick="closeExchange()">Cancel</button>
+      <button class="btn btn-gold" onclick="confirmExchange()">&#10003; Confirm Withdrawal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="tIco"></span><span id="tMsg"></span></div>
+
+<script>
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000/api'
+  : 'https://api.noverspirit.qd.je/api';
+let currentUser = null;
+
+const READER_LEVELS = [
+  {level:1, name:'Beginner',     icon:'&#128218;', scPer75:100, ratePerSC:0.750, color:'#c9bcba'},
+  {level:2, name:'Apprentice',   icon:'&#128214;', scPer75:115, ratePerSC:0.652, color:'#7b9cff'},
+  {level:3, name:'Scholar',      icon:'&#128081;', scPer75:135, ratePerSC:0.556, color:'#4caf50'},
+  {level:4, name:'Sage',         icon:'&#127775;', scPer75:160, ratePerSC:0.469, color:'#c8a261'},
+  {level:5, name:'Spirit Master',icon:'&#9889;',   scPer75:200, ratePerSC:0.375, color:'#b07fff'},
+];
+
+const WRITER_LEVELS = [
+  {level:1, name:'Student',      share:10,  scPer1000:175, icon:'&#128218;'},
+  {level:2, name:'Novice',       share:15,  scPer1000:175, icon:'&#128214;'},
+  {level:3, name:'Apprentice',   share:20,  scPer1000:185, icon:'&#127775;'},
+  {level:4, name:'Journeyman',   share:25,  scPer1000:185, icon:'&#128081;'},
+  {level:5, name:'Expert',       share:30,  scPer1000:200, icon:'&#9733;'},
+  {level:6, name:'Master',       share:35,  scPer1000:200, icon:'&#9884;&#65039;'},
+  {level:7, name:'Grandmaster',  share:40,  scPer1000:220, icon:'&#128081;'},
+  {level:8, name:'Ancestral',    share:45,  scPer1000:220, icon:'&#127942;'},
+  {level:9, name:'Saint',        share:50,  scPer1000:240, icon:'&#9889;'},
+];
+
+const HISTORY = [
+  {title:'Path of the Eternal Dao',author:'DaoMaster_X',cover:'&#9884;&#65039;',rating:5,date:'Jun 2026',chapters:289},
+  {title:'City of Ten Thousand Stars',author:'Nebula_Writes',cover:'&#11088;',rating:4,date:'May 2026',chapters:156},
+  {title:'The Dragon Emperor\'s Heir',author:'LongWang',cover:'&#128009;',rating:5,date:'Apr 2026',chapters:422},
+  {title:'Crimson Moon Sect',author:'SilverFox',cover:'&#127769;',rating:4,date:'Apr 2026',chapters:78},
+  {title:'Sword Saint Chronicles',author:'EdgeWalker',cover:'&#9876;&#65039;',rating:5,date:'Mar 2026',chapters:312},
+];
+
+const COMMUNITIES = [
+  {name:'Cultivation Realm',icon:'&#9733;',bg:'rgba(200,162,97,0.1)',members:'12.4K',posts:'3.2K',role:'Member',roleColor:'var(--muted)'},
+  {name:'Fantasy Writers Guild',icon:'&#9999;&#65039;',bg:'rgba(123,156,255,0.1)',members:'8.1K',posts:'1.8K',role:'Moderator',roleColor:'var(--blue)'},
+  {name:'Martial Arts Stories',icon:'&#128081;',bg:'rgba(106,27,41,0.3)',members:'5.6K',posts:'920',role:'Member',roleColor:'var(--muted)'},
+  {name:'Wuxia & Xianxia Hub',icon:'&#9884;&#65039;',bg:'rgba(176,127,255,0.1)',members:'22K',posts:'6.1K',role:'Member',roleColor:'var(--muted)'},
+  {name:'Aspiring Writers',icon:'&#127775;',bg:'rgba(76,175,80,0.1)',members:'3.2K',posts:'560',role:'Mentor',roleColor:'var(--purple)'},
+  {name:'Spirit Coin Traders',icon:'&#9889;',bg:'rgba(200,162,97,0.08)',members:'1.8K',posts:'290',role:'Member',roleColor:'var(--muted)'},
+];
+
+const RANKINGS = [
+  {rank:1,title:'The Celestial Ascension',cover:'&#128218;',genre:'Cultivation',views:'4.2M',earnings:'&#8377;38.4K',weeklyRank:'#3 Cultivation',change:'up'},
+  {rank:2,title:'Iron Fist of the Nine Heavens',cover:'&#128081;',genre:'Martial Arts',views:'2.9M',earnings:'&#8377;26.6K',weeklyRank:'#8 Martial Arts',change:'up'},
+  {rank:3,title:'Galaxy Romance: Two Souls',cover:'&#128153;',genre:'Romance',views:'7.2M',earnings:'&#8377;66K',weeklyRank:'#1 Romance',change:'same'},
+  {rank:4,title:'The Last Spirit Merchant',cover:'&#129514;',genre:'Fantasy',views:'980K',earnings:'&#8377;8.9K',weeklyRank:'#22 Fantasy',change:'down'},
+];
+
+const TEACHINGS = [
+  {title:'Workshop: Writing Fight Scenes',date:'Jun 20, 2026',students:24,icon:'&#9876;&#65039;',badge:'Completed'},
+  {title:'Mentoring: NoviceWriter_42',date:'Ongoing',students:1,icon:'&#127775;',badge:'Active'},
+  {title:'Live Q&A: Cultivation World-Building',date:'Jun 15, 2026',students:180,icon:'&#9884;&#65039;',badge:'Completed'},
+  {title:'Guest Lecture: Revenue Share Tips',date:'May 28, 2026',students:340,icon:'&#128176;',badge:'Completed'},
+];
+
+/* ── SESSION CHECK & PROFILE LOADING ── */
+async function loadUserProfile() {
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) {
+    window.location.href = 'auth.html';
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/auth/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+
+    if (data.error) {
+      // Token is invalid/expired
+      logout();
+      return;
+    }
+
+    currentUser = data.user;
+    
+    // Update local storage representation
+    localStorage.setItem('sn_user', JSON.stringify(currentUser));
+    localStorage.setItem('sn_user_coins', currentUser.coinsBalance);
+
+    renderHeaderControls();
+    updateProfileUI();
+    
+    if (currentUser.role === 'ADMIN') {
+      await loadPendingVerifications();
+      await loadPendingWithdrawals();
+      document.getElementById('adminReportsConsole').style.display = 'block';
+    }
+  } catch (err) {
+    showToast('&#9888;', 'Could not contact backend. Running in mock offline mode.');
+    loadOfflineMockUser();
+  }
+}
+
+function loadOfflineMockUser() {
+  currentUser = {
+    username: 'Offline_Daoist',
+    email: 'offline@spirit.com',
+    role: 'READER',
+    coinsBalance: 48200,
+    verificationStatus: 'NONE',
+    bio: 'You are currently browsing offline. Please check if your Express backend is running on port 5000!'
+  };
+  updateProfileUI();
+}
+
+function renderHeaderControls() {
+  // Update Topbar action list to replace Exchange Coins with dynamic log out
+  const topRight = document.getElementById('topbarRight');
+  if (topRight) {
+    topRight.innerHTML = `
+      <a href="Index.html" class="btn btn-ghost">&#127968; Home</a>
+      <a href="writer-hall.html" class="btn btn-ghost">&#9999;&#65039; Writer Hall</a>
+      <button class="btn btn-maroon" onclick="logout()">&#128682; Sign Out</button>
+    `;
+  }
+}
+
+function logout() {
+  localStorage.removeItem('sn_auth_token');
+  localStorage.removeItem('sn_user');
+  localStorage.removeItem('sn_user_coins');
+  window.location.href = 'auth.html';
+}
+
+function updateProfileUI() {
+  // Update text values
+  document.getElementById('profileName').textContent = currentUser.username;
+  document.getElementById('profileHandle').innerHTML = `@${currentUser.username} &bull; Spirit Account`;
+  document.getElementById('profileBio').textContent = currentUser.bio || 'This user is compiling their legacy scriptures in the Spirit-Novel Academy.';
+  
+  // Set badges
+  const badgeWrap = document.getElementById('profileBadges');
+  badgeWrap.innerHTML = '';
+  
+  if (currentUser.role === 'ADMIN') {
+    badgeWrap.innerHTML += `<span class="badge badge-mentor">&#127979; Head Master (Admin)</span>`;
+  }
+  if (currentUser.role === 'WRITER' || currentUser.role === 'ADMIN') {
+    badgeWrap.innerHTML += `<span class="badge badge-writer">&#9999;&#65039; Expert Writer</span>`;
+  } else {
+    badgeWrap.innerHTML += `<span class="badge badge-reader">&#128214; Scholar Reader</span>`;
+  }
+
+  // Set coins
+  document.getElementById('heroCoinsDisplay').innerHTML = `&#9889; ${currentUser.coinsBalance.toLocaleString()}`;
+  document.getElementById('statsCoinsDisplay').innerHTML = `&#9889; ${currentUser.coinsBalance.toLocaleString()}`;
+  const ratePerSC = (currentUser.coinsBalance * 0.175).toLocaleString('en-IN', {maximumFractionDigits: 0});
+  document.querySelector('.stat-mini div.sub').innerHTML = `&#8377;${ratePerSC} equivalent`;
+
+  // Toggle writer view section
+  const regSection = document.getElementById('writerConsoleRegister');
+  const pendingSection = document.getElementById('writerConsolePending');
+  const approvedSection = document.getElementById('writerConsoleApproved');
+
+  regSection.style.display = 'none';
+  pendingSection.style.display = 'none';
+  approvedSection.style.display = 'none';
+
+  if (currentUser.role === 'WRITER' || currentUser.role === 'ADMIN') {
+    approvedSection.style.display = 'block';
+    
+    // Set writer coins stats
+    document.getElementById('writerCoinsEarned').innerHTML = `&#9889; ${currentUser.coinsBalance.toLocaleString()}`;
+    document.getElementById('walletCoinsDisplay').innerHTML = `&#9889; ${currentUser.coinsBalance.toLocaleString()}`;
+  } else {
+    // Reader role check verification states
+    if (currentUser.verificationStatus === 'PENDING') {
+      pendingSection.style.display = 'block';
+      document.getElementById('pendingIdType').textContent = currentUser.idCardType || 'AADHAR';
+      document.getElementById('pendingIdLabel').textContent = currentUser.idCardNumber || 'N/A';
+      document.getElementById('pendingIdPhoto').src = currentUser.idCardPhoto || '';
+    } else {
+      regSection.style.display = 'block';
+      const alertBox = document.getElementById('verifyAlertBox');
+      if (currentUser.verificationStatus === 'REJECTED') {
+        alertBox.textContent = '⚠️ Your previous writer registration request was rejected by the Head Master. Please provide a clear ID and try again.';
+        alertBox.className = 'alert-box alert-error';
+        alertBox.style.display = 'block';
+      }
+    }
+  }
+}
+
+/* ── SUBMIT WRITER APPLICATION ── */
+async function submitWriterApplication(e) {
+  e.preventDefault();
+  const idCardType = document.getElementById('regIdType').value;
+  const idCardNumber = document.getElementById('regIdCard').value.trim();
+  const alertBox = document.getElementById('verifyAlertBox');
+  alertBox.style.display = 'none';
+
+  if (!base64IdPhoto) {
+    alertBox.textContent = '⚠️ Please upload a photo of your ID Card.';
+    alertBox.className = 'alert-box alert-error';
+    alertBox.style.display = 'block';
+    return;
+  }
+
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/users/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ idCardType, idCardNumber, idCardPhoto: base64IdPhoto })
+    });
+    const data = await response.json();
+
+    if (data.error) {
+      alertBox.textContent = data.message || 'Identity submission failed.';
+      alertBox.className = 'alert-box alert-error';
+      alertBox.style.display = 'block';
+    } else {
+      showToast('&#9999;&#65039;', 'Writer contract application submitted successfully!');
+      // Re-load profile to update state
+      await loadUserProfile();
+    }
+  } catch (err) {
+    showToast('&#9888;', 'Identity submission failed. Backend unavailable.');
+  }
+}
+
+/* ── ADMIN/MANAGER VERIFICATION LIST & ACTIONS ── */
+async function loadPendingVerifications() {
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/users/pending-verifications`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+
+    if (data.error) return;
+
+    document.getElementById('adminVerificationConsole').style.display = 'block';
+    const countBadge = document.getElementById('pendingAdminCount');
+    const pendingList = document.getElementById('adminPendingList');
+
+    countBadge.textContent = `${data.pendings.length} Pending`;
+
+    if (data.pendings.length === 0) {
+      pendingList.innerHTML = `<div style="text-align:center; padding: 1.5rem; color: var(--muted); font-size:0.85rem;">No pending registrations found at the moment.</div>`;
+      return;
+    }
+
+    pendingList.innerHTML = data.pendings.map(u => `
+      <div class="card" style="background: rgba(0,0,0,0.25); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1rem 1.5rem; border-color: rgba(255, 139, 158, 0.2);">
+        <div style="flex: 1; min-width: 250px;">
+          <div style="font-weight:700; font-size: 0.95rem; color: var(--gold-light);">@${u.username} (Reader Account)</div>
+          <div style="font-size:0.75rem; color: var(--muted); margin-bottom: 8px;">Email: ${u.email} | Mobile: ${u.mobile}</div>
+          <div style="font-size:0.8rem; color: var(--text); margin-bottom: 8px;">
+            <strong style="color:var(--gold);">ID Type:</strong> ${u.idCardType || 'AADHAR'} | <strong style="color:var(--gold);">Number:</strong> ${u.idCardNumber || 'N/A'}
+          </div>
+          <div style="font-size:0.75rem; color: var(--muted); margin-bottom: 4px; font-weight:600;">Uploaded ID Image:</div>
+          <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; max-width: 280px; max-height: 150px; background: rgba(0,0,0,0.3);">
+            <img src="${u.idCardPhoto || ''}" style="width: 100%; height: 100%; object-fit: contain; display: block;">
+          </div>
+        </div>
+        <div style="display:flex; gap: 0.5rem; align-items: center;">
+          <button class="btn btn-gold" onclick="approveVerification('${u.id}', 'APPROVE')" style="background:#4caf50; color:#fff; font-size:0.75rem; padding: 6px 12px; font-weight:700;">Approve</button>
+          <button class="btn btn-maroon" onclick="approveVerification('${u.id}', 'REJECT')" style="font-size:0.75rem; padding: 6px 12px; font-weight:700;">Reject</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load pending verifications', err);
+  }
+}
+
+async function approveVerification(userId, action) {
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/users/approve-verification`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ targetUserId: userId, action })
+    });
+    const data = await response.json();
+
+    if (data.error) {
+      showToast('&#9888;', data.message || 'Operation failed.');
+    } else {
+      showToast(action === 'APPROVE' ? '&#9989;' : '&#9888;', data.message);
+      // Reload profile and admin queue
+      await loadUserProfile();
+    }
+  } catch (err) {
+    showToast('&#9888;', 'Could not update verification status. Backend offline.');
+  }
+}
+
+/* ── MANAGER WITHDRAWAL QUEUE & CONTROLS ── */
+async function loadPendingWithdrawals() {
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/payment/withdrawals`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+
+    if (data.error) return;
+
+    document.getElementById('adminWithdrawalsConsole').style.display = 'block';
+    const countBadge = document.getElementById('pendingWithdrawCount');
+    const listWrap = document.getElementById('adminWithdrawList');
+
+    countBadge.textContent = `${data.pendings.length} Pending`;
+
+    if (data.pendings.length === 0) {
+      listWrap.innerHTML = `<div style="text-align:center; padding: 1.5rem; color: var(--muted); font-size:0.85rem;">No pending withdrawal requests found.</div>`;
+      return;
+    }
+
+    listWrap.innerHTML = data.pendings.map(w => `
+      <div class="card" style="background: rgba(0,0,0,0.25); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1rem 1.5rem; border-color: rgba(200, 162, 97, 0.25);">
+        <div>
+          <div style="font-weight:700; font-size: 0.95rem; color: var(--gold-light);">@${w.user.username} requested payout</div>
+          <div style="font-size:0.75rem; color: var(--muted);">Email: ${w.user.email} | Mobile: ${w.user.mobile}</div>
+          <div style="font-size:0.82rem; color: var(--text); margin-top: 6px;">
+            Amount: <strong style="color:var(--gold);">⚡ ${w.amountCoins.toLocaleString()} SC (₹${w.amountRupees.toLocaleString('en-IN')})</strong>
+          </div>
+          <div style="font-size:0.78rem; color: var(--muted); margin-top: 4px; font-family: monospace; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); display: inline-block;">
+            Destination (${w.paymentMethod}): ${w.paymentDetails}
+          </div>
+        </div>
+        <div style="display:flex; gap: 0.5rem;">
+          <button class="btn btn-gold" onclick="approveWithdrawal('${w.id}', 'APPROVE')" style="background:#4caf50; color:#fff; font-size:0.75rem; padding: 6px 12px; font-weight:700;">Approve Payout</button>
+          <button class="btn btn-maroon" onclick="approveWithdrawal('${w.id}', 'REJECT')" style="font-size:0.75rem; padding: 6px 12px; font-weight:700;">Reject & Refund</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load pending withdrawals', err);
+  }
+}
+
+async function approveWithdrawal(requestId, action) {
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) return;
+
+  const confirmMsg = action === 'APPROVE' 
+    ? "Are you sure you want to approve this payout? Verify that funds have been sent to the writer's bank/UPI account."
+    : "Are you sure you want to reject this withdrawal? The writer's locked coins will be refunded immediately.";
+
+  if (!confirm(confirmMsg)) return;
+
+  try {
+    const response = await fetch(`${API_URL}/payment/approve-withdrawal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ requestId, action })
+    });
+    const data = await response.json();
+
+    if (data.error) {
+      showToast('&#9888;', data.message || 'Operation failed.');
+    } else {
+      showToast(action === 'APPROVE' ? '&#9989;' : '&#9888;', data.message);
+      // Reload profile and withdrawals queue
+      await loadUserProfile();
+    }
+  } catch (err) {
+    showToast('&#9888;', 'Could not contact payment server. Payout status unchanged.');
+  }
+}
+
+/* ── ADMIN EXPORT REPORT FUNCTIONS ── */
+async function downloadWritersReport() {
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+  
+  try {
+    showToast('📊', 'Generating Writers Report...');
+    const response = await fetch(`${API_URL}/users/admin/export/writers`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.status !== 200) {
+      alert("Failed to export report. Verify permissions.");
+      return;
+    }
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'writers_report.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+    showToast('✓', 'Writers Report downloaded!');
+  } catch(err) {
+    console.error(err);
+    showToast('❌', 'Download failed.');
+  }
+}
+
+async function downloadGuildsReport() {
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+  
+  try {
+    showToast('🏰', 'Generating Sects Report...');
+    const response = await fetch(`${API_URL}/users/admin/export/guilds`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.status !== 200) {
+      alert("Failed to export report. Verify permissions.");
+      return;
+    }
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'guilds_report.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+    showToast('✓', 'Guilds Report downloaded!');
+  } catch(err) {
+    console.error(err);
+    showToast('❌', 'Download failed.');
+  }
+}
+
+/* ── RENDER READER RATES TABLE ── */
+function renderReaderRates(){
+  const t = document.getElementById('readerRateTable');
+  t.innerHTML = `<thead><tr>
+    <th>Level</th><th>Reader Title</th><th>SC per &#8377;75</th>
+    <th>Cost per SC</th><th>Platform Margin</th><th>Bonus vs Beginner</th>
+  </tr></thead><tbody>${
+    READER_LEVELS.map(r=>{
+      const margin = ((r.ratePerSC - 0.175) / r.ratePerSC * 100).toFixed(1);
+      const bonus = Math.round((r.scPer75 - 100) / 100 * 100);
+      const isActive = r.level === 1;
+      return `<tr class="${isActive?'highlight':''}">
+        <td><strong style="color:${r.color}">${r.icon} Lv.${r.level}</strong></td>
+        <td>${r.name}${isActive?' <span style="font-size:0.65rem;color:var(--gold);margin-left:4px;">(You)</span>':''}</td>
+        <td class="gold-text">${r.scPer75} SC</td>
+        <td>&#8377;${r.ratePerSC.toFixed(3)}</td>
+        <td>${margin}%</td>
+        <td class="${bonus>0?'green-text':''}">${bonus>0?'+'+bonus+'% more coins':'\u2014 Baseline'}</td>
+      </tr>`;
+    }).join('')
+  }</tbody>`;
+}
+
+/* ── RENDER WRITER RATES TABLE ── */
+function renderWriterRates(){
+  const t = document.getElementById('writerRateTable');
+  t.innerHTML = `<thead><tr>
+    <th>Level</th><th>Title</th><th>Rev. Share</th>
+    <th>1,000 SC =</th><th>&#8377;/SC</th>
+  </tr></thead><tbody>${
+    WRITER_LEVELS.map(w=>{
+      const isActive = w.level === 1;
+      return `<tr class="${isActive?'highlight':''}">
+        <td><strong>${w.icon}</strong> Lv.${w.level}</td>
+        <td>${w.name}${isActive?' <span style="font-size:0.62rem;color:var(--gold);">(You)</span>':''}</td>
+        <td class="green-text">${w.share}%</td>
+        <td class="gold-text">&#8377;${w.scPer1000}</td>
+        <td>&#8377;${(w.scPer1000/1000).toFixed(3)}</td>
+      </tr>`;
+    }).join('')
+  }</tbody>`;
+}
+
+/* ── RENDER CURRENTLY READING ── */
+function renderCurrentlyReading(){
+  const c = document.getElementById('currentlyReadingList');
+  c.innerHTML = `<div style="color:var(--muted); font-size: 0.85rem; padding: 1rem 0;">Syncing reading progress from the cloud...</div>`;
+}
+
+/* ── RENDER HISTORY ── */
+function renderHistory(){
+  const h = document.getElementById('readingHistoryList');
+  h.innerHTML = HISTORY.map(b=>`
+    <div class="history-book">
+      <div class="hb-cover">${b.cover}</div>
+      <div class="hb-info">
+        <div class="hb-title">${b.title}</div>
+        <div class="hb-meta">${b.author} &bull; ${b.chapters} ch &bull; ${b.date}</div>
+      </div>
+      <div class="hb-rating">${'&#9733;'.repeat(b.rating)}</div>
+    </div>`).join('');
+}
+
+/* ── RENDER COMMUNITIES ── */
+function renderCommunities(containerId){
+  const g = document.getElementById(containerId);
+  if(!g) return;
+  g.innerHTML = COMMUNITIES.slice(0,6).map(c=>`
+    <div class="community-card">
+      <div class="comm-icon" style="background:${c.bg}">${c.icon}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="comm-name">${c.name}</div>
+        <div class="comm-meta">${c.members} members &bull; ${c.posts} posts</div>
+        <span class="comm-role" style="background:rgba(0,0,0,0.2);color:${c.roleColor};border:1px solid ${c.roleColor}44;">${c.role}</span>
+      </div>
+    </div>`).join('');
+}
+
+/* ── RENDER RANKINGS ── */
+function renderRankings(){
+  const r = document.getElementById('rankingList');
+  r.innerHTML = RANKINGS.map(b=>`
+    <div class="rank-book">
+      <div class="rank-num ${b.rank<=3?'top':''}">
+        ${b.rank===1?'&#127941;':b.rank===2?'&#129352;':b.rank===3?'&#129353;':b.rank}
+      </div>
+      <div class="rank-cover">${b.cover}</div>
+      <div class="rank-info">
+        <div class="rank-title">${b.title}</div>
+        <div class="rank-meta">${b.genre} &bull; ${b.views} views</div>
+        <span class="rank-badge">${b.weeklyRank} ${b.change==='up'?'&#8593;':b.change==='down'?'&#8595;':'&#8213;'}</span>
+      </div>
+      <div class="rank-stat">
+        <div class="rv">${b.earnings}</div>
+        <div class="rl">Earned</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── RENDER TEACHING ── */
+function renderTeaching(){
+  const t = document.getElementById('teachingList');
+  t.innerHTML = TEACHINGS.map(a=>`
+    <div class="teach-item">
+      <div class="teach-icon">${a.icon}</div>
+      <div class="teach-text">
+        <div class="teach-title">${a.title}</div>
+        <div class="teach-desc">${a.date} &bull; ${a.students} student${a.students!==1?'s':''}</div>
+        <span class="teach-badge">${a.badge}</span>
+      </div>
+    </div>`).join('');
+}
+
+/* ── WRITER COMMUNITIES ── */
+function renderWriterCommunities(){
+  const g = document.getElementById('writerCommunitiesGrid');
+  if(!g) return;
+  g.style.display='flex';g.style.flexDirection='column';g.style.gap='0.6rem';
+  g.innerHTML = COMMUNITIES.filter(c=>['Cultivation Realm','Fantasy Writers Guild','Aspiring Writers'].includes(c.name))
+    .map(c=>`
+    <div class="community-card">
+      <div class="comm-icon" style="background:${c.bg}">${c.icon}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="comm-name">${c.name}</div>
+        <div class="comm-meta">${c.members} members &bull; ${c.posts} posts</div>
+        <span class="comm-role" style="background:rgba(0,0,0,0.2);color:${c.roleColor};border:1px solid ${c.roleColor}44;">${c.role}</span>
+      </div>
+    </div>`).join('');
+}
+
+/* ── MODE SWITCH ── */
+function switchMode(mode){
+  document.getElementById('readerView').style.display = mode==='reader'?'':'none';
+  document.getElementById('writerView').style.display = mode==='writer'?'':'none';
+  document.getElementById('readerModeBtn').classList.toggle('active', mode==='reader');
+  document.getElementById('writerModeBtn').classList.toggle('active', mode==='writer');
+}
+
+/* ── EXCHANGE CALC ── */
+function calcExchange(val){
+  const sc = parseInt(val)||0;
+  const amt = Math.floor(sc/1000)*175;
+  document.getElementById('exchangeResult').textContent = sc>=5000 ? '&#8377;'+amt.toLocaleString('en-IN') : 'Min 5,000 SC';
+}
+
+/* ── MODAL ── */
+function openExchange(){
+  document.getElementById('modalCoinInput').value = document.getElementById('coinInput')?.value || 10000;
+  updateModalCalc();
+  document.getElementById('exchangeModal').classList.add('open');
+}
+function closeExchange(){ document.getElementById('exchangeModal').classList.remove('open'); }
+function updateModalCalc(){
+  const sc = parseInt(document.getElementById('modalCoinInput').value)||0;
+  const amt = Math.floor(sc/1000)*175;
+  document.getElementById('modalReceiveAmt').innerHTML = sc>=5000?'&#8377;'+amt.toLocaleString('en-IN'):'Min 5,000 SC required';
+}
+function confirmExchange(){
+  const sc = parseInt(document.getElementById('modalCoinInput').value)||0;
+  if(sc<5000){showToast('&#9888;','Minimum 5,000 Spirit Coins required');return;}
+  const payId = document.getElementById('payoutId').value.trim();
+  if(!payId){showToast('&#9888;','Please enter your UPI / Account details');return;}
+  closeExchange();
+  showToast('&#9989;','Withdrawal of &#9889;'+sc.toLocaleString()+' submitted! Processing in 3-5 days.');
+}
+
+function editProfile(){ showToast('&#9998;','Profile editing coming soon'); }
+
+/* ── TOAST ── */
+/* ── TOAST ── */
+let toastTimer;
+function showToast(ico,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('tIco').innerHTML=ico;
+  document.getElementById('tMsg').innerHTML=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+/* ── DYNAMIC ID VERIFICATION INPUT HANDLERS ── */
+let base64IdPhoto = "";
+
+function handleIdTypeChange() {
+  const type = document.getElementById('regIdType').value;
+  const input = document.getElementById('regIdCard');
+  input.value = "";
+  
+  if (type === 'AADHAR') {
+    input.placeholder = "e.g. 1234-5678-9012";
+    input.maxLength = 14;
+  } else if (type === 'PAN') {
+    input.placeholder = "e.g. ABCDE1234F";
+    input.maxLength = 10;
+  } else if (type === 'VOTER_ID') {
+    input.placeholder = "e.g. XYZ1234567";
+    input.maxLength = 10;
+  }
+}
+
+function handleIdPhotoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('⚠️', 'Image size must be under 2MB.');
+    input.value = "";
+    document.getElementById('photoFileName').textContent = "No photo selected";
+    document.getElementById('idPhotoPreviewWrap').style.display = "none";
+    base64IdPhoto = "";
+    return;
+  }
+
+  document.getElementById('photoFileName').textContent = file.name;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    base64IdPhoto = e.target.result;
+    document.getElementById('idPhotoPreviewImg').src = base64IdPhoto;
+    document.getElementById('idPhotoPreviewWrap').style.display = "block";
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ── ACCOUNT DELETION ── */
+async function deleteAccount() {
+  const confirm1 = confirm("⚠️ WARNING: Are you absolutely sure you want to delete your Spirit Account?\nThis will permanently erase all your reading progress, coins, transaction history, and novels. This action CANNOT be undone!");
+  if (!confirm1) return;
+
+  const confirm2 = confirm("🔥 FINAL CONFIRMATION: Type 'DELETE' in your mind. This will clear all data from the database. Click OK to confirm permanent deletion.");
+  if (!confirm2) return;
+
+  const token = localStorage.getItem('sn_auth_token');
+  if (!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/users/me`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await response.json();
+
+    showToast('❌', 'Account deleted successfully.');
+    
+    // Clear credentials
+    localStorage.removeItem('sn_auth_token');
+    localStorage.removeItem('sn_user');
+    localStorage.removeItem('sn_user_coins');
+    
+    setTimeout(() => {
+      window.location.href = 'Index.html';
+    }, 1500);
+  } catch (err) {
+    showToast('⚠️', 'Account deletion failed. Server offline.');
+  }
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  loadUserProfile();
+  renderReaderRates();
+  renderWriterRates();
+  renderCurrentlyReading();
+  renderHistory();
+  renderCommunities('communitiesGrid');
+  renderRankings();
+  renderTeaching();
+  renderWriterCommunities();
+  calcExchange(10000);
+
+  // Check URL parameters for mode selection
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('mode') === 'writer') {
+    switchMode('writer');
+  }
+
+  // Format ID numbers dynamically based on rules
+  const idInput = document.getElementById('regIdCard');
+  if (idInput) {
+    idInput.addEventListener('input', function(e) {
+      const type = document.getElementById('regIdType').value;
+      let val = e.target.value;
+
+      if (type === 'AADHAR') {
+        // Strip everything that isn't a digit
+        val = val.replace(/\D/g, '');
+        let formatted = "";
+        if (val.length > 0) {
+          formatted += val.substring(0, 4);
+        }
+        if (val.length > 4) {
+          formatted += "-" + val.substring(4, 8);
+        }
+        if (val.length > 8) {
+          formatted += "-" + val.substring(8, 12);
+        }
+        e.target.value = formatted;
+      } else {
+        // PAN or Voter ID: capitalize, only letters and digits
+        e.target.value = val.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      }
+    });
+  }
+});
+
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeExchange(); });
+document.getElementById('exchangeModal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeExchange(); });
+</script>
+</body>
+</html>

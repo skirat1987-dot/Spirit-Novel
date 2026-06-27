@@ -1,0 +1,317 @@
+
+/* ─── SHARED WIDGETS STYLES (Bell Notification & Recharge Shop) ─── */
+
+/* Global Nav menu formatting */
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+  margin: 0 auto;
+  align-items: center;
+}
+.nav-link {
+  text-decoration: none;
+  color: var(--text, #e8dfd6);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  opacity: 0.85;
+  padding: 6px 0;
+  position: relative;
+}
+.nav-link:hover, .nav-link.active {
+  color: var(--gold, #c8a261) !important;
+  opacity: 1;
+}
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gold, #c8a261);
+  border-radius: 2px;
+}
+
+/* Bell Notification */
+.notif-bell-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+.notif-bell-btn {
+  background: transparent;
+  border: 1px solid rgba(200, 162, 97, 0.25);
+  color: var(--text);
+  font-size: 1.1rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.notif-bell-btn:hover {
+  background: rgba(200, 162, 97, 0.1);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #f44336;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  animation: popBadge 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes popBadge { from{transform:scale(0);} to{transform:scale(1);} }
+
+/* Notification Dropdown */
+.notif-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 320px;
+  background: #1e1612;
+  border: 1px solid var(--border, rgba(200, 162, 97, 0.25));
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  animation: slideNotif 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.notif-dropdown.open {
+  display: flex;
+}
+@keyframes slideNotif {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.notif-dropdown-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(200, 162, 97, 0.08);
+}
+.notif-dropdown-hdr h4 {
+  font-size: 0.85rem;
+  color: var(--gold, #c8a261);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.notif-clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  opacity: 0.6;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s ease;
+}
+.notif-clear-btn:hover {
+  opacity: 1;
+  color: var(--gold);
+}
+.notif-dropdown-list {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.notif-dropdown-list::-webkit-scrollbar {
+  width: 3px;
+}
+.notif-dropdown-list::-webkit-scrollbar-thumb {
+  background: rgba(200,162,97,0.15);
+}
+.notif-item {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(200, 162, 97, 0.06);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text, #e8dfd6);
+  transition: all 0.2s ease;
+}
+.notif-item:hover {
+  background: rgba(200, 162, 97, 0.03);
+}
+.notif-item:last-child {
+  border-bottom: none;
+}
+.notif-item-time {
+  font-size: 0.65rem;
+  color: var(--muted, #a59c94);
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+/* Floating Recharge Button */
+.floating-buy-sc {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: linear-gradient(135deg, #a88143, #c8a261);
+  color: #1a0f0a;
+  border-radius: 30px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 6px 20px rgba(200, 162, 97, 0.4);
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-family: 'Outfit', sans-serif;
+  user-select: none;
+}
+.floating-buy-sc:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(200, 162, 97, 0.55);
+}
+.floating-buy-sc .coin-icon {
+  animation: coinSpin 2s linear infinite;
+  display: inline-block;
+}
+@keyframes coinSpin {
+  0% { transform: rotateY(0); }
+  100% { transform: rotateY(360deg); }
+}
+
+/* Shop Modal Window Overlay */
+.shop-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.shop-modal-overlay.open {
+  display: flex;
+  opacity: 1;
+}
+.shop-modal {
+  background: #1e1612;
+  border: 1px solid rgba(200, 162, 97, 0.25);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  animation: popShopModal 0.3s cubic-bezier(0.16,1,0.3,1);
+  font-family: 'Outfit', sans-serif;
+  color: #e8dfd6;
+}
+@keyframes popShopModal {
+  from { transform: scale(0.95); }
+  to { transform: scale(1); }
+}
+.shop-modal h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  color: #fbf8f3;
+  margin-bottom: 0.3rem;
+  text-align: center;
+}
+.shop-modal p {
+  font-size: 0.8rem;
+  color: #a59c94;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  line-height: 1.4;
+}
+.shop-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.shop-card {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(200, 162, 97, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.shop-card:hover {
+  border-color: var(--gold, #c8a261);
+  background: rgba(200, 162, 97, 0.05);
+  transform: translateY(-2px);
+}
+.shop-card-coins {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold, #c8a261);
+  font-family: 'Cormorant Garamond', serif;
+}
+.shop-card-price {
+  font-size: 0.82rem;
+  color: #e8dfd6;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.shop-card-level {
+  font-size: 0.65rem;
+  color: #a59c94;
+  background: rgba(255,255,255,0.05);
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-top: 2px;
+}
+
+/* checkout overlay */
+.checkout-view {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+}
+.checkout-box {
+  background: rgba(76, 175, 80, 0.07);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+}
+.checkout-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #a59c94;
+  margin-bottom: 0.3rem;
+}
+.checkout-amt {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4caf50;
+  font-family: 'Cormorant Garamond', serif;
+}

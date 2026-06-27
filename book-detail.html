@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Details — Spirit-Novel</title>
+  <meta name="description" content="View chapters, stats and earnings for your novel on Spirit-Novel.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  <style>
+    :root{
+      --bg:#100c0a;--bg2:#180f0c;--bg3:#1e1410;--bg4:#251812;
+      --maroon:#6a1b29;--maroon2:#892837;--maroon3:#440e17;
+      --gold:#c8a261;--gold2:#a88143;--gold3:#dfc290;
+      --text:#fbf8f3;--muted:#c9bcba;--subtle:#7a6e6b;
+      --border:rgba(200,162,97,0.16);--border2:rgba(200,162,97,0.08);
+      --glow:0 0 24px rgba(200,162,97,0.25);--shadow:0 8px 32px rgba(0,0,0,0.4);
+      --tr:all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    /* TOPBAR */
+    .topbar{height:62px;background:linear-gradient(135deg,#0a0705,#16100d);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem;position:sticky;top:0;z-index:100;}
+    .logo{display:flex;align-items:center;gap:10px;}
+    .logo img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+    .logo-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;}
+    .breadcrumb{display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--muted);}
+    .breadcrumb a{color:var(--muted);transition:var(--tr);}
+    .breadcrumb a:hover{color:var(--gold);}
+    .breadcrumb .sep{color:var(--subtle);}
+    .breadcrumb .current{color:var(--gold);font-weight:500;}
+    .topbar-actions{margin-left:auto;display:flex;gap:0.6rem;align-items:center;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-size:0.85rem;font-weight:500;cursor:pointer;border:none;transition:var(--tr);font-family:'Outfit',sans-serif;}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+    .btn-ghost:hover{background:rgba(200,162,97,0.08);color:var(--gold);border-color:rgba(200,162,97,0.3);}
+    .btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a0f0a;font-weight:700;}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:var(--glow);}
+    .btn-maroon{background:linear-gradient(135deg,var(--maroon),var(--maroon2));color:var(--text);}
+    .btn-maroon:hover{transform:translateY(-1px);}
+    /* PAGE */
+    .page{max-width:1200px;margin:0 auto;padding:2rem 2rem 4rem;}
+    /* BOOK HERO */
+    .book-hero{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem;display:flex;gap:2rem;align-items:flex-start;position:relative;overflow:hidden;}
+    .book-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:200px;height:200px;background:radial-gradient(circle,rgba(200,162,97,0.08),transparent 70%);pointer-events:none;}
+    .hero-cover{width:100px;height:140px;border-radius:8px;background:linear-gradient(135deg,var(--maroon3),var(--maroon));display:flex;align-items:center;justify-content:center;font-size:3rem;flex-shrink:0;border:2px solid var(--border);box-shadow:var(--shadow);}
+    .hero-info{flex:1;}
+    .hero-info .genre-tag{display:inline-block;font-size:0.72rem;padding:3px 12px;background:rgba(106,27,41,0.4);border:1px solid rgba(200,162,97,0.2);border-radius:20px;color:var(--gold3);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.6rem;}
+    .hero-info h1{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--text);margin-bottom:0.4rem;line-height:1.2;}
+    .hero-info .synopsis{font-size:0.88rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;max-width:600px;}
+    .hero-meta{display:flex;gap:0.6rem;flex-wrap:wrap;}
+    .meta-pill{display:flex;align-items:center;gap:5px;font-size:0.75rem;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--muted);}
+    .meta-pill.green{color:#4caf50;border-color:rgba(76,175,80,0.3);background:rgba(76,175,80,0.06);}
+    .meta-pill.gold{color:var(--gold);border-color:rgba(200,162,97,0.3);background:rgba(200,162,97,0.06);}
+    .meta-pill .dot{width:7px;height:7px;border-radius:50%;}
+    .meta-pill.green .dot{background:#4caf50;}
+    .hero-actions{display:flex;flex-direction:column;gap:0.5rem;align-self:center;flex-shrink:0;}
+    /* STATS ROW */
+    .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2rem;}
+    .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.2rem;transition:var(--tr);}
+    .stat-card:hover{border-color:rgba(200,162,97,0.3);}
+    .stat-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--subtle);margin-bottom:0.4rem;}
+    .stat-val{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--text);line-height:1;}
+    .stat-val.gold{color:var(--gold);}
+    .stat-sub{font-size:0.7rem;color:var(--muted);margin-top:0.3rem;}
+    .stat-trend{font-size:0.7rem;color:#4caf50;}
+    /* SECTION */
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+    .section-head h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;}
+    /* CHAPTER TABLE */
+    .chapter-table{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ch-table-head{display:grid;grid-template-columns:2.5rem 1fr 90px 90px 90px 90px 100px;gap:1rem;padding:0.8rem 1.2rem;background:var(--bg3);border-bottom:1px solid var(--border);font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--subtle);}
+    .ch-row{display:grid;grid-template-columns:2.5rem 1fr 90px 90px 90px 90px 100px;gap:1rem;padding:0.9rem 1.2rem;border-bottom:1px solid var(--border2);align-items:center;transition:var(--tr);cursor:pointer;}
+    .ch-row:last-child{border-bottom:none;}
+    .ch-row:hover{background:rgba(200,162,97,0.04);}
+    .ch-num{font-size:0.78rem;font-weight:600;color:var(--gold);background:rgba(200,162,97,0.1);padding:2px 6px;border-radius:4px;text-align:center;}
+    .ch-title-cell{display:flex;flex-direction:column;gap:2px;}
+    .ch-title-text{font-size:0.88rem;color:var(--text);font-weight:500;line-height:1.3;}
+    .ch-date{font-size:0.7rem;color:var(--subtle);}
+    .ch-cell{font-size:0.82rem;color:var(--muted);text-align:right;}
+    .ch-cell.gold{color:var(--gold);}
+    .ch-cell.green{color:#4caf50;}
+    .ch-status{text-align:right;}
+    .status-badge{font-size:0.68rem;padding:2px 8px;border-radius:10px;display:inline-block;}
+    .status-badge.published{background:rgba(76,175,80,0.12);color:#4caf50;border:1px solid rgba(76,175,80,0.25);}
+    .status-badge.draft{background:rgba(200,162,97,0.1);color:var(--gold);border:1px solid rgba(200,162,97,0.25);}
+    .status-badge.premium{background:rgba(106,27,41,0.3);color:var(--gold3);border:1px solid rgba(200,162,97,0.2);}
+    .ch-actions{display:flex;gap:4px;justify-content:flex-end;}
+    .ch-btn{padding:4px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:var(--tr);}
+    .ch-btn-edit{background:var(--maroon);color:var(--text);}
+    .ch-btn-edit:hover{background:var(--maroon2);}
+    .ch-btn-more{background:transparent;color:var(--muted);border:1px solid var(--border);}
+    .ch-btn-more:hover{color:var(--gold);border-color:rgba(200,162,97,0.3);}
+    /* EMPTY STATE */
+    .empty-chapters{padding:4rem;text-align:center;}
+    .empty-chapters .empty-icon{font-size:3rem;margin-bottom:1rem;}
+    .empty-chapters h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--text);margin-bottom:0.5rem;}
+    .empty-chapters p{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+    .modal-overlay.open{opacity:1;pointer-events:all;}
+    .modal{background:#1e1612;border:1px solid var(--border);border-radius:20px;padding:2rem;width:90%;max-width:520px;transform:scale(0.95);transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);max-height:90vh;overflow-y:auto;}
+    .modal::-webkit-scrollbar{width:4px;}
+    .modal::-webkit-scrollbar-thumb{background:rgba(200,162,97,0.2);border-radius:2px;}
+    .modal-overlay.open .modal{transform:scale(1);}
+    .modal h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--text);margin-bottom:0.3rem;}
+    .modal .modal-sub{font-size:0.8rem;color:var(--muted);margin-bottom:1.4rem;}
+    .form-group{margin-bottom:1.1rem;}
+    .form-group label{display:block;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold2);margin-bottom:0.4rem;font-weight:600;}
+    .form-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:0.88rem;font-family:'Outfit',sans-serif;outline:none;transition:var(--tr);}
+    .form-input:focus{border-color:rgba(200,162,97,0.4);box-shadow:0 0 0 3px rgba(200,162,97,0.07);}
+    .form-input option{background:#1e1410;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+    .modal-actions{display:flex;gap:0.8rem;justify-content:flex-end;margin-top:1.5rem;}
+    /* COVER UPLOADER */
+    .cover-upload-area{display:flex;gap:1.2rem;align-items:flex-start;}
+    .cover-preview{width:80px;height:110px;border-radius:8px;background:linear-gradient(135deg,var(--maroon3),var(--maroon));border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;overflow:hidden;cursor:pointer;transition:var(--tr);position:relative;}
+    .cover-preview:hover{border-color:rgba(200,162,97,0.5);}
+    .cover-preview:hover::after{content:'\270F';position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--gold);}
+    .cover-preview img{width:100%;height:100%;object-fit:cover;}
+    .cover-upload-info{flex:1;}
+    .cover-upload-info p{font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:0.7rem;}
+    .cover-file-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:rgba(200,162,97,0.08);border:1px solid rgba(200,162,97,0.25);border-radius:7px;color:var(--gold);font-size:0.8rem;cursor:pointer;transition:var(--tr);font-family:'Outfit',sans-serif;}
+    .cover-file-btn:hover{background:rgba(200,162,97,0.15);}
+    /* SOLE RIGHTS */
+    .sole-rights-box{background:rgba(200,162,97,0.04);border:1px solid rgba(200,162,97,0.18);border-radius:12px;padding:1rem 1.2rem;display:flex;gap:1rem;align-items:flex-start;cursor:pointer;transition:var(--tr);}
+    .sole-rights-box:hover{border-color:rgba(200,162,97,0.35);background:rgba(200,162,97,0.07);}
+    .sole-rights-box.active{border-color:var(--gold);background:rgba(200,162,97,0.1);}
+    .sr-check{width:22px;height:22px;border-radius:6px;border:2px solid rgba(200,162,97,0.4);background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:var(--tr);font-size:0.9rem;}
+    .sole-rights-box.active .sr-check{background:var(--gold);border-color:var(--gold);color:#1a0f0a;}
+    .sr-text h4{font-size:0.88rem;font-weight:600;color:var(--text);margin-bottom:0.2rem;}
+    .sr-text p{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+    /* TOAST */
+    .toast{position:fixed;bottom:2rem;right:2rem;background:#1e1612;border:1px solid rgba(200,162,97,0.3);border-radius:10px;padding:0.8rem 1.2rem;color:var(--text);font-size:0.85rem;display:flex;align-items:center;gap:0.6rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);}.ch-table-head,.ch-row{grid-template-columns:2rem 1fr 70px 70px 90px;}.ch-col-views,.ch-col-words{display:none;}}
+    @media(max-width:600px){.stats-row{grid-template-columns:1fr 1fr;}.book-hero{flex-direction:column;}.ch-table-head,.ch-row{grid-template-columns:2rem 1fr 80px;}.ch-col-views,.ch-col-words,.ch-col-earn{display:none;}.cover-upload-area{flex-direction:column;}.form-row{grid-template-columns:1fr;}}
+
+    /* READER MODE STYLES */
+    body.reader-mode .ch-table-head, body.reader-mode .ch-row {
+      grid-template-columns: 2.5rem 1fr 90px 100px 100px !important;
+    }
+    body.reader-mode .ch-col-views, 
+    body.reader-mode .ch-col-earn, 
+    body.reader-mode .ch-actions, 
+    body.reader-mode #topbarNewChBtn, 
+    body.reader-mode #heroSettingsBtn, 
+    body.reader-mode #chNewBtn2 {
+      display: none !important;
+    }
+    body.reader-mode .ch-read-cell {
+      display: block !important;
+      text-align: right;
+    }
+    .ch-read-cell {
+      display: none;
+    }
+    .ch-btn-read {
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      color: #1a0f0a !important;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      border: none;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: var(--tr);
+    }
+    .ch-btn-read:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--glow);
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="Index.html" class="logo">
+    <img src="logomy.png" alt="Spirit-Novel">
+    <span class="logo-name">Spirit-Novel</span>
+  </a>
+  <div style="width:1px;height:28px;background:var(--border);margin:0 0.5rem;"></div>
+  <div class="breadcrumb">
+    <a href="writer-hall.html">Writer Hall</a>
+    <span class="sep">&#8250;</span>
+    <span class="current" id="breadcrumbTitle">Loading...</span>
+  </div>
+  <div class="topbar-actions">
+    <a href="writer-hall.html" class="btn btn-ghost" id="topbarBackLink">&#8592; My Books</a>
+    <a href="profile.html" class="btn btn-ghost">👤 Profile</a>
+    <button class="btn btn-gold" onclick="openNewChapterModal()" id="topbarNewChBtn">&#65291; New Chapter</button>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- BOOK HERO -->
+  <div class="book-hero" id="bookHero">
+    <div class="hero-cover" id="heroCover">&#128218;</div>
+    <div class="hero-info">
+      <div class="genre-tag" id="heroGenre">Genre</div>
+      <h1 id="heroTitle">Loading...</h1>
+      <p class="synopsis" id="heroSynopsis">Loading synopsis...</p>
+      <div class="hero-meta">
+        <div class="meta-pill green"><span class="dot"></span><span id="heroStatus">Ongoing</span></div>
+        <div class="meta-pill gold">&#128293; <span id="heroStreak">0</span> day streak</div>
+        <div class="meta-pill">&#128197; Updated <span id="heroUpdated">...</span></div>
+      </div>
+    </div>
+    <div class="hero-actions" id="heroActions">
+      <button class="btn btn-gold" id="heroNewChBtn" onclick="openNewChapterModal()">&#65291; New Chapter</button>
+      <button class="btn btn-ghost" id="heroSettingsBtn" onclick="openBookSettings()">&#9881; Book Settings</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Words</div>
+      <div class="stat-val" id="sWords">0</div>
+      <div class="stat-trend" id="sWordsTrend"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Chapters</div>
+      <div class="stat-val" id="sChapters">0</div>
+      <div class="stat-sub" id="sChaptersSub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Views</div>
+      <div class="stat-val" id="sViews">0</div>
+      <div class="stat-trend" id="sViewsTrend"></div>
+    </div>
+    <div class="stat-card" id="statsEarningsCard">
+      <div class="stat-label">Total Earnings</div>
+      <div class="stat-val gold" id="sEarnings">&#8377;0</div>
+      <div class="stat-sub">30% revenue share</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg. per Chapter</div>
+      <div class="stat-val" id="sAvg">0</div>
+      <div class="stat-sub">words per chapter</div>
+    </div>
+  </div>
+
+  <!-- CHAPTERS -->
+  <div class="section-head">
+    <div>
+      <h2>&#128209; Chapters</h2>
+    </div>
+    <div style="display:flex;gap:0.6rem;align-items:center;">
+      <input type="text" id="chSearch" placeholder="Search chapters..." style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--text);font-size:0.82rem;font-family:'Outfit',sans-serif;outline:none;width:200px;" oninput="filterChapters(this.value)">
+      <button class="btn btn-gold" onclick="openNewChapterModal()" id="chNewBtn2">&#65291; New Chapter</button>
+    </div>
+  </div>
+
+  <div class="chapter-table">
+    <div class="ch-table-head">
+      <div>#</div>
+      <div>Title</div>
+      <div class="ch-col-words" style="text-align:right;">Words</div>
+      <div class="ch-col-views" style="text-align:right;">Views</div>
+      <div class="ch-col-earn" style="text-align:right;">Earnings</div>
+      <div style="text-align:right;">Status</div>
+      <div class="ch-read-cell" style="text-align:right;">Read</div>
+      <div style="text-align:right;">Actions</div>
+    </div>
+    <div id="chaptersBody"></div>
+  </div>
+
+  <!-- REVIEWS SECTION (Reader Mode Only) -->
+  <div id="readerReviewsSection" style="margin-top: 3rem; display: none;">
+    <div class="section-head">
+      <div>
+        <h2>⭐ Book Reviews</h2>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
+      <!-- Submit Review Form -->
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; height: fit-content;">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--text); margin-bottom:1rem;">Leave a Review</h3>
+        <div class="form-group">
+          <label>Rating</label>
+          <select id="reviewRatingSelect" class="form-input" style="background:#1e1410;">
+            <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+            <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+            <option value="3">⭐⭐⭐ (3 Stars)</option>
+            <option value="2">⭐⭐ (2 Stars)</option>
+            <option value="1">⭐ (1 Star)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Review</label>
+          <textarea id="reviewTextarea" class="form-input" rows="4" placeholder="Share your experience reading this novel..." style="resize:vertical; min-height:80px;"></textarea>
+        </div>
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="btn btn-gold" onclick="submitBookReview()">Submit Review</button>
+        </div>
+      </div>
+
+      <!-- Reviews Feed -->
+      <div style="display:flex; flex-direction:column; gap:1rem; max-height:400px; overflow-y:auto; padding-right:0.5rem;" id="reviewsFeedContainer">
+        <!-- Live reviews injected here -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NEW CHAPTER MODAL -->
+<div class="modal-overlay" id="newChModal">
+  <div class="modal">
+    <h3>&#128209; New Chapter</h3>
+    <div class="form-group">
+      <label>Chapter Title</label>
+      <input type="text" class="form-input" id="newChTitle" placeholder="Enter chapter title...">
+    </div>
+    <div class="form-group">
+      <label>Visibility</label>
+      <select class="form-input" id="newChVisibility">
+        <option value="draft">Draft (not published)</option>
+        <option value="public">Public</option>
+        <option value="premium">Premium Members</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeNewChModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="createChapter()">&#9997; Open in Editor</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOK SETTINGS MODAL -->
+<div class="modal-overlay" id="bookSettingsModal">
+  <div class="modal">
+    <h3>&#9881;&#65039; Book Settings</h3>
+    <p class="modal-sub">Manage your novel's details, cover and rights</p>
+
+    <!-- COVER -->
+    <div class="form-group">
+      <label>&#128218; Book Cover</label>
+      <div class="cover-upload-area">
+        <div class="cover-preview" id="settingsCoverPreview" onclick="document.getElementById('coverFileInput').click()">
+          <span id="settingsCoverEmoji">&#128218;</span>
+        </div>
+        <div class="cover-upload-info">
+          <p>Upload a cover image for your novel. Recommended size: <strong style="color:var(--gold)">600 &times; 800 px</strong> (3:4 ratio). PNG or JPG, max 5 MB.</p>
+          <label class="cover-file-btn" for="coverFileInput">&#128247; Choose Image</label>
+          <input type="file" id="coverFileInput" accept="image/*" style="display:none" onchange="previewCover(this)">
+          <div id="coverFileName" style="font-size:0.72rem;color:var(--muted);margin-top:0.5rem;">No file chosen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TITLE -->
+    <div class="form-group">
+      <label>&#128218; Book Title</label>
+      <input type="text" class="form-input" id="setTitle" placeholder="Your novel title...">
+    </div>
+
+    <!-- GENRE & STATUS -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>&#127913; Genre</label>
+        <select class="form-input" id="setGenre">
+          <option>Fantasy</option>
+          <option>Cultivation</option>
+          <option>Sci-Fi</option>
+          <option>Romance</option>
+          <option>Mystery</option>
+          <option>Urban</option>
+          <option>Martial Arts</option>
+          <option>Isekai</option>
+          <option>Horror</option>
+          <option>Adventure</option>
+          <option>Historical</option>
+          <option>System</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>&#128204; Status</label>
+        <select class="form-input" id="setStatus">
+          <option value="Ongoing">Ongoing</option>
+          <option value="Hiatus">On Hiatus</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="form-group">
+      <label>&#128221; Description / Synopsis</label>
+      <textarea class="form-input" id="setDescription" rows="4" placeholder="Write a compelling synopsis that draws readers in..."
+        style="resize:vertical;min-height:100px;line-height:1.6;"></textarea>
+      <div style="text-align:right;font-size:0.7rem;color:var(--muted);margin-top:4px;"><span id="synopsisCount">0</span> / 500 characters</div>
+    </div>
+
+    <!-- SOLE RIGHTS -->
+    <div class="form-group">
+      <label>&#128274; Intellectual Property</label>
+      <div class="sole-rights-box" id="soleRightsBox" onclick="toggleSoleRights()">
+        <div class="sr-check" id="srCheck"></div>
+        <div class="sr-text">
+          <h4>&#169; Sole Copyright &amp; Exclusive Rights</h4>
+          <p>I confirm this is my original work and I hold full sole rights to this novel. Spirit-Novel may display and distribute it under the agreed revenue-share terms, but all intellectual property remains mine exclusively.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeBookSettings()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveBookSettings()">&#10003; Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastIcon"></span><span id="toastMsg"></span></div>
+
+<script>
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000/api'
+  : 'https://api.noverspirit.qd.je/api';
+let book = null;
+let chapters = [];
+let soleRightsChecked = false;
+let coverDataURL = null;
+
+const activeBookId = localStorage.getItem('sn_active_book');
+const activeBookSlug = localStorage.getItem('sn_active_book_slug');
+
+function fmtNum(n){ if(n>=1000000)return(n/1000000).toFixed(1)+'M'; if(n>=1000)return(n/1000).toFixed(1)+'K'; return n.toLocaleString(); }
+function fmtMoney(n){ if(n>=100000)return'₹'+(n/100000).toFixed(2)+'L'; if(n>=1000)return'₹'+(n/1000).toFixed(1)+'K'; return'₹'+n.toLocaleString(); }
+
+async function loadBookData() {
+  const slug = activeBookSlug || activeBookId;
+  if(!slug) {
+    window.location.href = 'library.html';
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/novels/${slug}`);
+    const data = await response.json();
+
+    if(data.error || !data.novel) {
+      alert("Failed to load novel details. Redirecting to Library...");
+      window.location.href = 'library.html';
+      return;
+    }
+
+    book = data.novel;
+    chapters = data.novel.chapters || [];
+    
+    localStorage.setItem('sn_active_book', book.id);
+    localStorage.setItem('sn_active_book_slug', book.slug);
+
+    renderBookHero();
+    renderChapters();
+    checkViewMode();
+  } catch (err) {
+    console.error('Failed to load novel details from backend', err);
+  }
+}
+
+function renderBookHero(){
+  document.title = book.title + ' — Spirit-Novel';
+  document.getElementById('breadcrumbTitle').textContent = book.title;
+  
+  if (book.coverImage) {
+    document.getElementById('heroCover').innerHTML = `<img src="${book.coverImage}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" alt="cover">`;
+  } else {
+    document.getElementById('heroCover').innerHTML = '📖';
+  }
+
+  document.getElementById('heroGenre').textContent = book.tags ? book.tags.split(',')[0].trim() : 'Fantasy';
+  document.getElementById('heroTitle').textContent = book.title;
+  document.getElementById('heroSynopsis').textContent = book.synopsis || 'No synopsis yet.';
+  document.getElementById('heroStatus').textContent = book.status;
+  document.getElementById('heroStreak').textContent = 14; 
+  document.getElementById('heroUpdated').textContent = new Date(book.updatedAt).toLocaleDateString();
+
+  const totalWords = chapters.length * 3000;
+  const avg = chapters.length ? 3000 : 0;
+  
+  document.getElementById('sWords').textContent = fmtNum(totalWords);
+  document.getElementById('sWordsTrend').innerHTML = '&#8593; +12.4K this week';
+  document.getElementById('sChapters').textContent = chapters.length;
+  document.getElementById('sChaptersSub').textContent = chapters.filter(c => !c.isPremium).length + ' free';
+  document.getElementById('sViews').textContent = fmtNum(book.views || 0);
+  document.getElementById('sViewsTrend').innerHTML = '&#8593; +104 today';
+  document.getElementById('sEarnings').innerHTML = fmtMoney(Math.round(book.views * 0.8));
+  document.getElementById('sAvg').textContent = avg.toLocaleString();
+}
+
+function renderChapters(filter=''){
+  const body = document.getElementById('chaptersBody');
+  body.innerHTML = '';
+  const filtered = filter ? chapters.filter(c=>c.title.toLowerCase().includes(filter.toLowerCase())) : chapters;
+
+  if(filtered.length===0){
+    body.innerHTML=`<div class="empty-chapters"><div class="empty-icon">&#128209;</div><h3>No chapters yet</h3><p>Start writing your first chapter!</p><button class="btn btn-gold" onclick="openNewChapterModal()">＋ Write First Chapter</button></div>`;
+    return;
+  }
+
+  filtered.forEach((ch,i)=>{
+    const row = document.createElement('div');
+    row.className = 'ch-row';
+    const statusBadge = ch.isPremium
+      ? '<span class="status-badge premium">⚡ Premium</span>'
+      : '<span class="status-badge published">Free Preview</span>';
+    row.innerHTML=`
+      <div class="ch-num">${ch.chapterNumber}</div>
+      <div class="ch-title-cell">
+        <div class="ch-title-text">${ch.title}</div>
+        <div class="ch-date">${new Date(ch.createdAt).toLocaleDateString()||'—'}</div>
+      </div>
+      <div class="ch-cell ch-col-words">3,000</div>
+      <div class="ch-cell ch-col-views">${ch.views || 0}</div>
+      <div class="ch-cell ch-col-earn green">₹0</div>
+      <div class="ch-status">${statusBadge}</div>
+      <div class="ch-read-cell">
+        <button class="ch-btn ch-btn-read" onclick="event.stopPropagation();readChapter('${ch.id}')">📖 Read</button>
+      </div>
+      <div class="ch-actions">
+        <button class="ch-btn ch-btn-edit" onclick="event.stopPropagation();editChapter('${ch.id}')">✍️ Edit</button>
+      </div>`;
+    row.addEventListener('click',()=> {
+      if(localStorage.getItem('sn_view_mode')==='reader'){
+        readChapter(ch.id);
+      } else {
+        editChapter(ch.id);
+      }
+    });
+    body.appendChild(row);
+  });
+}
+
+function filterChapters(v){ renderChapters(v); }
+
+function editChapter(id){
+  const ch = chapters.find(c=>c.id===id);
+  if(!ch) return;
+  localStorage.setItem('sn_active_chapter', JSON.stringify({
+    bookId: book.id,
+    chapterId: id,
+    bookTitle: book.title,
+    chapterTitle: ch.title,
+    content: ch.content || ''
+  }));
+  window.location.href = 'editor.html';
+}
+
+function readChapter(id) {
+  localStorage.setItem('sn_view_mode', 'reader');
+  localStorage.setItem('sn_active_chapter_id', id);
+  window.location.href = 'read.html';
+}
+
+function openNewChapterModal(){
+  document.getElementById('newChTitle').value = 'Chapter '+(chapters.length+1);
+  document.getElementById('newChModal').classList.add('open');
+  setTimeout(()=>document.getElementById('newChTitle').select(),100);
+}
+function closeNewChModal(){ document.getElementById('newChModal').classList.remove('open'); }
+
+async function createChapter(){
+  const title = document.getElementById('newChTitle').value.trim();
+  const visibility = document.getElementById('newChVisibility').value;
+  const token = localStorage.getItem('sn_auth_token');
+
+  if(!title){ alert('Please enter a chapter title'); return; }
+  if(!token) return;
+
+  const isPremium = visibility === 'premium';
+
+  try {
+    const response = await fetch(`${API_URL}/novels/${book.id}/chapters`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        title,
+        content: 'Lin Chen wiped the sweat from his forehead. The fire in the forge crackled...', 
+        isPremium,
+        coinCost: isPremium ? 5 : 0
+      })
+    });
+    const data = await response.json();
+
+    if (data.error) {
+      alert(data.message || 'Failed to create chapter.');
+    } else {
+      closeNewChModal();
+      showToast('📖', 'Chapter created! Loading editor...');
+      localStorage.setItem('sn_active_chapter', JSON.stringify({
+        bookId: book.id,
+        chapterId: data.chapter.id,
+        bookTitle: book.title,
+        chapterTitle: data.chapter.title,
+        content: data.chapter.content
+      }));
+      setTimeout(() => window.location.href = 'editor.html', 1000);
+    }
+  } catch (err) {
+    console.error('Failed to publish chapter', err);
+  }
+}
+
+function openBookSettings(){
+  document.getElementById('setTitle').value = book.title;
+  document.getElementById('setGenre').value = book.tags ? book.tags.split(',')[0].trim() : 'Fantasy';
+  document.getElementById('setStatus').value = book.status === 'ONGOING' ? 'Ongoing' : book.status === 'HIATUS' ? 'Hiatus' : 'Completed';
+  document.getElementById('setDescription').value = book.synopsis || '';
+  
+  const prev = document.getElementById('settingsCoverPreview');
+  if (book.coverImage) {
+    prev.innerHTML = `<img src="${book.coverImage}" alt="cover">`;
+  } else {
+    prev.innerHTML = `<span id="settingsCoverEmoji">📖</span>`;
+  }
+  
+  document.getElementById('bookSettingsModal').classList.add('open');
+}
+
+function closeBookSettings() {
+  document.getElementById('bookSettingsModal').classList.remove('open');
+}
+
+function previewCover(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024){ showToast('⚠️','Image too large (max 5 MB)'); return; }
+  document.getElementById('coverFileName').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    coverDataURL = e.target.result;
+    const prev = document.getElementById('settingsCoverPreview');
+    prev.innerHTML = '<img src="'+coverDataURL+'" alt="cover">';
+  };
+  reader.readAsDataURL(file);
+}
+
+function toggleSoleRights(){
+  soleRightsChecked = !soleRightsChecked;
+  updateSoleRightsUI();
+}
+function updateSoleRightsUI(){
+  const box = document.getElementById('soleRightsBox');
+  const chk = document.getElementById('srCheck');
+  box.classList.toggle('active', soleRightsChecked);
+  chk.innerHTML = soleRightsChecked ? '✓' : '';
+}
+
+function updateSynopsisCount(){
+  const v = document.getElementById('setDescription').value;
+  document.getElementById('synopsisCount').textContent = v.length;
+}
+document.getElementById('setDescription').addEventListener('input', updateSynopsisCount);
+
+async function saveBookSettings() {
+  closeBookSettings();
+  showToast('✓','Book settings updated!');
+}
+
+let toastTimer;
+function showToast(icon,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastIcon').innerHTML=icon;
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function checkViewMode() {
+  const isReader = localStorage.getItem('sn_view_mode') === 'reader';
+  if (isReader) {
+    document.body.classList.add('reader-mode');
+    
+    const bcLink = document.querySelector('.breadcrumb a');
+    if (bcLink) {
+      bcLink.href = 'library.html';
+      bcLink.textContent = 'Grand Library';
+    }
+    
+    const backBtn = document.getElementById('topbarBackLink');
+    if (backBtn) {
+      backBtn.href = 'library.html';
+      backBtn.innerHTML = '&#8592; Grand Library';
+    }
+    
+    const heroNewBtn = document.getElementById('heroNewChBtn');
+    if (heroNewBtn && chapters.length > 0) {
+      heroNewBtn.innerHTML = '📖 Read First Chapter';
+      heroNewBtn.onclick = () => readChapter(chapters[0].id);
+    }
+    
+    const earnCard = document.getElementById('statsEarningsCard');
+    if (earnCard) {
+      const earnLabel = earnCard.querySelector('.stat-label');
+      const earnVal = earnCard.querySelector('.stat-val');
+      const earnSub = earnCard.querySelector('.stat-sub');
+      if (earnLabel) earnLabel.textContent = 'Rating';
+      if (earnVal) {
+        earnVal.textContent = '⭐ ' + (book.rating || 5.0).toFixed(1);
+        earnVal.classList.remove('gold');
+      }
+      if (earnSub) earnSub.textContent = 'based on reader votes';
+    }
+
+    const reviewsSec = document.getElementById('readerReviewsSection');
+    if (reviewsSec) {
+      reviewsSec.style.display = 'block';
+      renderBookReviews();
+    }
+  }
+}
+
+const defaultReviews = [
+  {id: 1, reviewer: 'ImmortalDaoist', rating: 5, text: 'Masterful cultivation! The pacing of the progression is perfect and the battles feel earned rather than forced.', date: '3 days ago'},
+  {id: 2, reviewer: 'Cang_Lan', rating: 4, text: 'Really loved the Jade Pavilion chapter. The worldbuilding is dense and the elders have clear, distinct motivations.', date: '1 week ago'}
+];
+
+function loadBookReviews() {
+  if(!book) return [];
+  let reviews = JSON.parse(localStorage.getItem(`sn_reviews_${book.id}`) || 'null');
+  if (!reviews) {
+    reviews = defaultReviews;
+    localStorage.setItem(`sn_reviews_${book.id}`, JSON.stringify(reviews));
+  }
+  return reviews;
+}
+
+function renderBookReviews() {
+  const container = document.getElementById('reviewsFeedContainer');
+  if(!container) return;
+  const reviews = loadBookReviews();
+  if(reviews.length === 0) {
+    container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:2rem;">No reviews yet. Be the first to leave a review!</div>`;
+    return;
+  }
+  container.innerHTML = reviews.map(r => `
+    <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:12px; padding:1rem; display:flex; flex-direction:column; gap:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-weight:600; font-size:0.85rem; color:var(--text);">${r.reviewer}</span>
+        <span style="font-size:0.75rem; color:var(--muted);">${r.date}</span>
+      </div>
+      <div style="color:var(--gold); font-size:0.8rem;">${'⭐'.repeat(r.rating)}</div>
+      <p style="font-size:0.8rem; color:var(--text); line-height:1.4;">${r.text}</p>
+    </div>
+  `).join('');
+}
+
+function submitBookReview() {
+  const ratingVal = parseInt(document.getElementById('reviewRatingSelect').value);
+  const reviewText = document.getElementById('reviewTextarea').value.trim();
+  if(!reviewText) {
+    alert("Please write a review before submitting.");
+    return;
+  }
+  
+  const newReview = {
+    id: Date.now(),
+    reviewer: 'Daoist_Reader',
+    rating: ratingVal,
+    text: reviewText,
+    date: 'Just now'
+  };
+  
+  let allReviews = loadBookReviews();
+  allReviews.unshift(newReview);
+  localStorage.setItem(`sn_reviews_${book.id}`, JSON.stringify(allReviews));
+  
+  document.getElementById('reviewTextarea').value = '';
+  showToast('⭐', 'Review submitted successfully!');
+  renderBookReviews();
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadBookData();
+});
+</script>
+</body>
+</html>

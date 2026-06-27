@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tower of Honor — Spirit-Novel</title>
+  <meta name="description" content="Scribe competitions and top performing books leaderboard of the Spirit-Novel Academy.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  <style>
+    :root {
+      --bg:#120e0d; --bg-card:#1a1410; --text:#e8dfd6; --text-title:#fbf8f3;
+      --maroon:#6a1b29; --maroon2:#892837; --maroon3:#4e101b;
+      --gold:#c8a261; --gold2:#a88143; --gold3:#dfc290;
+      --border:rgba(200,162,97,0.18); --border-subtle:rgba(200,162,97,0.08);
+      --purple:#b07fff; --shadow:0 12px 30px rgba(0,0,0,0.5);
+      --tr:all 0.3s cubic-bezier(0.16,1,0.3,1);
+      --glow:0 0 20px rgba(200,162,97,0.25);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      background:var(--bg); color:var(--text); font-family:'Outfit', sans-serif;
+      min-height:100vh; overflow-x:hidden; -webkit-font-smoothing:antialiased;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar{
+      height:68px; background:rgba(26,20,16,0.92); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; padding:0 2rem;
+      position:sticky; top:0; z-index:100; backdrop-filter:blur(10px);
+    }
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .logo img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+    .logo-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--text-title);}
+    
+    .nav-menu{display:flex;list-style:none;gap:1.5rem;}
+    .nav-link{text-decoration:none;color:var(--text);font-size:0.88rem;font-weight:500;transition:var(--tr);opacity:0.85;padding:6px 0;position:relative;}
+    .nav-link:hover,.nav-link.active{color:var(--gold);opacity:1;}
+    .nav-link.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);border-radius:2px;}
+    
+    .btn{
+      display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;
+      font-size:0.82rem;font-weight:600;cursor:pointer;border:none;transition:var(--tr);
+      font-family:'Outfit',sans-serif;background:transparent;color:var(--text);border:1px solid var(--border);
+    }
+    .btn:hover{background:rgba(200,162,97,0.1);color:var(--gold);border-color:rgba(200,162,97,0.35);}
+    .btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a0f0a;border:none;}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:var(--glow);color:#1a0f0a;}
+
+    /* ─── PAGE HEADER ─── */
+    .hero-banner{
+      height:220px; background:linear-gradient(rgba(106,27,41,0.2) 0%, rgba(18,14,13,1) 100%), url('realm_map.png') center/cover;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 1rem; border-bottom:1px solid var(--border-subtle);
+    }
+    .hero-banner h1{font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:var(--text-title); text-shadow:0 2px 10px rgba(0,0,0,0.5); font-weight:700;}
+    .hero-banner p{font-size:0.95rem; color:var(--gold); margin-top:0.4rem; max-width:600px; text-transform:uppercase; letter-spacing:2px; font-weight:500;}
+
+    /* ─── LAYOUT CONTAINER ─── */
+    .page-wrap{max-width:1200px; margin:0 auto; padding:2rem 2rem 6rem; display:grid; grid-template-columns:300px 1fr; gap:2.5rem;}
+    
+    /* ─── SIDEBAR: MY STATS & STANDINGS ─── */
+    .sidebar{display:flex; flex-direction:column; gap:1.8rem;}
+    .sidebar-card{background:var(--bg-card); border:1px solid var(--border); border-radius:18px; padding:1.5rem; box-shadow:var(--shadow);}
+    .sidebar-card h3{font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--gold); margin-bottom:1rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.4rem;}
+    
+    .my-rank-item{display:flex; align-items:center; justify-content:space-between; margin-bottom:0.8rem; font-size:0.82rem;}
+    .my-rank-item .label{color:var(--text); opacity:0.8;}
+    .my-rank-item .val{font-weight:700; color:var(--text-title);}
+    .my-rank-badge{
+      display:inline-flex; align-items:center; justify-content:center;
+      background:rgba(200,162,97,0.1); border:1px solid var(--border);
+      padding:4px 8px; border-radius:12px; font-weight:700; color:var(--gold3); font-size:0.75rem;
+    }
+
+    /* ─── MAIN CONTENT: TABS & TABLES ─── */
+    .main-content{min-width:0;}
+    
+    .tab-bar{display:flex; gap:1rem; border-bottom:1px solid var(--border); margin-bottom:2rem;}
+    .tab-btn{
+      background:transparent; border:none; color:var(--text); font-family:'Outfit',sans-serif;
+      font-size:0.95rem; font-weight:600; padding:10px 16px; cursor:pointer; opacity:0.7; transition:var(--tr);
+      position:relative;
+    }
+    .tab-btn:hover, .tab-btn.active{opacity:1; color:var(--gold);}
+    .tab-btn.active::after{content:''; position:absolute; bottom:-1px; left:0; right:0; height:2px; background:var(--gold);}
+
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block; animation:fadeIn 0.4s ease;}
+    @keyframes fadeIn { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+    /* ─── COMPETITION CARDS ─── */
+    .comp-grid{display:grid; grid-template-columns:1fr; gap:1.5rem; margin-bottom:3rem;}
+    .comp-card{
+      background:linear-gradient(145deg, var(--bg-card) 0%, rgba(26,20,16,0.8) 100%);
+      border:1px solid var(--border); border-radius:18px; padding:1.8rem;
+      display:grid; grid-template-columns:1fr 200px; gap:1.5rem; transition:var(--tr);
+    }
+    .comp-card:hover{border-color:rgba(200,162,97,0.35); box-shadow:var(--glow);}
+    .comp-info{display:flex; flex-direction:column; gap:0.5rem;}
+    .comp-badge{
+      display:inline-flex; align-items:center; width:fit-content;
+      background:rgba(176,127,255,0.08); border:1px solid rgba(176,127,255,0.25);
+      color:var(--purple); font-size:0.7rem; text-transform:uppercase; letter-spacing:1px;
+      font-weight:700; padding:3px 8px; border-radius:12px; margin-bottom:0.2rem;
+    }
+    .comp-title{font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--text-title); font-weight:700;}
+    .comp-desc{font-size:0.85rem; color:var(--text); opacity:0.8; line-height:1.5;}
+    .comp-meta{display:flex; gap:1rem; font-size:0.75rem; color:var(--gold3); margin-top:0.5rem;}
+    
+    .comp-action-card{
+      border-left:1px solid var(--border); padding-left:1.5rem;
+      display:flex; flex-direction:column; justify-content:center; text-align:center; gap:0.6rem;
+    }
+    .comp-prize-val{font-size:1.6rem; font-weight:700; color:var(--gold);}
+    .comp-prize-lbl{font-size:0.68rem; text-transform:uppercase; letter-spacing:1px; color:var(--text); opacity:0.7;}
+
+    /* ─── LEADERBOARD TABLES ─── */
+    .filter-row{display:flex; gap:0.6rem; margin-bottom:1.5rem; justify-content:flex-end;}
+    .filter-btn{
+      background:rgba(255,255,255,0.04); border:1px solid var(--border-subtle);
+      border-radius:6px; color:var(--text); padding:5px 12px; font-size:0.78rem;
+      cursor:pointer; transition:var(--tr); font-weight:500;
+    }
+    .filter-btn:hover, .filter-btn.active{border-color:var(--gold); color:var(--gold3); background:rgba(200,162,97,0.08);}
+
+    .lead-table-container{background:var(--bg-card); border:1px solid var(--border); border-radius:16px; overflow:hidden;}
+    .lead-table{width:100%; border-collapse:collapse; text-align:left;}
+    .lead-table th{
+      background:rgba(0,0,0,0.15); border-bottom:1px solid var(--border-subtle);
+      padding:1rem; font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; color:var(--gold3);
+    }
+    .lead-table td{padding:1rem; border-bottom:1px solid var(--border-subtle); font-size:0.85rem;}
+    .lead-table tr:hover{background:rgba(255,255,255,0.015);}
+    .lead-table tr:last-child td{border-bottom:none;}
+    
+    .rank-cell{display:flex; align-items:center; gap:0.5rem; font-weight:700;}
+    .rank-num{width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center;}
+    .rank-gold{color:var(--gold);}
+    .rank-silver{color:#ccc;}
+    .rank-bronze{color:#cd7f32;}
+
+    .book-cell{display:flex; align-items:center; gap:1rem;}
+    .book-cover{width:36px; height:48px; border-radius:4px; background:linear-gradient(135deg,var(--maroon2),var(--maroon3)); display:flex; align-items:center; justify-content:center; font-size:1.1rem;}
+    .book-info{display:flex; flex-direction:column;}
+    .book-title{font-weight:600; color:var(--text-title); text-decoration:none; transition:var(--tr);}
+    .book-title:hover{color:var(--gold);}
+    .book-author{font-size:0.72rem; color:var(--text); opacity:0.7;}
+
+    .author-col{display:flex; align-items:center; justify-content:space-between; gap:1rem;}
+    .follow-btn{
+      padding:4px 10px; font-size:0.72rem; border-radius:6px; border:1px solid var(--border);
+      background:transparent; color:var(--gold3); cursor:pointer; transition:var(--tr);
+    }
+    .follow-btn:hover{background:var(--gold); color:#1a0f0a;}
+    .follow-btn.following{background:rgba(200,162,97,0.15); border-color:var(--gold); pointer-events:none;}
+
+    /* ─── TOAST ─── */
+    .toast{position:fixed;bottom:2rem;right:2rem;background:#1e1612;border:1px solid rgba(200,162,97,0.3);border-radius:10px;padding:0.8rem 1.2rem;color:var(--text);font-size:0.85rem;display:flex;align-items:center;gap:0.6rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;box-shadow:var(--shadow);}
+    .toast.show{transform:translateY(0);opacity:1;}
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="Index.html" class="logo">
+    <img src="logomy.png" alt="Spirit-Novel">
+    <span class="logo-name">Spirit-Novel</span>
+  </a>
+
+  <ul class="nav-menu">
+    <li><a href="Index.html" class="nav-link">Home</a></li>
+    <li><a href="library.html" class="nav-link">Library</a></li>
+    <li><a href="writer-hall.html" class="nav-link">Writer Hall</a></li>
+    <li><a href="tower.html" class="nav-link active">Tower of Honor</a></li>
+    <li><a href="profile.html" class="nav-link">Profile</a></li>
+  </ul>
+
+  <div class="topbar-right">
+    <a href="profile.html" class="btn">👤 Profile</a>
+  </div>
+</header>
+
+<!-- HERO BANNER -->
+<section class="hero-banner">
+  <h1>Tower of Honor</h1>
+  <p>✦ Celestial rankings of outstanding scribes and novels ✦</p>
+</section>
+
+<!-- MAIN CONTAINER -->
+<div class="page-wrap">
+  
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- Reader Rank Card -->
+    <div class="sidebar-card">
+      <h3>Reader Standings</h3>
+      <div class="my-rank-item">
+        <span class="label">Sovereign Level</span>
+        <span class="my-rank-badge">Lv.3 Scholar</span>
+      </div>
+      <div class="my-rank-item">
+        <span class="label">Global Rank</span>
+        <span class="val">#1,248</span>
+      </div>
+      <div class="my-rank-item">
+        <span class="label">Spirit Coins Spent</span>
+        <span class="val">18,400 SC</span>
+      </div>
+    </div>
+
+    <!-- Active Competition Standings Card -->
+    <div class="sidebar-card">
+      <h3>Your Competitions</h3>
+      <div class="my-rank-item" style="flex-direction:column; align-items:flex-start; gap:4px; margin-bottom:12px;">
+        <span style="font-weight:600; color:var(--text-title); font-size:0.8rem;">Summer Qi Writing Sprint</span>
+        <div style="display:flex; justify-content:space-between; width:100%; font-size:0.75rem; color:var(--muted);">
+          <span>Your Rank: <strong>#42</strong></span>
+          <span>Words: <strong>12,400</strong></span>
+        </div>
+      </div>
+      <div class="my-rank-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <span style="font-weight:600; color:var(--text-title); font-size:0.8rem;">Grand Library Reading Quest</span>
+        <div style="display:flex; justify-content:space-between; width:100%; font-size:0.75rem; color:var(--muted);">
+          <span>Your Rank: <strong>#128</strong></span>
+          <span>Chapters: <strong>48 / 100</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Followed Scribes Card -->
+    <div class="sidebar-card">
+      <h3>Followed Scribes</h3>
+      <div id="followedWritersList" style="display:flex; flex-direction:column; gap:0.6rem;">
+        <!-- Loaded dynamically -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main class="main-content">
+    
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('competitions', this)">Active Tournaments</button>
+      <button class="tab-btn" onclick="switchTab('leaderboards', this)">Best Performing Books</button>
+      <button class="tab-btn" onclick="switchTab('champions', this)">Hall of Fame</button>
+    </div>
+
+    <!-- TAB 1: COMPETITIONS -->
+    <div class="tab-panel active" id="competitions-tab">
+      <div class="comp-grid">
+        <!-- Comp 1 -->
+        <article class="comp-card">
+          <div class="comp-info">
+            <span class="comp-badge" style="background:rgba(200,162,97,0.08); border-color:var(--border); color:var(--gold);">Scribe Quest</span>
+            <h2 class="comp-title">Summer Qi Writing Sprint</h2>
+            <p class="comp-desc">Harness your celestial creative essence. Scribes compete to write and publish the highest number of high-quality words during the tournament period.</p>
+            <div class="comp-meta">
+              <span>⏳ Ends: July 15, 2026</span>
+              <span>•</span>
+              <span>🖋️ Participants: 1,480</span>
+            </div>
+          </div>
+          <div class="comp-action-card">
+            <div class="comp-prize-val">&#8377;15,000</div>
+            <div class="comp-prize-lbl">+ 20,000 SC Prize</div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem; width:100%; align-items:stretch;">
+              <button class="btn btn-gold" onclick="joinCompetition('Summer Qi Writing Sprint')">Participate</button>
+              <button class="btn" style="font-size:0.75rem; padding:5px 12px; border-color:var(--border);" onclick="viewTournamentLeaderboard('Summer Qi Writing Sprint')">📊 Standings</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Comp 2 -->
+        <article class="comp-card">
+          <div class="comp-info">
+            <span class="comp-badge" style="background:rgba(123,156,255,0.08); border-color:rgba(123,156,255,0.25); color:#7b9cff;">Mentor Initiative</span>
+            <h2 class="comp-title">Apprentice Scribe Rally</h2>
+            <p class="comp-desc">Exclusive race for novice and student writers below the Journeyman tier. Connect with high-level mentors to supercharge your formatting and plot pacing.</p>
+            <div class="comp-meta">
+              <span>⏳ Ends: July 30, 2026</span>
+              <span>•</span>
+              <span>🖋️ Participants: 620</span>
+            </div>
+          </div>
+          <div class="comp-action-card">
+            <div class="comp-prize-val">&#8377;5,000</div>
+            <div class="comp-prize-lbl">+ Custom Medal Badge</div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem; width:100%; align-items:stretch;">
+              <button class="btn btn-gold" onclick="joinCompetition('Apprentice Scribe Rally')">Participate</button>
+              <button class="btn" style="font-size:0.75rem; padding:5px 12px; border-color:var(--border);" onclick="viewTournamentLeaderboard('Apprentice Scribe Rally')">📊 Standings</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Comp 3 -->
+        <article class="comp-card">
+          <div class="comp-info">
+            <span class="comp-badge">Reading Quest</span>
+            <h2 class="comp-title">Grand Library Reading Quest</h2>
+            <p class="comp-desc">A tournament dedicated to our Daoist readers. Read 100 chapters of published novels in the library to share a global prize pool of 500,000 Spirit Coins!</p>
+            <div class="comp-meta">
+              <span>⏳ Ends: July 10, 2026</span>
+              <span>•</span>
+              <span>📖 Participants: 4,800</span>
+            </div>
+          </div>
+          <div class="comp-action-card">
+            <div class="comp-prize-val">⚡ 2,500 SC</div>
+            <div class="comp-prize-lbl">Guaranteed Reward</div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem; width:100%; align-items:stretch;">
+              <button class="btn btn-gold" onclick="joinCompetition('Grand Library Reading Quest')">Participate</button>
+              <button class="btn" style="font-size:0.75rem; padding:5px 12px; border-color:var(--border);" onclick="viewTournamentLeaderboard('Grand Library Reading Quest')">📊 Standings</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- TAB 2: LEADERBOARDS -->
+    <div class="tab-panel" id="leaderboards-tab">
+      <div class="filter-row" style="justify-content: space-between; align-items: center; width: 100%;">
+        <div style="position:relative; width: 250px;">
+          <input type="text" id="leaderboardSearch" placeholder="Search book or author..." oninput="onLeaderboardSearch()" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:6px; padding:6px 12px 6px 30px; color:var(--text); font-family:'Outfit',sans-serif; font-size:0.8rem; outline:none; transition:var(--tr);">
+          <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:0.8rem; pointer-events:none;">🔍</span>
+        </div>
+        <div style="display:flex; gap:0.6rem;">
+          <button class="filter-btn active" onclick="filterLeaderboard('weekly', this)">Weekly</button>
+          <button class="filter-btn" onclick="filterLeaderboard('monthly', this)">Monthly</button>
+          <button class="filter-btn" onclick="filterLeaderboard('yearly', this)">Yearly</button>
+        </div>
+      </div>
+
+      <div class="lead-table-container">
+        <table class="lead-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Book Title &amp; Scribe</th>
+              <th>Views</th>
+              <th>Words</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Loaded dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: CHAMPIONS (HALL OF FAME) -->
+    <div class="tab-panel" id="champions-tab">
+      <div class="lead-table-container">
+        <table class="lead-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Tournament Name</th>
+              <th>Grand Champion Scribe</th>
+              <th>Winning Novel Title</th>
+              <th>Grand Prize</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>2025</strong></td>
+              <td>Winter Qi Sprint</td>
+              <td>DaoMaster_X</td>
+              <td><a href="#" class="book-title" onclick="openNovelDirectly(2)">Path of the Eternal Dao</a></td>
+              <td class="gold-text">&#8377;20,000</td>
+            </tr>
+            <tr>
+              <td><strong>2025</strong></td>
+              <td>Autumn Cultivation Rally</td>
+              <td>Blade_Sage</td>
+              <td><a href="#" class="book-title" onclick="openNovelDirectly(4)">Iron Fist of the Nine Heavens</a></td>
+              <td class="gold-text">&#8377;15,000</td>
+            </tr>
+            <tr>
+              <td><strong>2024</strong></td>
+              <td>Year-End Grand Scribe Cup</td>
+              <td>SovereignWrites</td>
+              <td><a href="#" class="book-title">Galaxy Core Sector</a></td>
+              <td class="gold-text">&#8377;35,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<!-- AUTHOR BOOKS MODAL -->
+<div class="modal-overlay" id="authorBooksModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;">
+  <div class="modal" style="background:#1e1612;border:1px solid var(--border);border-radius:20px;padding:2rem;width:90%;max-width:480px;box-shadow:var(--shadow);">
+    <h3 id="modalAuthorName" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--text-title);margin-bottom:0.5rem;">Scribe's Scrolls</h3>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.2rem;">Select a scroll to open its details and start reading.</p>
+    <div id="authorBooksContainer" style="display:flex; flex-direction:column; gap:0.8rem; max-height:300px; overflow-y:auto; margin-bottom:1.5rem;">
+      <!-- List of books -->
+    </div>
+    <div style="display:flex; justify-content:flex-end;">
+      <button class="btn" onclick="closeAuthorBooksModal()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOURNAMENT LEADERBOARD MODAL -->
+<div class="modal-overlay" id="tournamentModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;">
+  <div class="modal" style="background:#1e1612;border:1px solid var(--border);border-radius:20px;padding:2rem;width:90%;max-width:500px;box-shadow:var(--shadow);">
+    <h3 id="modalTournamentName" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--text-title);margin-bottom:0.5rem;">Tournament Standings</h3>
+    <p id="modalTournamentDesc" style="font-size:0.8rem;color:var(--muted);margin-bottom:1.2rem; line-height:1.4;">Standings of the top contenders currently in this sprint.</p>
+    
+    <div style="background:rgba(0,0,0,0.15); border:1px solid var(--border-subtle); border-radius:12px; overflow:hidden; margin-bottom:1.5rem;">
+      <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.82rem;" id="tournamentLeaderboardTable">
+        <thead>
+          <tr style="background:rgba(0,0,0,0.25); border-bottom:1px solid var(--border-subtle); color:var(--gold3);">
+            <th style="padding:8px 12px; font-size:0.7rem; text-transform:uppercase;">Rank</th>
+            <th style="padding:8px 12px; font-size:0.7rem; text-transform:uppercase;">Contender</th>
+            <th style="padding:8px 12px; font-size:0.7rem; text-transform:uppercase; text-align:right;" id="modalScoreHeader">Words</th>
+          </tr>
+        </thead>
+        <tbody id="tournamentLeaderboardBody">
+          <!-- Top contenders -->
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="display:flex; justify-content:flex-end;">
+      <button class="btn" onclick="closeTournamentModal()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="tIco"></span><span id="tMsg"></span></div>
+
+<script>
+// Mock Scribe details for following functionality
+let followedWriters = JSON.parse(localStorage.getItem('sn_followed_writers') || '[]');
+
+function switchTab(tabName, btn){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
+// Competition registration
+function joinCompetition(compName){
+  showToast('🏆', `Registered successfully for: <strong>${compName}</strong>! Good luck!`);
+  // Update sidebar values
+  const activeComps = JSON.parse(localStorage.getItem('sn_my_competitions') || '[]');
+  if(!activeComps.includes(compName)){
+    activeComps.push(compName);
+    localStorage.setItem('sn_my_competitions', JSON.stringify(activeComps));
+  }
+}
+
+// Leaderboard data
+const mockLeaderboards = {
+  weekly: [
+    {rank: 1, title: 'The Celestial Ascension', author: 'LFeng', views: 84000, words: 124800, rating: 4.9, bookId: 1},
+    {rank: 2, title: 'Iron Fist of the Nine Heavens', author: 'Blade_Sage', views: 76000, words: 344200, rating: 4.8, bookId: 4},
+    {rank: 3, title: 'Path of the Eternal Dao', author: 'DaoMaster_X', views: 68000, words: 289100, rating: 4.7, bookId: 2},
+    {rank: 4, title: 'Galaxy Romance: Two Souls', author: 'StarWriter99', views: 52000, words: 88400, rating: 4.6, bookId: 3},
+    {rank: 5, title: 'Crimson Moon Sect', author: 'SilverFox', views: 41000, words: 78000, rating: 4.5, bookId: 5}
+  ],
+  monthly: [
+    {rank: 1, title: 'Path of the Eternal Dao', author: 'DaoMaster_X', views: 340000, words: 289100, rating: 4.7, bookId: 2},
+    {rank: 2, title: 'The Celestial Ascension', author: 'LFeng', views: 312000, words: 124800, rating: 4.9, bookId: 1},
+    {rank: 3, title: 'Iron Fist of the Nine Heavens', author: 'Blade_Sage', views: 298000, words: 344200, rating: 4.8, bookId: 4},
+    {rank: 4, title: 'Galaxy Romance: Two Souls', author: 'StarWriter99', views: 198000, words: 88400, rating: 4.6, bookId: 3},
+    {rank: 5, title: 'Sword Saint Chronicles', author: 'EdgeWalker', views: 165000, words: 312000, rating: 4.8, bookId: 6}
+  ],
+  yearly: [
+    {rank: 1, title: 'Iron Fist of the Nine Heavens', author: 'Blade_Sage', views: 4200000, words: 344200, rating: 4.8, bookId: 4},
+    {rank: 2, title: 'Path of the Eternal Dao', author: 'DaoMaster_X', views: 3800000, words: 289100, rating: 4.7, bookId: 2},
+    {rank: 3, title: 'The Celestial Ascension', author: 'LFeng', views: 312000, words: 124800, rating: 4.9, bookId: 1},
+    {rank: 4, title: 'Galaxy Romance: Two Souls', author: 'StarWriter99', views: 1540000, words: 88400, rating: 4.6, bookId: 3},
+    {rank: 5, title: 'Sword Saint Chronicles', author: 'EdgeWalker', views: 1420000, words: 312000, rating: 4.8, bookId: 6}
+  ]
+};
+
+let currentPeriod = 'weekly';
+
+function filterLeaderboard(period, btn){
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPeriod = period;
+  
+  const searchInp = document.getElementById('leaderboardSearch');
+  if(searchInp) searchInp.value = '';
+  
+  renderLeaderboard(period);
+}
+
+function renderLeaderboard(period, query = ''){
+  let data = mockLeaderboards[period] || [];
+  if (query.trim()) {
+    const q = query.toLowerCase().trim();
+    data = data.filter(b => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q));
+  }
+  
+  const tbody = document.getElementById('leaderboardBody');
+  if(data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--muted); padding:2rem;">No matching novels found.</td></tr>`;
+    return;
+  }
+  
+  tbody.innerHTML = data.map(b => {
+    let rankBadge = `<span class="rank-num">${b.rank}</span>`;
+    if(b.rank === 1) rankBadge = `<span class="rank-num rank-gold">🥇</span>`;
+    if(b.rank === 2) rankBadge = `<span class="rank-num rank-silver">🥈</span>`;
+    if(b.rank === 3) rankBadge = `<span class="rank-num rank-bronze">🥉</span>`;
+
+    const isFollowing = followedWriters.includes(b.author);
+    const followText = isFollowing ? 'Following' : 'Follow';
+    const followClass = isFollowing ? 'follow-btn following' : 'follow-btn';
+    
+    const coverChar = b.title.substring(0,1);
+
+    return `
+      <tr>
+        <td><div class="rank-cell">${rankBadge}</div></td>
+        <td>
+          <div class="book-cell">
+            <div class="book-cover">${coverChar}</div>
+            <div class="book-info">
+              <a href="#" class="book-title" onclick="openNovelDirectly(${b.bookId})">${b.title}</a>
+              <div class="author-col">
+                <span class="book-author">by ${b.author}</span>
+                <button class="${followClass}" onclick="followAuthor('${b.author}', this)">${followText}</button>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>${b.views.toLocaleString()}</td>
+        <td>${b.words.toLocaleString()}</td>
+        <td style="color:var(--gold); font-weight:600;">⭐ ${b.rating.toFixed(1)}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function onLeaderboardSearch() {
+  const query = document.getElementById('leaderboardSearch').value;
+  renderLeaderboard(currentPeriod, query);
+}
+
+function followAuthor(authorName, btn){
+  if(followedWriters.includes(authorName)) return;
+  followedWriters.push(authorName);
+  localStorage.setItem('sn_followed_writers', JSON.stringify(followedWriters));
+  
+  btn.textContent = 'Following';
+  btn.className = 'follow-btn following';
+  
+  showToast('👤', `You followed scribe: <strong>${authorName}</strong>!`);
+  renderFollowedWriters();
+}
+
+function renderFollowedWriters() {
+  const container = document.getElementById('followedWritersList');
+  if(!container) return;
+  const list = JSON.parse(localStorage.getItem('sn_followed_writers') || '[]');
+  if(list.length === 0) {
+    container.innerHTML = `<div style="font-size:0.75rem; color:var(--muted); text-align:center; padding:0.5rem 0;">No followed scribes yet.</div>`;
+    return;
+  }
+  container.innerHTML = list.map(w => `
+    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.15); border:1px solid var(--border-subtle); border-radius:8px; padding:6px 10px; font-size:0.8rem;">
+      <span style="font-weight:600; color:var(--text-title);">👤 ${w}</span>
+      <button class="btn" style="padding:3px 8px; font-size:0.68rem; border-color:var(--border);" onclick="openAuthorBooks('${w}')">Scrolls</button>
+    </div>
+  `).join('');
+}
+
+function openAuthorBooks(authorName) {
+  document.getElementById('modalAuthorName').textContent = `${authorName}'s Scrolls`;
+  const container = document.getElementById('authorBooksContainer');
+  
+  const allBooks = JSON.parse(localStorage.getItem('sn_books') || '[]');
+  const books = allBooks.filter(b => (b.author || '').toLowerCase() === authorName.toLowerCase() || (authorName === 'LFeng' && b.id === 1));
+  
+  let booksHTML = '';
+  if (books.length === 0) {
+    let mockTitle = "The Celestial Ascension";
+    let mockGenre = "Cultivation";
+    let mockId = 1;
+    if(authorName === 'Blade_Sage') { mockTitle = "Iron Fist of the Nine Heavens"; mockGenre = "Martial Arts"; mockId = 4; }
+    else if(authorName === 'DaoMaster_X') { mockTitle = "Path of the Eternal Dao"; mockGenre = "Cultivation"; mockId = 2; }
+    else if(authorName === 'StarWriter99') { mockTitle = "Galaxy Romance: Two Souls"; mockGenre = "Sci-Fi Romance"; mockId = 3; }
+    else if(authorName === 'SilverFox') { mockTitle = "Crimson Moon Sect"; mockGenre = "Fantasy"; mockId = 5; }
+    
+    booksHTML = `
+      <div style="display:flex; align-items:center; gap:10px; padding:8px; background:rgba(0,0,0,0.15); border:1px solid var(--border-subtle); border-radius:8px; cursor:pointer;" onclick="openNovelDirectly(${mockId})">
+        <div style="font-size:1.5rem;">📙</div>
+        <div style="flex:1;">
+          <h4 style="font-size:0.82rem; color:var(--text-title); font-weight:600;">${mockTitle}</h4>
+          <span style="font-size:0.68rem; color:var(--gold);">${mockGenre}</span>
+        </div>
+      </div>
+    `;
+  } else {
+    booksHTML = books.map(b => `
+      <div style="display:flex; align-items:center; gap:10px; padding:8px; background:rgba(0,0,0,0.15); border:1px solid var(--border-subtle); border-radius:8px; cursor:pointer;" onclick="openNovelDirectly(${b.id})">
+        <div style="font-size:1.5rem;">📙</div>
+        <div style="flex:1;">
+          <h4 style="font-size:0.82rem; color:var(--text-title); font-weight:600;">${b.title}</h4>
+          <span style="font-size:0.68rem; color:var(--gold);">${b.genre}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  container.innerHTML = booksHTML;
+  document.getElementById('authorBooksModal').classList.add('open');
+}
+
+function closeAuthorBooksModal() {
+  document.getElementById('authorBooksModal').classList.remove('open');
+}
+
+const tournamentLeaderboards = {
+  'Summer Qi Writing Sprint': [
+    {rank: 1, name: 'DaoMaster_X', score: '38,900 words'},
+    {rank: 2, name: 'Blade_Sage', score: '31,200 words'},
+    {rank: 3, name: 'SovereignWrites', score: '24,600 words'},
+    {rank: 4, name: 'LFeng', score: '12,400 words'},
+    {rank: 5, name: 'NovelFanatic', score: '9,800 words'}
+  ],
+  'Apprentice Scribe Rally': [
+    {rank: 1, name: 'StarWriter99', score: '18,500 words'},
+    {rank: 2, name: 'SilverFox', score: '14,200 words'},
+    {rank: 3, name: 'Cang_Lan', score: '11,800 words'},
+    {rank: 4, name: 'EdgeWalker', score: '8,400 words'},
+    {rank: 5, name: 'NoviceScribe1', score: '6,200 words'}
+  ],
+  'Grand Library Reading Quest': [
+    {rank: 1, name: 'Daoist_Cody', score: '89 chapters'},
+    {rank: 2, name: 'ImmortalDaoist', score: '78 chapters'},
+    {rank: 3, name: 'ReaderPeak', score: '64 chapters'},
+    {rank: 4, name: 'Lin Feng', score: '48 chapters'},
+    {rank: 5, name: 'SectDisciple', score: '32 chapters'}
+  ]
+};
+
+function viewTournamentLeaderboard(compName) {
+  document.getElementById('modalTournamentName').textContent = compName;
+  
+  let scoreHeader = 'Words';
+  if(compName.includes('Reading')) {
+    scoreHeader = 'Chapters';
+  }
+  document.getElementById('modalScoreHeader').textContent = scoreHeader;
+
+  const data = tournamentLeaderboards[compName] || [];
+  const tbody = document.getElementById('tournamentLeaderboardBody');
+  tbody.innerHTML = data.map(c => `
+    <tr style="border-bottom:1px solid var(--border-subtle);">
+      <td style="padding:10px 12px; font-weight:700; border-bottom:1px solid var(--border-subtle); color:var(--text);">#${c.rank}</td>
+      <td style="padding:10px 12px; font-weight:500; border-bottom:1px solid var(--border-subtle); color:var(--text-title);">${c.name}</td>
+      <td style="padding:10px 12px; text-align:right; font-weight:600; border-bottom:1px solid var(--border-subtle); color:var(--gold);">${c.score}</td>
+    </tr>
+  `).join('');
+  
+  document.getElementById('tournamentModal').classList.add('open');
+}
+
+function closeTournamentModal() {
+  document.getElementById('tournamentModal').classList.remove('open');
+}
+
+function openNovelDirectly(id){
+  localStorage.setItem('sn_view_mode', 'reader');
+  localStorage.setItem('sn_active_book', id);
+  window.location.href = 'book-detail.html';
+}
+
+/* ─── TOAST ─── */
+let toastTimer;
+function showToast(ico,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('tIco').innerHTML=ico;
+  document.getElementById('tMsg').innerHTML=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  renderLeaderboard('weekly');
+  renderFollowedWriters();
+});
+</script>
+</body>
+</html>

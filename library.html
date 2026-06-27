@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grand Library — Spirit-Novel</title>
+  <meta name="description" content="Explore thousands of magical web novels, listen to narrated audiobooks, and manage your Spirit Coins in the Grand Library.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  <style>
+    :root {
+      --bg:#100c0a; --bg2:#180f0c; --bg3:#1e1410; --bg4:#251812;
+      --maroon:#6a1b29; --maroon2:#892837; --maroon3:#440e17;
+      --gold:#c8a261; --gold2:#a88143; --gold3:#dfc290; --gold4:#eeddb5;
+      --green:#4caf50; --blue:#7b9cff;
+      --text:#fbf8f3; --muted:#c9bcba; --subtle:#7a6e6b;
+      --border:rgba(200,162,97,0.16); --border2:rgba(200,162,97,0.08);
+      --glow:0 0 24px rgba(200,162,97,0.25);
+      --shadow:0 8px 32px rgba(0,0,0,0.5);
+      --tr:all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    a{text-decoration:none;color:inherit;}
+
+    /* ─── TOPBAR ─── */
+    .topbar{height:62px;background:linear-gradient(135deg,#0a0705,#16100d);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem;position:sticky;top:0;z-index:100;}
+    .logo{display:flex;align-items:center;gap:10px;}
+    .logo img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+    .logo-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--text);}
+    .topbar-sep{width:1px;height:28px;background:var(--border);margin:0 0.5rem;}
+    .topbar-title{font-size:1rem;color:var(--muted);font-weight:400;}
+    .topbar-title span{color:var(--gold);font-weight:600;}
+    
+    /* Search Bar in Topbar */
+    .topbar-search{flex:1;max-width:360px;position:relative;margin-left:1.5rem;}
+    .topbar-search input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:6px 12px 6px 32px;color:var(--text);font-size:0.82rem;font-family:'Outfit',sans-serif;outline:none;transition:var(--tr);}
+    .topbar-search input:focus{border-color:rgba(200,162,97,0.45);box-shadow:0 0 10px rgba(200,162,97,0.08);}
+    .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.85rem;pointer-events:none;}
+
+    .topbar-right{margin-left:auto;display:flex;gap:1rem;align-items:center;}
+    
+    /* Spirit Coins Pill */
+    .coins-pill{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--maroon3),var(--maroon));border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;color:var(--gold4);box-shadow:var(--glow);cursor:pointer;transition:var(--tr);}
+    .coins-pill:hover{transform:translateY(-1px);filter:brightness(1.1);}
+    .coins-pill .plus-btn{width:16px;height:16px;border-radius:50%;background:var(--gold);color:#1a0f0a;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;}
+    
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-size:0.85rem;font-weight:500;cursor:pointer;border:none;transition:var(--tr);font-family:'Outfit',sans-serif;}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+    .btn-ghost:hover{background:rgba(200,162,97,0.08);color:var(--gold);border-color:rgba(200,162,97,0.3);}
+    .btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a0f0a;font-weight:700;}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:var(--glow);}
+
+    /* ─── PAGE CONTAINER ─── */
+    .page{max-width:1280px;margin:0 auto;padding:2rem 2rem 5rem;}
+
+    /* ─── 3D COVER FLOW SHOWCASE ─── */
+    .showcase-sect{background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:3rem 2rem 2rem;margin-bottom:3rem;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+    .showcase-sect::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(200,162,97,0.04),transparent 75%);pointer-events:none;}
+    .showcase-title-box{text-align:center;margin-bottom:2rem;}
+    .showcase-title-box h2{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--text);margin-bottom:0.3rem;}
+    .showcase-title-box p{font-size:0.85rem;color:var(--muted);}
+
+    /* 3D Container */
+    .carousel-3d-wrap{
+      height:280px;position:relative;display:flex;align-items:center;justify-content:center;
+      perspective:1000px;transform-style:preserve-3d;margin-bottom:1.5rem;
+    }
+    .book-3d{
+      width:150px;height:210px;position:absolute;border-radius:10px;
+      cursor:pointer;transition:var(--tr);transform-style:preserve-3d;
+      box-shadow:0 15px 40px rgba(0,0,0,0.6);overflow:hidden;
+      border:1px solid rgba(255,255,255,0.08);background:#251812;
+    }
+    .book-3d img{width:100%;height:100%;object-fit:cover;pointer-events:none;}
+    
+    /* 3D Cover Flow Transform states */
+    .book-3d.active{
+      transform:translate3d(0, 0, 100px) rotateY(0deg) scale(1.15);
+      z-index:10;opacity:1;filter:none;
+      border-color:var(--gold);box-shadow:0 15px 45px rgba(200,162,97,0.22);
+    }
+    .book-3d.left-1{
+      transform:translate3d(-150px, 0, 20px) rotateY(25deg) scale(0.9);
+      z-index:5;opacity:0.8;filter:brightness(0.6);
+    }
+    .book-3d.right-1{
+      transform:translate3d(150px, 0, 20px) rotateY(-25deg) scale(0.9);
+      z-index:5;opacity:0.8;filter:brightness(0.6);
+    }
+    .book-3d.left-2{
+      transform:translate3d(-270px, 0, -40px) rotateY(40deg) scale(0.75);
+      z-index:2;opacity:0.45;filter:brightness(0.35);
+    }
+    .book-3d.right-2{
+      transform:translate3d(270px, 0, -40px) rotateY(-40deg) scale(0.75);
+      z-index:2;opacity:0.45;filter:brightness(0.35);
+    }
+    .book-3d.hidden-state{
+      transform:translate3d(0, 0, -150px) scale(0.5);
+      z-index:0;opacity:0;pointer-events:none;
+    }
+
+    /* Carousel Nav Details */
+    .active-book-info{text-align:center;max-width:500px;margin:0 auto;transition:var(--tr);opacity:0;transform:translateY(10px);}
+    .active-book-info.show{opacity:1;transform:translateY(0);}
+    .active-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:0.3rem;}
+    .active-meta{font-size:0.75rem;color:var(--gold);margin-bottom:0.6rem;display:flex;justify-content:center;gap:10px;}
+    .active-synopsis{font-size:0.82rem;color:var(--muted);line-height:1.5;margin-bottom:1.2rem;}
+    
+    .carousel-arrows{position:absolute;top:50%;width:100%;max-width:800px;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none;z-index:15;}
+    .carousel-arrow{width:44px;height:44px;border-radius:50%;background:rgba(24,15,12,0.85);border:1px solid var(--border);color:var(--gold);font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:all;transition:var(--tr);box-shadow:var(--shadow);}
+    .carousel-arrow:hover{background:var(--maroon);color:var(--text);border-color:rgba(200,162,97,0.3);}
+
+    /* ─── THEME ROWS (HORIZONTAL SCROLLING) ─── */
+    .row-section{margin-bottom:2.5rem;position:relative;}
+    .row-hdr{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1rem;padding:0 0.2rem;}
+    .row-title h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--text);}
+    .row-title p{font-size:0.75rem;color:var(--subtle);margin-top:2px;}
+    .view-all{font-size:0.8rem;color:var(--gold);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;transition:var(--tr);}
+    .view-all:hover{color:var(--gold3);transform:translateX(2px);}
+
+    /* Scrolling Container */
+    .cards-row-wrap{position:relative;margin:0 -0.5rem;}
+    .cards-row-wrap:hover .scroll-arrow{opacity:1;}
+    .cards-row{
+      display:flex;gap:1.2rem;overflow-x:auto;padding:0.5rem;
+      scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
+    }
+    .cards-row::-webkit-scrollbar{height:4px;}
+    .cards-row::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:2px;}
+    .cards-row::-webkit-scrollbar-thumb{background:rgba(200,162,97,0.14);border-radius:2px;transition:var(--tr);}
+    .cards-row:hover::-webkit-scrollbar-thumb{background:rgba(200,162,97,0.32);}
+
+    /* Card Item */
+    .row-card{
+      width:180px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+      padding:0.75rem;flex-shrink:0;transition:var(--tr);cursor:pointer;display:flex;flex-direction:column;
+    }
+    .row-card:hover{border-color:rgba(200,162,97,0.35);transform:translateY(-3px);box-shadow:var(--shadow);}
+    .rc-cover{width:100%;height:200px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);overflow:hidden;margin-bottom:0.7rem;}
+    .rc-cover img{width:100%;height:100%;object-fit:cover;transition:var(--tr);}
+    .row-card:hover .rc-cover img{transform:scale(1.05);}
+    .rc-title{font-size:0.82rem;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .rc-author{font-size:0.68rem;color:var(--subtle);margin-bottom:0.5rem;}
+    .rc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:auto;}
+    .rc-rating{font-size:0.72rem;color:var(--gold);font-weight:500;display:flex;align-items:center;gap:3px;}
+    .rc-chapters{font-size:0.68rem;color:var(--muted);}
+
+    /* Scroll Arrows overlay */
+    .scroll-arrow{
+      position:absolute;top:50%;transform:translateY(-50%);
+      width:36px;height:36px;border-radius:50%;background:rgba(24,15,12,0.9);
+      border:1px solid var(--border);color:var(--gold);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;opacity:0;transition:var(--tr);z-index:20;box-shadow:var(--shadow);
+    }
+    .scroll-arrow:hover{background:var(--maroon);color:var(--text);}
+    .scroll-arrow.s-left{left:-10px;}
+    .scroll-arrow.s-right{right:-10px;}
+
+    /* ─── GRID / ALL BOOKS VIEW PANEL ─── */
+    .grid-view-panel{display:none;margin-top:1rem;animation:fadeIn 0.4s ease-out;}
+    .grid-view-panel.active{display:block;}
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+    .grid-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem;}
+    .grid-title-text{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;}
+    .grid-close{font-size:0.85rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px;transition:var(--tr);}
+    .grid-close:hover{color:var(--gold);}
+    .grid-books{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1.5rem;}
+
+    /* ─── TOAST ─── */
+    .toast{position:fixed;bottom:2rem;right:2rem;background:#1e1612;border:1px solid rgba(200,162,97,0.3);border-radius:10px;padding:0.8rem 1.2rem;color:var(--text);font-size:0.85rem;display:flex;align-items:center;gap:0.6rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;}
+    .toast.show{transform:translateY(0);opacity:1;}
+
+    @media(max-width:900px){
+      .carousel-3d-wrap{height:220px;}
+      .book-3d{width:110px;height:154px;}
+      .book-3d.left-1{transform:translate3d(-100px, 0, 15px) rotateY(20deg) scale(0.85);}
+      .book-3d.right-1{transform:translate3d(100px, 0, 15px) rotateY(-20deg) scale(0.85);}
+      .book-3d.left-2{transform:translate3d(-180px, 0, -30px) rotateY(35deg) scale(0.7);}
+      .book-3d.right-2{transform:translate3d(180px, 0, -30px) rotateY(-35deg) scale(0.7);}
+    }
+    @media(max-width:600px){
+      .topbar-search{display:none;}
+      .carousel-3d-wrap{height:180px;}
+      .book-3d{width:90px;height:126px;}
+      .book-3d.left-1{transform:translate3d(-70px, 0, 10px) rotateY(15deg) scale(0.85);}
+      .book-3d.right-1{transform:translate3d(70px, 0, 10px) rotateY(-15deg) scale(0.85);}
+      .book-3d.left-2, .book-3d.right-2{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="Index.html" class="logo">
+    <img src="logomy.png" alt="Spirit-Novel">
+    <span class="logo-name">Spirit-Novel</span>
+  </a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-title">🏛️ <span>Grand Library</span></div>
+  
+  <!-- Search -->
+  <div class="topbar-search">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="librarySearch" placeholder="Search books, authors, or scrolls..." oninput="onSearch(this.value)">
+  </div>
+
+  <div class="topbar-right">
+    <a href="Index.html" class="btn btn-ghost" style="padding:6px 14px;">Home</a>
+    <div class="coins-pill" onclick="openRechargeShop()">
+      <span>⚡ <span id="coinBalance">48,200</span></span>
+      <div class="plus-btn">+</div>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ==================== 3D COVER SHOWCASE ==================== -->
+  <section class="showcase-sect" id="showcaseSect">
+    <div class="showcase-title-box">
+      <h2>Featured Academy Volumes</h2>
+      <p>Scroll or click any tome below to enter the narrative gate</p>
+    </div>
+
+    <div class="carousel-3d-wrap" id="carousel3d">
+      <!-- Generated dynamically in JS -->
+    </div>
+    
+    <div class="carousel-arrows">
+      <button class="carousel-arrow" onclick="carouselPrev()">‹</button>
+      <button class="carousel-arrow" onclick="carouselNext()">›</button>
+    </div>
+
+    <!-- Active Details Display -->
+    <div class="active-book-info" id="activeBookInfo">
+      <h3 class="active-title" id="actTitle">Title</h3>
+      <div class="active-meta">
+        <span id="actGenre">Genre</span> &bull; 
+        <span id="actRating">⭐ 5.0</span> &bull; 
+        <span id="actChapters">0 Chapters</span>
+      </div>
+      <p class="active-synopsis" id="actSynopsis">Synopsis description goes here.</p>
+      <button class="btn btn-gold" id="readBtn">Start Reading</button>
+    </div>
+  </section>
+
+  <!-- ==================== ALL BOOKS GRID VIEW ==================== -->
+  <section class="grid-view-panel" id="gridViewPanel">
+    <div class="grid-hdr">
+      <div class="grid-title-text" id="gridGenreTitle">Fantasy Novels</div>
+      <div class="grid-close" onclick="closeGridView()">✕ Back to Library</div>
+    </div>
+    <div class="grid-books" id="gridBooksContainer"></div>
+  </section>
+
+  <!-- ==================== MAIN GENRE ROWS ==================== -->
+  <div id="genreRowsContainer">
+    <!-- Generated dynamically in JS -->
+  </div>
+
+</div>
+
+<div class="toast" id="toast"><span id="tIco"></span><span id="tMsg"></span></div>
+
+<script>
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000/api'
+  : 'https://api.noverspirit.qd.je/api';
+const MOCK_BOOKS = [
+  {id:1,title:'The Celestial Ascension',genre:'Cultivation',author:'Lin Feng',cover:'📙',rating:4.9,chapters:47,words:124800,views:4200000,desc:'A young cultivator discovers a forbidden path to immortality amidst celestial wind peaks.',coverUrl:'upscalemedia-transformed.png'},
+  {id:2,title:'Iron Fist of the Nine Heavens',genre:'Martial Arts',author:'Blade_Sage',cover:'👑',rating:4.8,chapters:34,words:89200,views:2900000,desc:'A fallen martial artist rises to claim the golden throne of all nine heavens.',coverUrl:'Writerhall.png'},
+  {id:3,title:'The Last Spirit Merchant',genre:'Fantasy',author:'LFeng',cover:'🔮',rating:4.7,chapters:12,words:31400,views:980000,desc:'A mysterious merchant travels between floating realms selling forbidden relics.',coverUrl:'Library.png'},
+  {id:4,title:'Galaxy Romance: Two Souls',genre:'Romance',author:'StarWriter',cover:'💙',rating:4.6,chapters:88,words:234000,views:7200000,desc:'Two rival command pilots fall in love across a galaxy in cosmic conflict.',coverUrl:'Acommunitythatfeelslikehome.png'},
+  {id:5,title:'Sword Saint Chronicles',genre:'Martial Arts',author:'EdgeWalker',cover:'⚔️',rating:4.9,chapters:112,words:312000,views:6100000,desc:'The path of a swordsman who seeks the ultimate edge above the clouds.',coverUrl:'Towerofhonor.png'},
+  {id:6,title:'Path of the Eternal Dao',genre:'Cultivation',author:'DaoMaster',cover:'☯️',rating:4.8,chapters:289,words:640000,views:9200000,desc:'Cultivating Qi, seeking enlightenment, and fighting cosmic entities.',coverUrl:''},
+  {id:7,title:'Fallen Sect Disciple',genre:'Cultivation',author:'CloudScribe',cover:'⛰️',rating:4.5,chapters:76,words:180000,views:3400000,desc:'Expelled Disciple discovers an ancient ring that holds the soul of a master.',coverUrl:''},
+  {id:8,title:'Chrono Trigger: Rebirth',genre:'Sci-Fi',author:'FutureScribe',cover:'⏳',rating:4.7,chapters:56,words:130000,views:1800000,desc:'Time travel parameters collapse, sending a technician to a retro-cyber future.',coverUrl:''},
+  {id:9,title:'City of Ten Thousand Stars',genre:'Romance',author:'Luna',cover:'⭐',rating:4.4,chapters:120,words:210000,views:4800000,desc:'A starologist meets a pilot from a distant solar system in a space hub city.',coverUrl:''},
+  {id:10,title:'System Glitch: God Mode',genre:'Sci-Fi',author:'BugHunter',cover:'👾',rating:4.9,chapters:98,words:240000,views:5500000,desc:'A beta tester exploits a coordinate boundary overflow error, gaining god-like stats.',coverUrl:''}
+];
+
+let ALL_BOOKS = [];
+let RISING_BOOKS = [];
+let NEWLY_ARRIVED_BOOKS = [];
+
+// Carousel state
+let carouselBooks = [];
+let activeIndex = 0;
+
+// Render 3D Cover Flow Carousel
+function render3DCarousel(){
+  const wrap = document.getElementById('carousel3d');
+  wrap.innerHTML = '';
+  
+  carouselBooks.forEach((book, index) => {
+    let positionClass = 'hidden-state';
+    
+    // Assign position classes relative to activeIndex
+    if(index === activeIndex) {
+      positionClass = 'active';
+    } else if(index === activeIndex - 1) {
+      positionClass = 'left-1';
+    } else if(index === activeIndex + 1) {
+      positionClass = 'right-1';
+    } else if(index === activeIndex - 2) {
+      positionClass = 'left-2';
+    } else if(index === activeIndex + 2) {
+      positionClass = 'right-2';
+    }
+    
+    const card = document.createElement('div');
+    card.className = `book-3d ${positionClass}`;
+    
+    if(book.coverUrl){
+      card.innerHTML = `<img src="${book.coverUrl}" alt="${book.title}">`;
+    } else {
+      card.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem;background:linear-gradient(135deg,var(--maroon3),var(--maroon));border:1px solid var(--border);border-radius:10px;">${book.cover}</div>`;
+    }
+    
+    // Clicking side cover brings it to focus
+    card.addEventListener('click', () => {
+      activeIndex = index;
+      render3DCarousel();
+      updateActiveInfo(book);
+    });
+    
+    wrap.appendChild(card);
+  });
+  
+  updateActiveInfo(carouselBooks[activeIndex]);
+}
+
+function updateActiveInfo(book){
+  const infoPanel = document.getElementById('activeBookInfo');
+  infoPanel.classList.remove('show');
+  
+  setTimeout(() => {
+    document.getElementById('actTitle').textContent = book.title;
+    document.getElementById('actGenre').textContent = book.genre;
+    document.getElementById('actRating').innerHTML = `⭐ ${book.rating.toFixed(1)}`;
+    document.getElementById('actChapters').textContent = `${book.chapters} Chapters`;
+    document.getElementById('actSynopsis').textContent = book.desc;
+    
+    const readBtn = document.getElementById('readBtn');
+    readBtn.onclick = () => {
+      localStorage.setItem('sn_view_mode', 'reader');
+      localStorage.setItem('sn_active_book', book.id);
+      window.location.href = 'book-detail.html';
+    };
+    
+    infoPanel.classList.add('show');
+  }, 150);
+}
+
+function carouselPrev(){
+  if(activeIndex > 0) {
+    activeIndex--;
+    render3DCarousel();
+  }
+}
+function carouselNext(){
+  if(activeIndex < carouselBooks.length - 1) {
+    activeIndex++;
+    render3DCarousel();
+  }
+}
+
+/* ─── THEME ROWS ─── */
+const GENRES = ['Cultivation', 'Martial Arts', 'Fantasy', 'Romance', 'Sci-Fi'];
+
+function renderGenreRows(){
+  const container = document.getElementById('genreRowsContainer');
+  container.innerHTML = '';
+  
+  // 1. Newly Arrived Volumes Row
+  if (NEWLY_ARRIVED_BOOKS.length > 0) {
+    const section = document.createElement('section');
+    section.className = 'row-section';
+    section.id = 'row-newly-arrived';
+    section.innerHTML = `
+      <div class="row-hdr">
+        <div class="row-title">
+          <h3>🌱 Newly Arrived Volumes</h3>
+          <p>The freshest tales added to the Grand Library</p>
+        </div>
+      </div>
+      <div class="cards-row-wrap">
+        <button class="scroll-arrow s-left" onclick="scrollRow('row-list-newly', -400)">&#8249;</button>
+        <div class="cards-row" id="row-list-newly">
+          ${NEWLY_ARRIVED_BOOKS.map(b => `
+            <div class="row-card" onclick="openBookDetails('${b.id}')">
+              <div class="rc-cover">
+                ${b.coverUrl ? `<img src="${b.coverUrl}" alt="${b.title}">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3.5rem;background:linear-gradient(135deg,var(--maroon3),var(--maroon));">${b.cover}</div>`}
+              </div>
+              <div class="rc-title">${b.title}</div>
+              <div class="rc-author">by ${b.author}</div>
+              <div class="rc-footer">
+                <div class="rc-rating">⭐ ${b.rating.toFixed(1)}</div>
+                <div class="rc-chapters">${b.views.toLocaleString()} views</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <button class="scroll-arrow s-right" onclick="scrollRow('row-list-newly', 400)">&#8250;</button>
+      </div>
+    `;
+    container.appendChild(section);
+  }
+
+  // 2. Rising Books Row
+  if (RISING_BOOKS.length > 0) {
+    const section = document.createElement('section');
+    section.className = 'row-section';
+    section.id = 'row-rising';
+    section.innerHTML = `
+      <div class="row-hdr">
+        <div class="row-title">
+          <h3>🔥 Rising Books</h3>
+          <p>High potential rising stars capturing readers' attention</p>
+        </div>
+      </div>
+      <div class="cards-row-wrap">
+        <button class="scroll-arrow s-left" onclick="scrollRow('row-list-rising', -400)">&#8249;</button>
+        <div class="cards-row" id="row-list-rising">
+          ${RISING_BOOKS.map(b => `
+            <div class="row-card" onclick="openBookDetails('${b.id}')">
+              <div class="rc-cover">
+                ${b.coverUrl ? `<img src="${b.coverUrl}" alt="${b.title}">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3.5rem;background:linear-gradient(135deg,var(--maroon3),var(--maroon));">${b.cover}</div>`}
+              </div>
+              <div class="rc-title">${b.title}</div>
+              <div class="rc-author">by ${b.author}</div>
+              <div class="rc-footer">
+                <div class="rc-rating">⭐ ${b.rating.toFixed(1)}</div>
+                <div class="rc-chapters">${b.views.toLocaleString()} views</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <button class="scroll-arrow s-right" onclick="scrollRow('row-list-rising', 400)">&#8250;</button>
+      </div>
+    `;
+    container.appendChild(section);
+  }
+
+  // 3. Normal Genres
+  GENRES.forEach((genre, idx) => {
+    const genreBooks = ALL_BOOKS.filter(b => b.genre === genre);
+    if(genreBooks.length === 0) return;
+    
+    const section = document.createElement('section');
+    section.className = 'row-section';
+    section.id = `row-${genre.toLowerCase()}`;
+    
+    section.innerHTML = `
+      <div class="row-hdr">
+        <div class="row-title">
+          <h3>${genre} Vault</h3>
+          <p>Celestial collections of outstanding ${genre} novels</p>
+        </div>
+        <button class="view-all" onclick="openGenreGrid('${genre}')">View All (${genreBooks.length}) &#8250;</button>
+      </div>
+      <div class="cards-row-wrap">
+        <button class="scroll-arrow s-left" onclick="scrollRow('row-list-${idx}', -400)">&#8249;</button>
+        <div class="cards-row" id="row-list-${idx}">
+          ${genreBooks.map(b => `
+            <div class="row-card" onclick="openBookDetails('${b.id}')">
+              <div class="rc-cover">
+                ${b.coverUrl ? `<img src="${b.coverUrl}" alt="${b.title}">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3.5rem;background:linear-gradient(135deg,var(--maroon3),var(--maroon));">${b.cover}</div>`}
+              </div>
+              <div class="rc-title">${b.title}</div>
+              <div class="rc-author">by ${b.author}</div>
+              <div class="rc-footer">
+                <div class="rc-rating">⭐ ${b.rating.toFixed(1)}</div>
+                <div class="rc-chapters">${b.chapters} ch</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <button class="scroll-arrow s-right" onclick="scrollRow('row-list-${idx}', 400)">&#8250;</button>
+      </div>
+    `;
+    container.appendChild(section);
+  });
+}
+
+function scrollRow(rowId, offset) {
+  document.getElementById(rowId).scrollLeft += offset;
+}
+
+function openBookDetails(bookId){
+  localStorage.setItem('sn_view_mode', 'reader');
+  localStorage.setItem('sn_active_book', bookId);
+  window.location.href = 'book-detail.html';
+}
+
+/* ─── GRID VIEW CONTROLLER ─── */
+function openGenreGrid(genreName){
+  // Hide main layout sections
+  document.getElementById('showcaseSect').style.display = 'none';
+  document.getElementById('genreRowsContainer').style.display = 'none';
+  
+  // Update Grid UI
+  document.getElementById('gridGenreTitle').textContent = `${genreName} Novels`;
+  const gridContainer = document.getElementById('gridBooksContainer');
+  gridContainer.innerHTML = '';
+  
+  const filtered = ALL_BOOKS.filter(b => b.genre.toLowerCase() === genreName.toLowerCase());
+  
+  filtered.forEach(b => {
+    const card = document.createElement('div');
+    card.className = 'row-card';
+    card.style.width = '100%';
+    card.onclick = () => openBookDetails(b.id);
+    card.innerHTML = `
+      <div class="rc-cover">
+        ${b.coverUrl ? `<img src="${b.coverUrl}" alt="${b.title}">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3.5rem;background:linear-gradient(135deg,var(--maroon3),var(--maroon));">${b.cover}</div>`}
+      </div>
+      <div class="rc-title">${b.title}</div>
+      <div class="rc-author">by ${b.author}</div>
+      <div class="rc-footer">
+        <div class="rc-rating">⭐ ${b.rating.toFixed(1)}</div>
+        <div class="rc-chapters">${b.chapters} ch</div>
+      </div>
+    `;
+    gridContainer.appendChild(card);
+  });
+  
+  document.getElementById('gridViewPanel').classList.add('active');
+}
+
+function closeGridView(){
+  document.getElementById('gridViewPanel').classList.remove('active');
+  document.getElementById('showcaseSect').style.display = 'block';
+  document.getElementById('genreRowsContainer').style.display = 'block';
+  window.history.pushState({}, document.title, window.location.pathname);
+}
+
+/* ─── SEARCH ─── */
+function onSearch(query){
+  if(!query.trim()){
+    if(document.getElementById('gridViewPanel').classList.contains('active')){
+      closeGridView();
+    }
+    return;
+  }
+  
+  document.getElementById('showcaseSect').style.display = 'none';
+  document.getElementById('genreRowsContainer').style.display = 'none';
+  
+  document.getElementById('gridGenreTitle').textContent = `Search Results: "${query}"`;
+  const container = document.getElementById('gridBooksContainer');
+  container.innerHTML = '';
+  
+  const filtered = ALL_BOOKS.filter(b => 
+    b.title.toLowerCase().includes(query.toLowerCase()) || 
+    b.author.toLowerCase().includes(query.toLowerCase()) || 
+    b.genre.toLowerCase().includes(query.toLowerCase())
+  );
+  
+  if(filtered.length === 0){
+    container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--subtle);">No scrolls found matching your search parameter</div>`;
+  } else {
+    filtered.forEach(b => {
+      const card = document.createElement('div');
+      card.className = 'row-card';
+      card.style.width = '100%';
+      card.onclick = () => openBookDetails(b.id);
+      card.innerHTML = `
+        <div class="rc-cover">
+          ${b.coverUrl ? `<img src="${b.coverUrl}" alt="${b.title}">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3.5rem;background:linear-gradient(135deg,var(--maroon3),var(--maroon));">${b.cover}</div>`}
+        </div>
+        <div class="rc-title">${b.title}</div>
+        <div class="rc-author">by ${b.author}</div>
+        <div class="rc-footer">
+          <div class="rc-rating">⭐ ${b.rating.toFixed(1)}</div>
+          <div class="rc-chapters">${b.chapters} ch</div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+  
+  document.getElementById('gridViewPanel').classList.add('active');
+}
+
+/* ─── TOAST ─── */
+let toastTimer;
+function showToast(ico,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('tIco').innerHTML=ico;
+  document.getElementById('tMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+/* ─── API DATA LOADER ─── */
+async function loadLibraryData() {
+  try {
+    // 1. Fetch all books from backend
+    const responseAll = await fetch(`${API_URL}/novels`);
+    const dataAll = await responseAll.json();
+    
+    if (dataAll.novels && dataAll.novels.length > 0) {
+      ALL_BOOKS = dataAll.novels.map(n => ({
+        id: n.id,
+        title: n.title,
+        genre: n.tags ? n.tags.split(',')[0].trim() : 'Fantasy',
+        author: n.author ? n.author.username : 'Unknown',
+        cover: '📖',
+        rating: n.rating || 5.0,
+        chapters: n.chapters ? n.chapters.length : 3,
+        words: 80000,
+        views: n.views || 0,
+        desc: n.synopsis,
+        coverUrl: n.coverImage
+      }));
+    } else {
+      ALL_BOOKS = MOCK_BOOKS;
+    }
+  } catch (err) {
+    console.error('Failed to load novels, falling back to mocks', err);
+    ALL_BOOKS = MOCK_BOOKS;
+  }
+
+  try {
+    // 2. Fetch rising and newly arrived books
+    const responseRank = await fetch(`${API_URL}/novels/ranking-sections`);
+    const dataRank = await responseRank.json();
+
+    if (dataRank.rising && dataRank.newlyArrived) {
+      RISING_BOOKS = dataRank.rising.map(n => ({
+        id: n.id,
+        title: n.title,
+        genre: n.tags ? n.tags.split(',')[0].trim() : 'Fantasy',
+        author: n.author ? n.author.username : 'Unknown',
+        cover: '🔥',
+        rating: n.rating || 5.0,
+        chapters: 3,
+        views: n.views || 0,
+        desc: n.synopsis,
+        coverUrl: n.coverImage
+      }));
+
+      NEWLY_ARRIVED_BOOKS = dataRank.newlyArrived.map(n => ({
+        id: n.id,
+        title: n.title,
+        genre: n.tags ? n.tags.split(',')[0].trim() : 'Fantasy',
+        author: n.author ? n.author.username : 'Unknown',
+        cover: '🌱',
+        rating: n.rating || 5.0,
+        chapters: 3,
+        views: n.views || 0,
+        desc: n.synopsis,
+        coverUrl: n.coverImage
+      }));
+    }
+  } catch (err) {
+    console.error('Failed to load rankings, falling back', err);
+    RISING_BOOKS = ALL_BOOKS.slice(0, 5);
+    NEWLY_ARRIVED_BOOKS = ALL_BOOKS.slice().reverse().slice(0, 5);
+  }
+
+  // Populate 3D carousel books
+  if (ALL_BOOKS.length > 0) {
+    carouselBooks = ALL_BOOKS.slice(0, 5);
+    activeIndex = Math.min(2, carouselBooks.length - 1);
+    render3DCarousel();
+  }
+
+  // Render dynamic rows
+  renderGenreRows();
+}
+
+/* ─── INITIALIZE ─── */
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadLibraryData();
+  enableRowWheelScroll();
+  
+  // Check URL query parameters for direct links from homepage
+  const params = new URLSearchParams(window.location.search);
+  const genreParam = params.get('genre');
+  if(genreParam){
+    openGenreGrid(genreParam);
+  }
+});
+
+function enableRowWheelScroll(){
+  const rows = document.querySelectorAll('.cards-row');
+  rows.forEach(row => {
+    row.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        row.scrollLeft += e.deltaY * 1.5; // Multiply for smoother/faster scroll feel
+      }
+    }, { passive: false });
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writer Hall — Spirit-Novel</title>
+  <meta name="description" content="Manage all your novels, track earnings, word counts, streaks, analytics, comments, and rights in Spirit-Novel Writer Hall.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  <style>
+    :root {
+      --bg:#100c0a; --bg2:#180f0c; --bg3:#1e1410; --bg4:#251812;
+      --maroon:#6a1b29; --maroon2:#892837; --maroon3:#440e17;
+      --gold:#c8a261; --gold2:#a88143; --gold3:#dfc290; --gold4:#eeddb5;
+      --green:#4caf50; --blue:#7b9cff; --purple:#b07fff;
+      --text:#fbf8f3; --muted:#c9bcba; --subtle:#7a6e6b;
+      --border:rgba(200,162,97,0.16); --border2:rgba(200,162,97,0.08);
+      --glow:0 0 24px rgba(200,162,97,0.25);
+      --shadow:0 8px 32px rgba(0,0,0,0.4);
+      --tr:all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    button{background:none;border:none;color:inherit;font-family:inherit;cursor:pointer;}
+
+    /* ─── TOPBAR ─── */
+    .topbar{height:62px;background:linear-gradient(135deg,#0a0705,#16100d);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem;position:sticky;top:0;z-index:100;}
+    .logo{display:flex;align-items:center;gap:10px;}
+    .logo img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+    .logo-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--text);}
+    .topbar-sep{width:1px;height:28px;background:var(--border);margin:0 0.5rem;}
+    .topbar-title{font-size:1rem;color:var(--muted);font-weight:400;}
+    .topbar-title span{color:var(--gold);font-weight:600;}
+    .topbar-actions{margin-left:auto;display:flex;gap:0.6rem;align-items:center;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-size:0.85rem;font-weight:500;cursor:pointer;border:none;transition:var(--tr);font-family:'Outfit',sans-serif;}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+    .btn-ghost:hover{background:rgba(200,162,97,0.08);color:var(--gold);border-color:rgba(200,162,97,0.3);}
+    .btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a0f0a;font-weight:700;}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:var(--glow);}
+    .btn-maroon{background:linear-gradient(135deg,var(--maroon),var(--maroon2));color:var(--text);}
+    .btn-maroon:hover{transform:translateY(-1px);}
+
+    /* ─── LAYOUT ─── */
+    .page{max-width:1280px;margin:0 auto;padding:2rem 2rem 4rem;}
+
+    /* ─── PROFILE HEADER ─── */
+    .writer-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;padding:1.5rem 2rem;background:var(--bg2);border:1px solid var(--border);border-radius:16px;}
+    .writer-avatar{width:70px;height:70px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,var(--maroon),var(--maroon2));display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;cursor:pointer;transition:var(--tr);}
+    .writer-avatar:hover{transform:scale(1.05);}
+    .writer-info h1{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--text);}
+    .writer-rank-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 12px;background:rgba(200,162,97,0.12);border:1px solid rgba(200,162,97,0.3);border-radius:20px;font-size:0.78rem;color:var(--gold);margin-top:0.3rem;}
+    .writer-rank-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+
+    /* ─── TABS NAVIGATION ─── */
+    .tabs-nav{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:4px;gap:4px;margin-bottom:2rem;}
+    .tab-btn{flex:1;padding:10px 1rem;border-radius:8px;font-size:0.88rem;font-weight:500;color:var(--muted);transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:8px;}
+    .tab-btn:hover{color:var(--gold);}
+    .tab-btn.active{background:linear-gradient(135deg,var(--maroon),var(--maroon2));color:var(--text);box-shadow:0 4px 12px rgba(0,0,0,0.35);}
+    
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+
+    /* ─── CARDS & GRID ─── */
+    .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2rem;}
+    .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.4rem;transition:var(--tr);}
+    .stat-card:hover{border-color:rgba(200,162,97,0.3);transform:translateY(-2px);}
+    .stat-card .label{font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--subtle);margin-bottom:0.5rem;}
+    .stat-card .value{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--text);line-height:1;}
+    .stat-card .value.gold{color:var(--gold);}
+    .stat-card .sublabel{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;}
+    .stat-card .trend{font-size:0.72rem;color:var(--green);margin-top:0.2rem;}
+
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+    .section-head h2{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--text);}
+    .section-head .eyebrow{font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold2);margin-bottom:0.2rem;}
+
+    .books-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;}
+    .book-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:var(--tr);cursor:pointer;position:relative;}
+    .book-card:hover{border-color:rgba(200,162,97,0.4);transform:translateY(-4px);box-shadow:var(--shadow);}
+    .book-card-banner{height:8px;background:linear-gradient(90deg,var(--maroon),var(--gold2));}
+    .book-card-banner.ongoing{background:linear-gradient(90deg,#2a6b3a,#4caf50);}
+    .book-card-banner.hiatus{background:linear-gradient(90deg,#5a4a1a,#c8a261);}
+    .book-card-body{padding:1.2rem;}
+    .book-top{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;}
+    .book-cover{width:56px;height:76px;border-radius:6px;background:linear-gradient(135deg,var(--maroon3),var(--maroon));display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;border:2px solid var(--border);overflow:hidden;}
+    .book-cover img{width:100%;height:100%;object-fit:cover;}
+    .book-meta h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:0.3rem;}
+    .book-meta .genre{font-size:0.7rem;padding:2px 8px;background:rgba(106,27,41,0.4);border:1px solid rgba(200,162,97,0.2);border-radius:12px;color:var(--gold3);display:inline-block;margin-bottom:0.4rem;}
+    .book-meta .status{font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:5px;}
+    .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+    .status-dot.ongoing{background:#4caf50;}
+    .status-dot.hiatus{background:#c8a261;}
+    .status-dot.completed{background:#7b9cff;}
+    .book-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:1rem;}
+    .bstat{background:var(--bg3);border-radius:8px;padding:0.55rem 0.7rem;text-align:center;}
+    .bstat .bval{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--text);line-height:1;}
+    .bstat .blbl{font-size:0.62rem;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+    .book-footer{display:flex;align-items:center;justify-content:space-between;}
+    .streak-badge{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:var(--gold);background:rgba(200,162,97,0.08);padding:4px 10px;border-radius:20px;border:1px solid rgba(200,162,97,0.2);}
+    .book-actions{display:flex;gap:0.4rem;}
+    .book-btn{padding:5px 12px;border-radius:7px;font-size:0.78rem;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:var(--tr);}
+    .book-btn-primary{background:var(--maroon);color:var(--text);}
+    .book-btn-primary:hover{background:var(--maroon2);}
+    .book-btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+    .book-btn-ghost:hover{color:var(--gold);border-color:rgba(200,162,97,0.3);}
+    .earning-row{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:#4caf50;background:rgba(76,175,80,0.07);padding:3px 10px;border-radius:12px;border:1px solid rgba(76,175,80,0.2);}
+
+    .new-book-card{background:var(--bg2);border:2px dashed rgba(200,162,97,0.25);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;padding:2.5rem;cursor:pointer;transition:var(--tr);min-height:260px;}
+    .new-book-card:hover{border-color:rgba(200,162,97,0.5);background:rgba(200,162,97,0.04);}
+    .new-book-icon{width:56px;height:56px;border-radius:50%;background:rgba(200,162,97,0.1);border:2px solid rgba(200,162,97,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+    .new-book-card h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--gold);}
+    .new-book-card p{font-size:0.82rem;color:var(--muted);text-align:center;max-width:180px;}
+
+    /* ─── ANALYTICS TAB ─── */
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:1.5rem;}
+    .chart-container{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;position:relative;}
+    .chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+    .chart-header h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--text);}
+    .chart-legend{display:flex;gap:1rem;font-size:0.75rem;color:var(--muted);}
+    .legend-item{display:flex;align-items:center;gap:5px;}
+    .legend-color{width:10px;height:10px;border-radius:3px;}
+    /* Mock Chart Visuals */
+    .mock-chart-visual{height:180px;display:flex;align-items:flex-end;justify-content:space-between;padding-top:1rem;border-bottom:2px solid rgba(200,162,97,0.2);position:relative;}
+    .chart-bar-group{display:flex;flex-direction:column;align-items:center;flex:1;height:100%;justify-content:flex-end;gap:5px;}
+    .chart-bar{width:60%;max-width:32px;background:linear-gradient(to top,var(--maroon),var(--maroon2));border-radius:4px 4px 0 0;transition:var(--tr);position:relative;}
+    .chart-bar.gold-bar{background:linear-gradient(to top,var(--gold2),var(--gold));}
+    .chart-bar:hover::after{content:attr(data-val);position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:0.65rem;color:var(--text);z-index:10;}
+    .chart-lbl{font-size:0.68rem;color:var(--subtle);margin-top:0.4rem;text-align:center;}
+    
+    .table-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;overflow:hidden;}
+    .table-card h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;margin-bottom:1rem;}
+    .report-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+    .report-table th{text-align:left;padding:0.6rem 0.8rem;background:var(--bg3);color:var(--subtle);font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);}
+    .report-table td{padding:0.75rem 0.8rem;border-bottom:1px solid var(--border2);color:var(--muted);}
+    .report-table tr:last-child td{border-bottom:none;}
+    .report-table tr:hover td{background:rgba(200,162,97,0.03);color:var(--text);}
+
+    /* ─── COMMENTS & REVIEWS TAB ─── */
+    .comment-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1rem;transition:var(--tr);}
+    .comment-item:hover{border-color:rgba(200,162,97,0.3);}
+    .comment-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.7rem;}
+    .commenter{display:flex;align-items:center;gap:10px;}
+    .commenter-avatar{width:36px;height:36px;border-radius:50%;background:rgba(200,162,97,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem;border:1px solid var(--border);}
+    .commenter-name{font-size:0.85rem;font-weight:600;color:var(--text);}
+    .commenter-lvl{font-size:0.65rem;padding:2px 7px;background:rgba(123,156,255,0.12);color:var(--blue);border-radius:10px;font-weight:500;}
+    .comment-date{font-size:0.75rem;color:var(--subtle);}
+    .comment-book-tag{font-size:0.7rem;color:var(--gold);background:rgba(200,162,97,0.07);padding:2px 8px;border-radius:4px;border:1px solid rgba(200,162,97,0.15);display:inline-block;margin-bottom:0.6rem;}
+    .comment-text{font-size:0.88rem;color:var(--muted);line-height:1.5;margin-bottom:0.8rem;}
+    .comment-actions{display:flex;gap:1rem;font-size:0.75rem;color:var(--subtle);align-items:center;}
+    .comment-act-btn{cursor:pointer;display:flex;align-items:center;gap:4px;transition:var(--tr);}
+    .comment-act-btn:hover{color:var(--gold);}
+    .reply-box-wrap{margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--border2);display:none;}
+    .reply-box-wrap.active{display:block;}
+    .reply-ta{width:100%;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:6px;padding:0.6rem;color:var(--text);font-family:'Outfit',sans-serif;font-size:0.82rem;outline:none;resize:vertical;min-height:50px;}
+    .reply-actions{display:flex;justify-content:flex-end;gap:0.5rem;margin-top:0.5rem;}
+    .author-reply{margin-top:0.8rem;padding:0.7rem 1rem;background:rgba(200,162,97,0.04);border-left:2px solid var(--gold);border-radius:0 6px 6px 0;font-size:0.82rem;}
+    .author-reply-title{font-size:0.7rem;text-transform:uppercase;color:var(--gold2);font-weight:600;margin-bottom:3px;}
+
+    /* ─── EARNINGS & PAYOUTS TAB ─── */
+    .coin-panel{background:linear-gradient(135deg,#1a0d08,#2a1610);border:1px solid rgba(200,162,97,0.3);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;margin-bottom:1.5rem;}
+    .coin-panel::before{content:'\u26A1';position:absolute;right:2rem;top:1.5rem;font-size:5rem;opacity:0.04;line-height:1;}
+    .coin-balance{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:0.2rem;}
+    .coin-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold2);margin-bottom:1.2rem;}
+    .coin-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin-bottom:1.2rem;}
+    .coin-source{background:rgba(0,0,0,0.25);border-radius:8px;padding:0.7rem 0.9rem;}
+    .coin-source .cv{font-size:1.2rem;font-weight:700;color:var(--text);font-family:'Cormorant Garamond',serif;}
+    .coin-source .cl{font-size:0.62rem;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+    .exchange-row{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;}
+    .exchange-input{background:rgba(255,255,255,0.06);border:1px solid rgba(200,162,97,0.25);border-radius:8px;padding:8px 12px;color:var(--text);font-size:0.9rem;font-family:'Outfit',sans-serif;outline:none;width:150px;transition:var(--tr);}
+    .exchange-input:focus{border-color:rgba(200,162,97,0.5);}
+    .exchange-arrow{color:var(--gold);font-size:1.2rem;}
+    .exchange-result{font-size:1.1rem;font-weight:600;color:var(--green);font-family:'Cormorant Garamond',serif;}
+
+    /* ─── CONTRACTS & RIGHTS TAB ─── */
+    .contract-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;transition:var(--tr);display:flex;flex-direction:column;justify-content:space-between;min-height:220px;}
+    .contract-card:hover{border-color:rgba(200,162,97,0.3);}
+    .contract-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+    .contract-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--text);}
+    .contract-status{font-size:0.68rem;padding:2px 8px;border-radius:10px;text-transform:uppercase;font-weight:600;}
+    .contract-status.signed{background:rgba(76,175,80,0.12);color:var(--green);border:1px solid rgba(76,175,80,0.25);}
+    .contract-status.pending{background:rgba(200,162,97,0.12);color:var(--gold);border:1px solid rgba(200,162,97,0.25);}
+    .contract-desc{font-size:0.82rem;color:var(--muted);line-height:1.5;margin-bottom:1rem;}
+    
+    /* MODALS */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+    .modal-overlay.open{opacity:1;pointer-events:all;}
+    .modal{background:#1e1612;border:1px solid var(--border);border-radius:20px;padding:2rem;width:90%;max-width:520px;transform:scale(0.95);transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);max-height:85vh;overflow-y:auto;}
+    .modal-overlay.open .modal{transform:scale(1);}
+    .modal h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--text);margin-bottom:0.4rem;}
+    .modal p{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+    .form-group{margin-bottom:1rem;}
+    .form-group label{display:block;font-size:0.78rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold2);margin-bottom:0.4rem;font-weight:600;}
+    .form-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:0.9rem;font-family:'Outfit',sans-serif;outline:none;transition:var(--tr);}
+    .form-input:focus{border-color:rgba(200,162,97,0.4);}
+    .form-input option{background:#1e1410;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+    .modal-actions{display:flex;gap:0.8rem;justify-content:flex-end;margin-top:1.5rem;}
+    .confirm-box{background:rgba(76,175,80,0.07);border:1px solid rgba(76,175,80,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;}
+    .confirm-box .cv{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--green);}
+    .confirm-box .cl{font-size:0.75rem;color:var(--muted);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:2rem;right:2rem;background:#1e1612;border:1px solid rgba(200,162,97,0.3);border-radius:10px;padding:0.8rem 1.2rem;color:var(--text);font-size:0.85rem;display:flex;align-items:center;gap:0.6rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;box-shadow:var(--shadow);}
+    .toast.show{transform:translateY(0);opacity:1;}
+    
+    @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);} .books-grid{grid-template-columns:1fr 1fr;} .grid-2,.grid-3{grid-template-columns:1fr;}}
+    @media(max-width:600px){.stats-row{grid-template-columns:1fr 1fr;} .books-grid{grid-template-columns:1fr;} .writer-header{flex-direction:column;text-align:center;} .coin-breakdown{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="Index.html" class="logo">
+    <img src="logomy.png" alt="Spirit-Novel">
+    <span class="logo-name">Spirit-Novel</span>
+  </a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-title">&#9999;&#65039; <span>Writer Hall</span></div>
+  <div class="topbar-actions">
+    <a href="Index.html" class="btn btn-ghost">&#127968; Home</a>
+    <a href="profile.html" class="btn btn-ghost">👤 Profile</a>
+    <button class="btn btn-gold" onclick="openNewBookModal()">&#65291; New Book</button>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- WRITER PROFILE -->
+  <div class="writer-header">
+    <div class="writer-avatar" onclick="window.location.href='profile.html'" style="cursor:pointer;" title="View Profile">&#128084;</div>
+    <div class="writer-info">
+      <h1 id="writerName">Lin Feng</h1>
+      <div class="writer-rank-badge"><span class="dot"></span><span id="writerRank">Expert Writer &bull; 30% Revenue Share</span></div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:0.6rem;flex-wrap:wrap;">
+      <div style="text-align:center;padding:0.5rem 1.2rem;background:rgba(200,162,97,0.06);border:1px solid var(--border);border-radius:10px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--gold);">&#128293; 42</div>
+        <div style="font-size:0.68rem;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;">Day Streak</div>
+      </div>
+      <div style="text-align:center;padding:0.5rem 1.2rem;background:rgba(76,175,80,0.06);border:1px solid rgba(76,175,80,0.2);border-radius:10px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:#4caf50;">&#8377;14,280</div>
+        <div style="font-size:0.68rem;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;">This Month</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS NAV -->
+  <nav class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab('books-tab')">&#128216; My Books</button>
+    <button class="tab-btn" onclick="switchTab('analytics-tab')">&#128200; Analytics</button>
+    <button class="tab-btn" onclick="switchTab('comments-tab')">&#128172; Comments &amp; Reviews</button>
+    <button class="tab-btn" onclick="switchTab('payouts-tab')">&#128181; Payouts &amp; Wallet</button>
+    <button class="tab-btn" onclick="switchTab('contracts-tab')">&#128220; Contracts &amp; Rights</button>
+  </nav>
+
+  <!-- ═══════════ TAB 1: MY BOOKS ═══════════ -->
+  <div id="books-tab" class="tab-panel active">
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="label">Total Books</div>
+        <div class="value" id="totalBooks">4</div>
+        <div class="sublabel">3 Ongoing &bull; 1 Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Words Written</div>
+        <div class="value">1.24<span style="font-size:1rem;">M</span></div>
+        <div class="trend">&#8593; +12,400 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Views</div>
+        <div class="value">8.7<span style="font-size:1rem;">M</span></div>
+        <div class="trend">&#8593; +48K today</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Earnings</div>
+        <div class="value gold">&#8377;1.82<span style="font-size:1rem;">L</span></div>
+        <div class="sublabel">30% revenue share</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Followers</div>
+        <div class="value">24.6<span style="font-size:1rem;">K</span></div>
+        <div class="trend">&#8593; +380 this week</div>
+      </div>
+    </div>
+
+    <!-- BOOKS -->
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">My Library</div>
+        <h2>Your Books</h2>
+      </div>
+      <button class="btn btn-gold" onclick="openNewBookModal()">&#65291; New Book</button>
+    </div>
+
+    <div class="books-grid" id="booksGrid"></div>
+  </div>
+
+  <!-- ═══════════ TAB 2: ANALYTICS ═══════════ -->
+  <div id="analytics-tab" class="tab-panel">
+    <div class="grid-2">
+      <!-- Views and Reads Line Chart -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Daily Views Progression</h3>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-color" style="background:var(--maroon2);"></div>Views</div>
+            <div class="legend-item"><div class="legend-color" style="background:var(--gold);"></div>Unique Readers</div>
+          </div>
+        </div>
+        <div class="mock-chart-visual">
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:40%;" data-val="12K"></div>
+            <div class="chart-lbl">Mon</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:55%;" data-val="16K"></div>
+            <div class="chart-lbl">Tue</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:48%;" data-val="14K"></div>
+            <div class="chart-lbl">Wed</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:70%;" data-val="21K"></div>
+            <div class="chart-lbl">Thu</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:85%;" data-val="26K"></div>
+            <div class="chart-lbl">Fri</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:95%;" data-val="30K"></div>
+            <div class="chart-lbl">Sat</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:88%;" data-val="28K"></div>
+            <div class="chart-lbl">Sun</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coin Gifts Daily Chart -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Daily Gift Earnings (Spirit Coins)</h3>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-color" style="background:var(--gold);"></div>Coins Received</div>
+          </div>
+        </div>
+        <div class="mock-chart-visual">
+          <div class="chart-bar-group">
+            <div class="chart-bar gold-bar" style="height:30%;" data-val="420"></div>
+            <div class="chart-lbl">Mon</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar gold-bar" style="height:45%;" data-val="680"></div>
+            <div class="chart-lbl">Tue</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar gold-bar" style="height:60%;" data-val="820"></div>
+            <div class="chart-lbl">Wed</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar gold-bar" style="height:25%;" data-val="380"></div>
+            <div class="chart-lbl">Thu</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar gold-bar" style="height:75%;" data-val="1.1K"></div>
+            <div class="chart-lbl">Fri</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar gold-bar" style="height:90%;" data-val="1.4K"></div>
+            <div class="chart-lbl">Sat</div>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar gold-bar" style="height:80%;" data-val="1.2K"></div>
+            <div class="chart-lbl">Sun</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter Performance Table -->
+    <div class="table-card">
+      <h3>Individual Chapter Performance</h3>
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Chapter</th>
+            <th>Book</th>
+            <th>Views</th>
+            <th>Premium Locks</th>
+            <th>Comments</th>
+            <th>Gifts Received</th>
+            <th>Est. Royalty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ch 47. The Grand Staircase</td>
+            <td>The Celestial Ascension</td>
+            <td>128,400</td>
+            <td>94,100</td>
+            <td>380</td>
+            <td>&#9889; 4,200</td>
+            <td style="color:var(--green);">₹1,536</td>
+          </tr>
+          <tr>
+            <td>Ch 46. Jade Pavilion of Trials</td>
+            <td>The Celestial Ascension</td>
+            <td>104,200</td>
+            <td>82,000</td>
+            <td>290</td>
+            <td>&#9889; 3,100</td>
+            <td style="color:var(--green);">₹1,248</td>
+          </tr>
+          <tr>
+            <td>Ch 34. Iron Fist Rising</td>
+            <td>Iron Fist of the Nine Heavens</td>
+            <td>89,500</td>
+            <td>71,400</td>
+            <td>184</td>
+            <td>&#9889; 2,400</td>
+            <td style="color:var(--green);">₹842</td>
+          </tr>
+          <tr>
+            <td>Ch 33. Fallen Sect Disciple</td>
+            <td>Iron Fist of the Nine Heavens</td>
+            <td>76,100</td>
+            <td>58,000</td>
+            <td>112</td>
+            <td>&#9889; 1,800</td>
+            <td style="color:var(--green);">₹680</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ TAB 3: COMMENTS & REVIEWS ═══════════ -->
+  <div id="comments-tab" class="tab-panel">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Reader Interaction</div>
+        <h2>Feedback &amp; Reviews Hub</h2>
+      </div>
+    </div>
+
+    <div id="commentsContainer"></div>
+  </div>
+
+  <!-- ═══════════ TAB 4: PAYOUTS & WALLET ═══════════ -->
+  <div id="payouts-tab" class="tab-panel">
+    <div class="coin-panel">
+      <div class="coin-label">Available Spirit Coins</div>
+      <div class="coin-balance">&#9889; 48,200</div>
+      <div class="coin-breakdown">
+        <div class="coin-source"><div class="cv">32,400</div><div class="cl">From Reader Gifts</div></div>
+        <div class="coin-source"><div class="cv">12,800</div><div class="cl">Chapter Bonuses</div></div>
+        <div class="coin-source"><div class="cv">3,000</div><div class="cl">Community Events</div></div>
+        <div class="coin-source"><div class="cv">₹8,435</div><div class="cl">Exchange Value</div></div>
+      </div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.8rem;">&#9889; 1,000 Spirit Coins = <strong style="color:var(--green);">&#8377;175</strong> (Expert Writer multiplier applied) &nbsp;&bull;&nbsp; Min. withdrawal: 5,000 SC</div>
+      <div class="exchange-row">
+        <input type="number" class="exchange-input" id="coinInput" placeholder="Enter SC amount" min="5000" step="1000" oninput="calcExchange(this.value)" value="10000">
+        <span class="exchange-arrow">&#8594;</span>
+        <span class="exchange-result" id="exchangeResult">&#8377;1,750</span>
+        <button class="btn btn-gold" onclick="openExchangeModal()">Withdraw Payout &#8594;</button>
+      </div>
+      <div style="font-size:0.68rem;color:var(--subtle);margin-top:0.5rem;">Rate Card: 1,000 SC = ₹175 &bull; Processing 3-5 business days &bull; TDS of 10% applied above ₹10,000</div>
+    </div>
+
+    <!-- Payout History Logs -->
+    <div class="table-card">
+      <h3>Payout History Log</h3>
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Reference ID</th>
+            <th>Spirit Coins Exchanged</th>
+            <th>Exchange Rate</th>
+            <th>Royalty Paid (INR)</th>
+            <th>Payment Destination</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-06-20</td>
+            <td>TXN-98421074</td>
+            <td>&#9889; 20,000</td>
+            <td>₹175 / 1k SC</td>
+            <td style="color:var(--green); font-weight:600;">₹3,500</td>
+            <td>UPI (feng@upi)</td>
+            <td><span style="font-size:0.7rem; padding:3px 8px; background:rgba(76,175,80,0.1); color:var(--green); border-radius:4px; border:1px solid rgba(76,175,80,0.25);">Success</span></td>
+          </tr>
+          <tr>
+            <td>2026-05-15</td>
+            <td>TXN-87421094</td>
+            <td>&#9889; 15,000</td>
+            <td>₹175 / 1k SC</td>
+            <td style="color:var(--green); font-weight:600;">₹2,625</td>
+            <td>UPI (feng@upi)</td>
+            <td><span style="font-size:0.7rem; padding:3px 8px; background:rgba(76,175,80,0.1); color:var(--green); border-radius:4px; border:1px solid rgba(76,175,80,0.25);">Success</span></td>
+          </tr>
+          <tr>
+            <td>2026-04-10</td>
+            <td>TXN-74109842</td>
+            <td>&#9889; 10,000</td>
+            <td>₹175 / 1k SC</td>
+            <td style="color:var(--green); font-weight:600;">₹1,750</td>
+            <td>UPI (feng@upi)</td>
+            <td><span style="font-size:0.7rem; padding:3px 8px; background:rgba(76,175,80,0.1); color:var(--green); border-radius:4px; border:1px solid rgba(76,175,80,0.25);">Success</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ TAB 5: CONTRACTS & RIGHTS ═══════════ -->
+  <div id="contracts-tab" class="tab-panel">
+    <div class="grid-2">
+      <!-- Signed Contracts -->
+      <div class="contract-card">
+        <div class="contract-hdr">
+          <div>
+            <div class="contract-title">The Celestial Ascension</div>
+            <div style="font-size:0.75rem; color:var(--subtle); margin-top:2px;">Exclusive Distribution Agreement</div>
+          </div>
+          <span class="contract-status signed">Active &amp; Signed</span>
+        </div>
+        <p class="contract-desc">
+          Writers retain full intellectual property rights. By signing, you grant Spirit-Novel exclusive digital distribution rights in exchange for a premium **30% revenue share** (Expert Writer tier) and direct Reader Coin gifting multipliers.
+        </p>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--muted);">
+          <span>Signed: Jan 14, 2026</span>
+          <a href="#" style="color:var(--gold); text-decoration:underline;">View Contract PDF</a>
+        </div>
+      </div>
+
+      <!-- Pending Contracts -->
+      <div class="contract-card" style="border-style:dashed;">
+        <div class="contract-hdr">
+          <div>
+            <div class="contract-title">Iron Fist of the Nine Heavens</div>
+            <div style="font-size:0.75rem; color:var(--subtle); margin-top:2px;">Standard Distribution License</div>
+          </div>
+          <span class="contract-status pending">Pending Signature</span>
+        </div>
+        <p class="contract-desc">
+          Sign the exclusive contract for this novel to upgrade from the standard 10% tier to your eligible **30% revenue share tier**.
+        </p>
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+          <span style="font-size:0.75rem; color:var(--subtle);">Awaiting your signature</span>
+          <button class="btn btn-gold" style="padding:5px 12px; font-size:0.78rem;" onclick="signContractModal('Iron Fist of the Nine Heavens')">Sign Contract</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rights Matrix Card -->
+    <div class="table-card">
+      <h3>Royalty &amp; Contract Agreement Guidelines</h3>
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Agreement Type</th>
+            <th>Writers Title Eligibility</th>
+            <th>Revenue Share %</th>
+            <th>Intellectual Property Rights</th>
+            <th>Reader Gift Bonus</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Standard Non-Exclusive</td>
+            <td>All writers (Level 1+)</td>
+            <td>10% baseline share</td>
+            <td>100% retained by Writer</td>
+            <td>No bonus multipliers</td>
+          </tr>
+          <tr style="background:rgba(200,162,97,0.04); color:var(--text);">
+            <td><strong style="color:var(--gold);">Exclusive Contract</strong></td>
+            <td>Apprentice level or higher</td>
+            <td style="color:var(--green); font-weight:600;">20% – 50% depending on Level</td>
+            <td>100% retained by Writer (Digital Sole rights verified)</td>
+            <td style="color:var(--gold); font-weight:600;">Up to 30% cash-out multiplier bonus</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- NEW BOOK MODAL -->
+<div class="modal-overlay" id="newBookModal">
+  <div class="modal">
+    <h3>&#128218; Create New Book</h3>
+    <p>Start a new novel in your Spirit-Novel library</p>
+    <div class="form-group">
+      <label>Book Title</label>
+      <input type="text" class="form-input" id="newBookTitle" placeholder="Enter your book title...">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Genre</label>
+        <select class="form-input" id="newBookGenre">
+          <option>Fantasy</option><option>Cultivation</option><option>Sci-Fi</option>
+          <option>Romance</option><option>Mystery</option><option>Urban</option>
+          <option>Martial Arts</option><option>Isekai</option><option>Horror</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select class="form-input" id="newBookStatus">
+          <option>Ongoing</option><option>Hiatus</option><option>Completed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Synopsis (optional)</label>
+      <textarea class="form-input" rows="3" id="newBookSynopsis" placeholder="Brief description of your novel..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeNewBookModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="createBook()">&#128218; Create Book</button>
+    </div>
+  </div>
+</div>
+
+<!-- COIN WITHDRAWAL MODAL -->
+<div class="modal-overlay" id="exchangeModal">
+  <div class="modal">
+    <h3>&#9889; Exchange Spirit Coins</h3>
+    <p>Convert your earned Spirit Coins to real-world currency. Processed via UPI / Bank Transfer within 3–5 working days.</p>
+    <div class="mf">
+      <label>Spirit Coins to Exchange</label>
+      <input type="number" id="modalCoinInput" min="5000" step="1000" value="10000" oninput="updateModalCalc()">
+    </div>
+    <div class="confirm-box" id="confirmBox">
+      <div class="cl">You will receive</div>
+      <div class="cv" id="modalReceiveAmt">&#8377;1,750</div>
+      <div class="cl" style="margin-top:4px;">After platform processing (Expert Writer rate: 1,000 SC = &#8377;175)</div>
+    </div>
+    <div class="form-group">
+      <label>Payout Method</label>
+      <select class="form-input" id="payoutMethod">
+        <option>UPI ID</option>
+        <option>Bank Transfer (IMPS)</option>
+        <option>PhonePe / Paytm Wallet</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>UPI ID / Account details</label>
+      <input type="text" class="form-input" id="payoutId" placeholder="e.g. name@upi">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeExchangeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="confirmExchange()">Confirm Withdrawal</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRACT SIGN MODAL -->
+<div class="modal-overlay" id="contractModal">
+  <div class="modal">
+    <h3>&#128220; Sign Digital Exclusive Agreement</h3>
+    <p id="contractModalText">Sign exclusive contract for your book to unlock royalty multipliers.</p>
+    <div class="form-group" style="background:rgba(200,162,97,0.05); border:1px solid var(--border); padding:1rem; border-radius:10px; font-size:0.8rem; line-height:1.5; color:var(--muted); max-height:180px; overflow-y:auto; margin-bottom:1rem;">
+      <strong>TERMS &amp; CONDITIONS:</strong><br>
+      1. Grant of Digital Exclusive Rights: Scribe hereby grants Spirit-Novel exclusive digital hosting rights.<br>
+      2. Revenue Split: Royalty payout will rise to the Scribe rank level split (30% for Expert Writer).<br>
+      3. Intellectual Property Protection: Scribe retains 100% intellectual property ownership. Spirit-Novel is a distribution partner only.<br>
+      4. Termination: Requires a 30-day written notice if book is finished.
+    </div>
+    <div class="form-group">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer; text-transform:none; letter-spacing:0;">
+        <input type="checkbox" id="contractAgreeCheck"> I declare that I possess sole legal rights to this novel and agree to the terms.
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Digital Signature (Type your Full Name)</label>
+      <input type="text" class="form-input" id="contractSignInput" placeholder="Lin Feng">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeContractModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="confirmContractSign()">Sign Agreement</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastIcon"></span><span id="toastMsg"></span></div>
+
+<script>
+// Verify the user is an authorized writer
+(function checkWriterPermissions() {
+  const userStr = localStorage.getItem('sn_user');
+  const token = localStorage.getItem('sn_auth_token');
+  
+  if (!token || !userStr) {
+    // Redirect to login portal
+    window.location.href = 'auth.html';
+    return;
+  }
+  
+  try {
+    const user = JSON.parse(userStr);
+    if (user.role !== 'WRITER' && user.role !== 'ADMIN') {
+      // Redirect reader to writer registration page
+      window.location.href = 'profile.html?mode=writer';
+      return;
+    }
+  } catch(e) {
+    window.location.href = 'auth.html';
+  }
+})();
+
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000/api'
+  : 'https://api.noverspirit.qd.je/api';
+let books = [];
+
+function fmtNum(n){
+  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+  if(n>=1000) return (n/1000).toFixed(1)+'K';
+  return n.toLocaleString();
+}
+function fmtMoney(n){
+  if(n>=100000) return '₹'+(n/100000).toFixed(2)+'L';
+  if(n>=1000) return '₹'+(n/1000).toFixed(1)+'K';
+  return '₹'+n.toLocaleString();
+}
+
+/* ─── TABS CONTROLLER ─── */
+function switchTab(tabId){
+  document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+  if(activeBtn) activeBtn.classList.add('active');
+}
+
+async function loadWriterBooks() {
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/novels/author/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if(data.novels) {
+      books = data.novels;
+    }
+  } catch (err) {
+    console.error('Failed to load writer novels from API', err);
+  }
+  renderBooks();
+}
+
+function renderBooks(){
+  const grid = document.getElementById('booksGrid');
+  grid.innerHTML = '';
+  books.forEach(b => {
+    const statusColor = b.status==='ONGOING'?'ongoing':b.status==='HIATUS'?'hiatus':'completed';
+    const dotClass = b.status==='ONGOING'?'ongoing':b.status==='HIATUS'?'hiatus':'completed';
+    const card = document.createElement('div');
+    card.className = 'book-card';
+    card.innerHTML = `
+      <div class="book-card-banner ${statusColor}"></div>
+      <div class="book-card-body">
+        <div class="book-top">
+          <div class="book-cover">📖</div>
+          <div class="book-meta">
+            <h3>${b.title}</h3>
+            <div class="genre">${b.tags ? b.tags.split(',')[0] : 'Fantasy'}</div>
+            <div class="status"><span class="status-dot ${dotClass}"></span>${b.status} &bull; Updated ${new Date(b.updatedAt).toLocaleDateString()}</div>
+          </div>
+        </div>
+        <div class="book-stats">
+          <div class="bstat"><div class="bval">${fmtNum(b.chapters?.length * 3000 || 0)}</div><div class="blbl">Words</div></div>
+          <div class="bstat"><div class="bval">${b.chapters?.length || 0}</div><div class="blbl">Chapters</div></div>
+          <div class="bstat"><div class="bval">${fmtNum(b.views || 0)}</div><div class="blbl">Views</div></div>
+        </div>
+        <div class="book-footer">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div class="earning-row">&#128176; ${fmtMoney(Math.round(b.views * 0.8))} earned</div>
+            <div class="streak-badge">&#128293; 14 day streak</div>
+          </div>
+          <div class="book-actions">
+            <button class="book-btn book-btn-ghost" onclick="event.stopPropagation();editBook('${b.id}', '${b.slug}')">&#9881;</button>
+            <button class="book-btn book-btn-primary" onclick="event.stopPropagation();openBook('${b.id}', '${b.slug}')">Open &rarr;</button>
+          </div>
+        </div>
+      </div>`;
+    card.addEventListener('click', ()=>openBook(b.id, b.slug));
+    grid.appendChild(card);
+  });
+
+  const newCard = document.createElement('div');
+  newCard.className = 'new-book-card';
+  newCard.onclick = openNewBookModal;
+  newCard.innerHTML = `<div class="new-book-icon">&#128218;</div><h3>New Book</h3><p>Start a brand new novel in your writer hall</p>`;
+  grid.appendChild(newCard);
+  document.getElementById('totalBooks').textContent = books.length;
+}
+
+function openBook(id, slug){
+  localStorage.setItem('sn_view_mode', 'writer');
+  localStorage.setItem('sn_active_book', id);
+  localStorage.setItem('sn_active_book_slug', slug);
+  window.location.href = 'book-detail.html';
+}
+function editBook(id, slug){
+  localStorage.setItem('sn_view_mode', 'writer');
+  localStorage.setItem('sn_active_book', id);
+  localStorage.setItem('sn_active_book_slug', slug);
+  window.location.href = 'book-detail.html';
+}
+
+function openNewBookModal(){ document.getElementById('newBookModal').classList.add('open'); setTimeout(()=>document.getElementById('newBookTitle').focus(),100); }
+function closeNewBookModal(){ document.getElementById('newBookModal').classList.remove('open'); }
+
+async function createBook(){
+  const title = document.getElementById('newBookTitle').value.trim();
+  const genre = document.getElementById('newBookGenre').value;
+  const synopsis = document.getElementById('newBookSynopsis').value.trim();
+  const token = localStorage.getItem('sn_auth_token');
+
+  if(!title){ alert('Please enter a book title'); return; }
+  if(!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/novels`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        title,
+        synopsis,
+        tags: genre,
+        status: 'ONGOING'
+      })
+    });
+    const data = await response.json();
+
+    if(data.error) {
+      alert(data.message || 'Failed to create novel.');
+    } else {
+      closeNewBookModal();
+      showToast('&#128218;', 'Book created! Opening details...');
+      localStorage.setItem('sn_view_mode', 'writer');
+      localStorage.setItem('sn_active_book', data.novel.id);
+      localStorage.setItem('sn_active_book_slug', data.novel.slug);
+      setTimeout(() => window.location.href = 'book-detail.html', 1000);
+    }
+  } catch (err) {
+    console.error('Failed to create book', err);
+    alert('Failed to connect to publishing API.');
+  }
+}
+
+/* ─── WALLET & WITHDRAWAL ─── */
+function calcExchange(val){
+  const sc = parseInt(val)||0;
+  const amt = Math.floor(sc/1000)*175;
+  document.getElementById('exchangeResult').innerHTML = sc>=1000 ? '₹'+amt.toLocaleString('en-IN') : 'Min 1,000 SC';
+}
+function openExchangeModal(){
+  document.getElementById('modalCoinInput').value = document.getElementById('coinInput').value;
+  updateModalCalc();
+  document.getElementById('exchangeModal').classList.add('open');
+}
+function closeExchangeModal(){ document.getElementById('exchangeModal').classList.remove('open'); }
+function updateModalCalc(){
+  const sc = parseInt(document.getElementById('modalCoinInput').value)||0;
+  const amt = Math.floor(sc/1000)*175;
+  document.getElementById('modalReceiveAmt').innerHTML = sc>=1000 ? '₹'+amt.toLocaleString('en-IN') : 'Min 1,000 SC';
+}
+async function confirmExchange(){
+  const sc = parseInt(document.getElementById('modalCoinInput').value)||0;
+  if(sc < 1000){ alert("Minimum 1,000 Spirit Coins required."); return; }
+  const payId = document.getElementById('payoutId').value.trim();
+  if(!payId){ alert("Please enter your payout destination ID."); return; }
+  
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/payment/withdraw`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        amountCoins: sc,
+        method: 'UPI',
+        destination: payId
+      })
+    });
+    const data = await response.json();
+    if(data.error) {
+      alert(data.message || 'Withdrawal failed.');
+    } else {
+      closeExchangeModal();
+      showToast('&#9989;', `Withdrawal request of ₹${data.payout.amountInr} submitted!`);
+      // Sync balance
+      const coinsText = document.getElementById('coinBalance') || document.getElementById('exchangeBalance');
+      if(coinsText) {
+        const currentBal = parseInt(coinsText.textContent.replace(/,/g, '')) || 0;
+        coinsText.textContent = (currentBal - sc).toLocaleString();
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Failed to submit withdrawal request.');
+  }
+}
+
+/* ─── COMMENTS ─── */
+function toggleReplyBox(id){
+  const box = document.getElementById(id);
+  box.classList.toggle('active');
+  if(box.classList.contains('active')) box.querySelector('textarea').focus();
+}
+
+async function loadWriterComments() {
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/novels/author/comments`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    
+    if(data.comments) {
+      const container = document.getElementById('commentsContainer');
+      if(!container) return;
+      
+      if(data.comments.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding: 1.5rem; color: var(--muted); font-size:0.85rem;">No reviews or comments left by readers yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = data.comments.map(c => {
+        const authorReply = c.replies && c.replies.length > 0 ? c.replies[0] : null;
+
+        return `
+          <div class="comment-item">
+            <div class="comment-hdr">
+              <div class="commenter">
+                <div class="commenter-avatar">👤</div>
+                <div class="commenter-name">${c.user.username}</div>
+                <span class="commenter-lvl">${c.user.role}</span>
+              </div>
+              <div class="comment-date">${new Date(c.createdAt).toLocaleDateString()}</div>
+            </div>
+            <div class="comment-book-tag">${c.novel.title} ${c.chapter ? `&bull; Chapter ${c.chapter.chapterNumber}` : ''}</div>
+            <div class="comment-text">${c.content}</div>
+            <div class="comment-actions">
+              <span class="comment-act-btn">&#128077; Like</span>
+              <span class="comment-act-btn" onclick="toggleReplyBox('reply-${c.id}')">&#128172; Reply</span>
+            </div>
+            
+            <!-- Inline Author Reply -->
+            <div class="author-reply" id="existing-reply-${c.id}" style="${authorReply ? '' : 'display:none;'}">
+              <div class="author-reply-title">Author Reply &bull; Active</div>
+              <span class="reply-text">${authorReply ? authorReply.content : ''}</span>
+            </div>
+
+            <!-- Reply Box -->
+            <div class="reply-box-wrap" id="reply-${c.id}">
+              <textarea class="reply-ta" placeholder="Type your reply as author..."></textarea>
+              <div class="reply-actions">
+                <button class="btn btn-ghost" style="padding:4px 10px; font-size:0.75rem;" onclick="toggleReplyBox('reply-${c.id}')">Cancel</button>
+                <button class="btn btn-maroon" style="padding:4px 10px; font-size:0.75rem;" onclick="submitReply('reply-${c.id}', 'existing-reply-${c.id}', '${c.id}')">Post Reply</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  } catch (err) {
+    console.error('Failed to load writer comments', err);
+  }
+}
+
+async function submitReply(boxId, replyId, commentId){
+  const box = document.getElementById(boxId);
+  const ta = box.querySelector('textarea');
+  const txt = ta.value.trim();
+  const token = localStorage.getItem('sn_auth_token');
+  if(!txt || !token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/novels/comments/${commentId}/reply`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ content: txt })
+    });
+    const data = await response.json();
+
+    if(data.error) {
+      alert(data.message || 'Failed to submit reply.');
+    } else {
+      showToast('&#128172;', 'Reply posted successfully!');
+      await loadWriterComments();
+    }
+  } catch (err) {
+    console.error('Failed to post comment reply', err);
+  }
+}
+
+/* ─── CONTRACTS ─── */
+let pendingContractTargetName = "";
+function signContractModal(bookName){
+  pendingContractTargetName = bookName;
+  document.getElementById('contractModalText').innerHTML = `Sign digital exclusive agreement for your book <strong style="color:var(--gold); font-family:'Cormorant Garamond',serif; font-size:1.15rem;">${bookName}</strong>.`;
+  document.getElementById('contractAgreeCheck').checked = false;
+  document.getElementById('contractSignInput').value = "";
+  document.getElementById('contractModal').classList.add('open');
+}
+function closeContractModal(){ document.getElementById('contractModal').classList.remove('open'); }
+function confirmContractSign(){
+  const chk = document.getElementById('contractAgreeCheck').checked;
+  const sig = document.getElementById('contractSignInput').value.trim();
+  if(!chk){ alert("You must possess sole rights."); return; }
+  if(!sig){ alert("Please sign your name digitally to complete the contract."); return; }
+  
+  closeContractModal();
+  showToast('&#128220;', `Exclusive contract signed for ${pendingContractTargetName}!`);
+}
+
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape'){
+    closeNewBookModal();
+    closeExchangeModal();
+    closeContractModal();
+  }
+});
+
+let toastTimer;
+function showToast(icon,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastIcon').innerHTML=icon;
+  document.getElementById('toastMsg').innerHTML=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadWriterBooks();
+  await loadWriterComments();
+  calcExchange(10000);
+});
+</script>
+</body>
+</html>

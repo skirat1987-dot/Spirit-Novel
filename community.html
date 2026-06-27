@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Hall — Spirit-Novel</title>
+  <meta name="description" content="Join guilds, chat anonymously, and learn from expert mentors in the Spirit-Novel Community Hall.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+  <style>
+    :root {
+      --bg:#0e0b09; --bg-card:#15110f; --bg-chat:#1b1512;
+      --maroon:#6a1b29; --maroon2:#892837; --maroon-subtle:#2a1015;
+      --gold:#c8a261; --gold2:#a88143; --gold3:#dfc290;
+      --border:rgba(200,162,97,0.16); --border-subtle:rgba(200,162,97,0.06);
+      --text:#e8dfd6; --text-title:#fbf8f3; --muted:#a59c94;
+      --purple:#b07fff; --green:#4caf50; --shadow:0 12px 32px rgba(0,0,0,0.6);
+      --tr:all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      background:var(--bg); color:var(--text); font-family:'Outfit', sans-serif;
+      height:100vh; overflow:hidden; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar{
+      height:62px; background:rgba(14,11,9,0.95); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; padding:0 2rem;
+      flex-shrink:0; z-index:100; backdrop-filter:blur(8px);
+    }
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .logo img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+    .logo-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--text-title);}
+    
+    .nav-menu{display:flex;list-style:none;gap:1.5rem;}
+    .nav-link{text-decoration:none;color:var(--text);font-size:0.85rem;font-weight:500;transition:var(--tr);opacity:0.85;padding:6px 0;position:relative;}
+    .nav-link:hover,.nav-link.active{color:var(--gold);opacity:1;}
+    .nav-link.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);border-radius:2px;}
+    
+    .coins-pill{
+      display:flex;align-items:center;gap:6px;background:rgba(200,162,97,0.08);
+      border:1px solid var(--border);padding:5px 12px;border-radius:20px;
+      font-size:0.82rem;font-weight:600;color:var(--gold3);
+    }
+
+    /* ─── DISCORD LAYOUT ─── */
+    .app-layout{display:flex;flex:1;overflow:hidden;min-height:0;}
+
+    /* LEFT SIDEBAR: CHANNELS & GUILDS */
+    .channels-bar{
+      width:240px; background:var(--bg-card); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; flex-shrink:0;
+    }
+    .section-lbl{
+      font-size:0.68rem; text-transform:uppercase; letter-spacing:1.5px;
+      color:var(--gold); font-weight:700; padding:1.2rem 1rem 0.5rem;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .section-lbl span{cursor:pointer; font-size:0.9rem;}
+    
+    .channel-list{display:flex; flex-direction:column; gap:2px; padding:0 0.5rem; overflow-y:auto;}
+    .channel-item{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:8px 10px; border-radius:6px; font-size:0.82rem; color:var(--muted);
+      cursor:pointer; transition:var(--tr); text-decoration:none;
+    }
+    .channel-item:hover, .channel-item.active{background:rgba(200,162,97,0.06); color:var(--text-title);}
+    .channel-item.active{border-left:3px solid var(--gold); border-radius:0 6px 6px 0;}
+    .channel-item .badge{background:var(--maroon); color:var(--text-title); font-size:0.65rem; padding:1px 5px; border-radius:10px; font-weight:600;}
+
+    /* MIDDLE: CHAT INTERFACE */
+    .chat-area{flex:1; display:flex; flex-direction:column; background:var(--bg-chat); min-width:0;}
+    .chat-hdr{
+      height:56px; border-bottom:1px solid var(--border-subtle); display:flex;
+      align-items:center; padding:0 1.5rem; justify-content:space-between; flex-shrink:0;
+    }
+    .chat-title{font-weight:600; color:var(--text-title); font-size:0.95rem; display:flex; align-items:center; gap:6px;}
+    
+    .chat-messages{flex:1; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; gap:1.2rem;}
+    .msg-item{display:flex; gap:0.8rem; align-items:flex-start;}
+    .msg-avatar{width:36px; height:36px; border-radius:50%; background:var(--maroon-subtle); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0;}
+    .msg-content{flex:1;}
+    .msg-meta{display:flex; align-items:center; gap:0.5rem; margin-bottom:0.2rem;}
+    .msg-user{font-size:0.85rem; font-weight:600; color:var(--text-title);}
+    .msg-role{font-size:0.65rem; padding:1px 6px; border-radius:4px; font-weight:600;}
+    .msg-role.scribe{background:rgba(200,162,97,0.12); color:var(--gold3); border:1px solid var(--border);}
+    .msg-role.scholar{background:rgba(76,175,80,0.1); color:#4caf50;}
+    .msg-time{font-size:0.7rem; color:var(--muted); opacity:0.6;}
+    .msg-text{font-size:0.88rem; line-height:1.5; color:var(--text); white-space:pre-wrap; word-break:break-word;}
+
+    /* CHAT INPUT */
+    .chat-input-area{padding:1rem 1.5rem; border-top:1px solid var(--border-subtle); flex-shrink:0;}
+    .chat-input-wrap{display:flex; gap:0.8rem; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:6px 12px; align-items:center;}
+    .chat-input{flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:'Outfit',sans-serif; font-size:0.88rem;}
+    .chat-input::placeholder{color:var(--muted); opacity:0.6;}
+
+    /* RIGHT SIDEBAR: MEMBERS / INFO PANEL */
+    .info-bar{
+      width:240px; background:var(--bg-card); border-left:1px solid var(--border);
+      display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto;
+    }
+    .member-item{
+      display:flex; align-items:center; gap:8px; padding:6px 1rem;
+      font-size:0.8rem; color:var(--muted); cursor:pointer; transition:var(--tr);
+    }
+    .member-item:hover{color:var(--text-title);}
+    .member-dot{width:6px; height:6px; border-radius:50%; background:var(--green);}
+    .member-dot.offline{background:#555;}
+
+    /* ─── MENTORSHIP PANEL ─── */
+    .mentorship-wrap{flex:1; display:none; flex-direction:column; padding:2rem; overflow-y:auto; background:var(--bg-chat);}
+    .mentorship-wrap.active{display:flex;}
+    .mentor-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:1.5rem; margin-top:1.5rem;}
+    .cohort-card{
+      background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.5rem;
+      display:flex; flex-direction:column; gap:0.8rem; box-shadow:var(--shadow);
+    }
+    .cohort-hdr{display:flex; justify-content:space-between; align-items:center;}
+    .cohort-title{font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:700; color:var(--text-title);}
+    .cohort-mentor{font-size:0.75rem; color:var(--gold);}
+    .cohort-price{font-size:1.1rem; font-weight:700; color:var(--gold3); text-align:right;}
+
+    /* ─── MODAL ─── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+    .modal-overlay.open{opacity:1;pointer-events:all;}
+    .modal{background:#1e1612;border:1px solid var(--border);border-radius:20px;padding:2rem;width:90%;max-width:480px;box-shadow:var(--shadow);}
+    .modal h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--text-title);margin-bottom:0.5rem;}
+    .modal p{font-size:0.8rem;color:var(--muted);margin-bottom:1.2rem; line-height:1.4;}
+    .form-group{margin-bottom:1rem;}
+    .form-group label{display:block;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold2);margin-bottom:0.35rem;font-weight:600;}
+    .form-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:0.85rem;font-family:'Outfit',sans-serif;outline:none;}
+    .modal-actions{display:flex; gap:0.6rem; justify-content:flex-end; margin-top:1.5rem;}
+
+    /* ─── TOAST ─── */
+    .toast{position:fixed;bottom:2rem;right:2rem;background:#1e1612;border:1px solid rgba(200,162,97,0.3);border-radius:10px;padding:0.8rem 1.2rem;color:var(--text);font-size:0.85rem;display:flex;align-items:center;gap:0.6rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;box-shadow:var(--shadow);}
+    .toast.show{transform:translateY(0);opacity:1;}
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="Index.html" class="logo">
+    <img src="logomy.png" alt="Spirit-Novel">
+    <span class="logo-name">Spirit-Novel</span>
+  </a>
+
+  <ul class="nav-menu">
+    <li><a href="Index.html" class="nav-link">Home</a></li>
+    <li><a href="library.html" class="nav-link">Library</a></li>
+    <li><a href="writer-hall.html" class="nav-link">Writer Hall</a></li>
+    <li><a href="tower.html" class="nav-link">Tower of Honor</a></li>
+    <li><a href="community.html" class="nav-link active">Community Hall</a></li>
+    <li><a href="profile.html" class="nav-link">Profile</a></li>
+  </ul>
+
+  <div class="topbar-right">
+    <div class="coins-pill">
+      <span>⚡ <span id="coinBalance">48,200</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- APPLICATION LAYOUT -->
+<div class="app-layout">
+  
+  <!-- LEFT SIDEBAR -->
+  <aside class="channels-bar">
+    <!-- General Sect -->
+    <div class="section-lbl">Channels</div>
+    <div class="channel-list" id="generalChannels">
+      <div class="channel-item active" onclick="switchChannel('general', this)"># general-discussion</div>
+      <div class="channel-item" onclick="switchChannel('recs', this)"># novel-recs</div>
+      <div class="channel-item" onclick="switchChannel('lore', this)"># world-building</div>
+      <div class="channel-item" onclick="showMentorshipTab(this)" style="color:var(--purple); font-weight:600;">🏫 Mentorship-Platform</div>
+    </div>
+
+    <!-- Guilds Sect -->
+    <div class="section-lbl">
+      Guilds 
+      <span onclick="openCreateGuildModal()" title="Form a Guild (500 SC)">﹢</span>
+    </div>
+    <div class="channel-list" id="guildList">
+      <!-- Dynamic Guilds -->
+    </div>
+  </aside>
+
+  <!-- MIDDLE CHAT AREA -->
+  <section class="chat-area" id="chatArea">
+    <div class="chat-hdr">
+      <div class="chat-title" id="chatHdrTitle"># general-discussion</div>
+      <div id="guildHdrActions" style="display:none; gap:0.5rem;">
+        <button class="btn" id="btnToggleGuildTab" style="font-size:0.75rem; padding:4px 10px;" onclick="toggleGuildTab()">📜 Quest Board</button>
+        <button class="btn" style="font-size:0.75rem; padding:4px 10px;" onclick="openUpgradeGuildModal()">⚙️ Upgrade Guild</button>
+        <button class="btn btn-gold" style="font-size:0.75rem; padding:4px 10px;" onclick="openGuildInfoModal()">ℹ️ Benefits</button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <!-- Chat message bubbles loaded dynamically -->
+    </div>
+
+    <!-- Guild Quest Board Panel -->
+    <div id="guildQuestBoard" style="display:none; flex:1; overflow-y:auto; padding:1.5rem; flex-direction:column; gap:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:1rem; flex-shrink:0;">
+        <div>
+          <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--text-title);">Guild Quest Board</h3>
+          <p style="font-size:0.8rem; color:var(--muted); margin-top:2px;">Contribute progress to active quests. Completion rewards are funded by the guild owner.</p>
+        </div>
+        <button class="btn btn-gold" id="btnCreateQuest" onclick="openCreateQuestModal()" style="display:none; font-size:0.8rem; padding:6px 12px;">Set Guild Quest</button>
+      </div>
+      <div id="guildQuestsContainer" style="display:flex; flex-direction:column; gap:1rem;">
+        <!-- Dynamic active quests list -->
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="chat-input-wrap">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Message #general-discussion anonymously..." onkeydown="handleChatSubmit(event)">
+        <button class="btn btn-gold" style="padding:4px 12px; font-size:0.75rem;" onclick="submitMessage()">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENTORSHIP PLATFORM AREA (HIDDEN BY DEFAULT) -->
+  <section class="mentorship-wrap" id="mentorshipArea">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:1rem;">
+      <div>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-size:2rem; color:var(--text-title);">Mentorship Lecture Halls</h2>
+        <p style="font-size:0.8rem; color:var(--muted);">Join cohorts hosted by Expert Writers and Saint level Scribes to improve your pacing, world-building, and earnings.</p>
+      </div>
+      <button class="btn btn-gold" id="btnCreateLecture" onclick="openCreateLectureModal()" style="display:none;">Create Lecture Hall</button>
+    </div>
+
+    <div class="mentor-grid" id="cohortsContainer">
+      <!-- Mentorship cohorts -->
+    </div>
+  </section>
+
+  <!-- RIGHT SIDEBAR (ONLINE MEMBERS) -->
+  <aside class="info-bar" id="infoBar">
+    <div class="section-lbl">Online Members</div>
+    <div id="membersList">
+      <div class="member-item"><div class="member-dot"></div><span>Lin Feng</span></div>
+      <div class="member-item"><div class="member-dot"></div><span>Daoist_Cody</span></div>
+      <div class="member-item"><div class="member-dot"></div><span>Blade_Sage</span></div>
+      <div class="member-item"><div class="member-dot"></div><span>NovelFanatic</span></div>
+      <div class="member-item"><div class="member-dot"></div><span>DaoMaster_X</span></div>
+      <div class="member-item"><div class="member-dot"></div><span>StarWriter99</span></div>
+      <div class="member-item"><div class="member-dot"></div><span>Cang_Lan</span></div>
+    </div>
+  </aside>
+</div>
+
+<!-- CREATE GUILD MODAL -->
+<div class="modal-overlay" id="createGuildModal">
+  <div class="modal">
+    <h3>Form a Novel Guild</h3>
+    <p>Forming a guild requires <strong style="color:var(--gold);">500 Spirit Coins</strong>. Guilds unite authors and permanent readers, allowing you to advertise books, run lore sprints, and host promotional banners.</p>
+    <div class="form-group">
+      <label>Guild Name</label>
+      <input type="text" id="gNameInp" class="form-input" placeholder="e.g. Heavenly Scribe Sect">
+    </div>
+    <div class="form-group">
+      <label>Guild Motto / Focus</label>
+      <input type="text" id="gMottoInp" class="form-input" placeholder="e.g. Seeking the path of absolute pacing">
+    </div>
+    <div class="form-group">
+      <label>Primary Genre</label>
+      <select id="gGenreInp" class="form-input" style="background:#1e1410;">
+        <option>Cultivation</option>
+        <option>Martial Arts</option>
+        <option>Fantasy</option>
+        <option>Romance</option>
+        <option>Sci-Fi</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeCreateGuildModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="confirmCreateGuild()">Form Guild (500 SC)</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPGRADE GUILD MODAL -->
+<div class="modal-overlay" id="upgradeGuildModal">
+  <div class="modal">
+    <h3>Upgrade Guild Capacity</h3>
+    <p>Spend Spirit Coins to expand your guild's storage size and allow more disciples to join your channel.</p>
+    <div style="background:rgba(200,162,97,0.06); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:1rem; font-size:0.85rem;">
+      <div>Current Size: <strong id="lblCurrentLimit">20 Members</strong></div>
+      <div style="margin-top:0.4rem;">Next Upgrade: <strong>30 Members</strong></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeUpgradeGuildModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="confirmUpgradeGuild()">Upgrade (+10 Slots) - 100 SC</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUILD INFO MODAL -->
+<div class="modal-overlay" id="guildInfoModal">
+  <div class="modal">
+    <h3>Guild Sect Benefits</h3>
+    <div style="display:flex; flex-direction:column; gap:0.9rem; font-size:0.82rem; line-height:1.5; margin-bottom:1.5rem;">
+      <div style="display:flex; gap:10px;">
+        <span style="font-size:1.3rem;">📢</span>
+        <div>
+          <strong>Book Advertisement</strong>
+          <p style="color:var(--muted);">Pin promotional banners of your guild members' books directly inside the channel so readers joining can explore them.</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <span style="font-size:1.3rem;">❤️</span>
+        <div>
+          <strong>Permanent Loyal Readers</strong>
+          <p style="color:var(--muted);">Guild structures foster close connections. Readers in your guild count as permanent supporters, increasing daily view counts and streak bonuses.</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <span style="font-size:1.3rem;">💬</span>
+        <div>
+          <strong>Collaborative Sprints &amp; Quests</strong>
+          <p style="color:var(--muted);">Host private character debates, draft review sessions, and join group writing sprints to level up collectively.</p>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; justify-content:flex-end;">
+      <button class="btn btn-gold" onclick="closeGuildInfoModal()">I See</button>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE LECTURE MODAL -->
+<div class="modal-overlay" id="createLectureModal">
+  <div class="modal">
+    <h3>Open a Mentorship Lecture Hall</h3>
+    <p>Expert Scribes and above can host private cohorts here. New apprentice authors pay the entry fee to join, ask questions, and submit drafts for reviews.</p>
+    <div class="form-group">
+      <label>Lecture Topic</label>
+      <input type="text" id="lTopicInp" class="form-input" placeholder="e.g. Masterful Pacing in Cultivation Battles">
+    </div>
+    <div class="form-group">
+      <label>Entry Fee (Spirit Coins)</label>
+      <input type="number" id="lFeeInp" class="form-input" placeholder="e.g. 50" min="0" max="500">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeCreateLectureModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="confirmCreateLecture()">Create Lecture</button>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE QUEST MODAL -->
+<div class="modal-overlay" id="createQuestModal">
+  <div class="modal">
+    <h3>Set Guild Quest</h3>
+    <p>Set a goal for your guild members. The reward you set will be deducted from your Spirit Coins balance and locked as a prize pool.</p>
+    <div class="form-group">
+      <label>Quest Objective / Goal</label>
+      <input type="text" id="qObjectiveInp" class="form-input" placeholder="e.g. Write 10,000 words collectively">
+    </div>
+    <div class="form-group">
+      <label>Quest Type</label>
+      <select id="qTypeInp" class="form-input" style="background:#1e1410;">
+        <option value="words">Writing Sprint (Words)</option>
+        <option value="chapters">Reading Quest (Chapters)</option>
+        <option value="reviews">Review Raid (Reviews)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Target Value</label>
+      <input type="number" id="qTargetInp" class="form-input" placeholder="e.g. 10000" min="1">
+    </div>
+    <div class="form-group">
+      <label>Spirit Coin Reward (Funded by you)</label>
+      <input type="number" id="qRewardInp" class="form-input" placeholder="e.g. 200" min="10" max="5000">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeCreateQuestModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="confirmCreateQuest()">Set Quest</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="tIco"></span><span id="tMsg"></span></div>
+
+<script>
+// Wallet balance
+let coinBalance = parseInt(localStorage.getItem('sn_user_coins') || '0');
+document.getElementById('coinBalance').textContent = coinBalance.toLocaleString();
+
+const WRITER_LEVEL = 5; 
+if (WRITER_LEVEL >= 5) {
+  document.getElementById('btnCreateLecture').style.display = 'inline-flex';
+}
+
+// Active pointers
+let activeChannelId = 'general';
+let activeGuildId = null;
+let guilds = [];
+let lectures = [];
+
+function setCoinsBalance(val) {
+  coinBalance = val;
+  localStorage.setItem('sn_user_coins', val);
+  document.getElementById('coinBalance').textContent = val.toLocaleString();
+}
+
+async function switchChannel(channelId, el) {
+  document.getElementById('mentorshipArea').style.display = 'none';
+  document.getElementById('chatArea').style.display = 'flex';
+  document.getElementById('infoBar').style.display = 'block';
+
+  document.querySelectorAll('.channel-item').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  activeChannelId = channelId;
+  activeGuildId = null;
+
+  document.getElementById('chatMessages').style.display = 'flex';
+  document.querySelector('.chat-input-area').style.display = 'block';
+  document.getElementById('guildQuestBoard').style.display = 'none';
+
+  document.getElementById('chatHdrTitle').textContent = el.textContent;
+  document.getElementById('guildHdrActions').style.display = 'none';
+  document.getElementById('chatInput').placeholder = `Message ${el.textContent} anonymously...`;
+
+  await loadMessages();
+}
+
+async function switchGuildChannel(guildId, el) {
+  document.getElementById('mentorshipArea').style.display = 'none';
+  document.getElementById('chatArea').style.display = 'flex';
+  document.getElementById('infoBar').style.display = 'block';
+
+  document.querySelectorAll('.channel-item').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  activeChannelId = null;
+  activeGuildId = guildId;
+
+  document.getElementById('chatMessages').style.display = 'flex';
+  document.querySelector('.chat-input-area').style.display = 'block';
+  document.getElementById('guildQuestBoard').style.display = 'none';
+  const toggleBtn = document.getElementById('btnToggleGuildTab');
+  if (toggleBtn) toggleBtn.textContent = '📜 Quest Board';
+
+  const g = guilds.find(gd => gd.id === guildId);
+  document.getElementById('chatHdrTitle').textContent = `🛡️ ${g.name}`;
+  document.getElementById('guildHdrActions').style.display = 'flex';
+  document.getElementById('chatInput').placeholder = `Message guild ${g.name} anonymously...`;
+
+  await loadMessages();
+}
+
+function showMentorshipTab(el) {
+  document.querySelectorAll('.channel-item').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  document.getElementById('chatArea').style.display = 'none';
+  document.getElementById('infoBar').style.display = 'none';
+  document.getElementById('mentorshipArea').style.display = 'flex';
+  
+  loadLectures();
+}
+
+/* ─── MESSAGES API ─── */
+async function loadMessages() {
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:3rem; font-size:0.85rem;">Connecting to Qi grid...</div>`;
+
+  let url = `${API_URL}/community/messages`;
+  if (activeGuildId) {
+    url += `?guildId=${activeGuildId}`;
+  } else {
+    url += `?channelId=${activeChannelId}`;
+  }
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (data.messages && data.messages.length > 0) {
+      container.innerHTML = data.messages.map(m => `
+        <div class="msg-item">
+          <div class="msg-avatar">${m.user.substring(0,2)}</div>
+          <div class="msg-content">
+            <div class="msg-meta">
+              <span class="msg-user">${m.user}</span>
+              <span class="msg-role ${m.roleClass}">${m.role}</span>
+              <span class="msg-time">${m.time}</span>
+            </div>
+            <p class="msg-text">${m.text}</p>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:3rem; font-size:0.85rem;">This channel is silent. Start the discussion!</div>`;
+    }
+    container.scrollTop = container.scrollHeight;
+  } catch(err) {
+    console.error('Failed to load messages', err);
+    container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:3rem; font-size:0.85rem;">Could not connect to Spirit-Novel network.</div>`;
+  }
+}
+
+function handleChatSubmit(e) {
+  if (e.key === 'Enter') {
+    submitMessage();
+  }
+}
+
+async function submitMessage() {
+  const inp = document.getElementById('chatInput');
+  const txt = inp.value.trim();
+  const token = localStorage.getItem('sn_auth_token');
+  if(!txt || !token) return;
+
+  inp.value = '';
+
+  try {
+    const response = await fetch(`${API_URL}/community/messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        channelId: activeGuildId ? undefined : activeChannelId,
+        guildId: activeGuildId || undefined,
+        text: txt
+      })
+    });
+    const data = await response.json();
+    if(!data.error) {
+      await loadMessages();
+    }
+  } catch (err) {
+    console.error('Message post failed', err);
+  }
+}
+
+/* ─── SECTS / GUILDS API ─── */
+async function loadGuilds() {
+  try {
+    const response = await fetch(`${API_URL}/community/guilds`);
+    const data = await response.json();
+    if(data.guilds) {
+      guilds = data.guilds;
+    }
+  } catch(err) {
+    console.error('Failed to load sects', err);
+  }
+  renderGuilds();
+}
+
+function renderGuilds() {
+  const container = document.getElementById('guildsListContainer');
+  if(!container) return;
+  
+  if(guilds.length === 0) {
+    container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:1rem; font-size:0.75rem;">No sects established yet.</div>`;
+    return;
+  }
+
+  container.innerHTML = guilds.map(g => {
+    const userStr = localStorage.getItem('sn_user');
+    let isMember = false;
+    if(userStr) {
+      try {
+        const u = JSON.parse(userStr);
+        isMember = u.guildId === g.id;
+      } catch(e){}
+    }
+
+    return `
+      <div class="guild-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <h4 class="guild-name">${g.name}</h4>
+            <div class="guild-motto">"${g.motto}"</div>
+          </div>
+          <span class="guild-genre">${g.genre}</span>
+        </div>
+        <div class="guild-footer">
+          <span class="guild-count">👥 ${g.count}/${g.limit} Disciples</span>
+          ${isMember ? `
+            <button class="btn btn-ghost" style="padding:4px 8px; font-size:0.7rem; color:var(--gold);" onclick="switchGuildChannel('${g.id}', this)">Enter Hall</button>
+          ` : `
+            <button class="btn btn-gold" style="padding:4px 8px; font-size:0.7rem;" onclick="joinGuild('${g.id}')">Join Sect</button>
+          `}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openCreateGuildModal(){ document.getElementById('createGuildModal').classList.add('open'); }
+function closeCreateGuildModal(){ document.getElementById('createGuildModal').classList.remove('open'); }
+
+async function confirmCreateGuild() {
+  const name = document.getElementById('gNameInp').value.trim();
+  const motto = document.getElementById('gMottoInp').value.trim();
+  const token = localStorage.getItem('sn_auth_token');
+
+  if(!name || !token) { alert('Sect name is required.'); return; }
+
+  try {
+    const response = await fetch(`${API_URL}/community/guilds`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ name, motto })
+    });
+    const data = await response.json();
+
+    if(data.error) {
+      alert(data.message || 'Failed to establish Sect.');
+    } else {
+      closeCreateGuildModal();
+      showToast('🛡️', `Sect ${name} established successfully!`);
+      const userStr = localStorage.getItem('sn_user');
+      if(userStr) {
+        const u = JSON.parse(userStr);
+        u.guildId = data.guild.id;
+        localStorage.setItem('sn_user', JSON.stringify(u));
+      }
+      await loadGuilds();
+    }
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+async function joinGuild(guildId) {
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/community/guilds/${guildId}/join`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await response.json();
+
+    if(data.error) {
+      alert(data.message || 'Failed to join Sect.');
+    } else {
+      showToast('🛡️', data.message);
+      const userStr = localStorage.getItem('sn_user');
+      if(userStr) {
+        const u = JSON.parse(userStr);
+        u.guildId = guildId;
+        localStorage.setItem('sn_user', JSON.stringify(u));
+      }
+      await loadGuilds();
+    }
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+/* ─── ACADEMY LECTURES API ─── */
+async function loadLectures() {
+  try {
+    const response = await fetch(`${API_URL}/community/lectures`);
+    const data = await response.json();
+    if(data.lectures) {
+      lectures = data.lectures;
+    }
+  } catch(err) {
+    console.error(err);
+  }
+  renderLectures();
+}
+
+function renderLectures() {
+  const grid = document.getElementById('lecturesGrid');
+  grid.innerHTML = '';
+
+  if(lectures.length === 0) {
+    grid.innerHTML = `<div style="text-align:center; color:var(--muted); padding:3rem; width:100%;">No active lectures scheduled by mentors yet.</div>`;
+    return;
+  }
+
+  const currentUserStr = localStorage.getItem('sn_user');
+  let currentUsername = '';
+  if(currentUserStr) {
+    try {
+      currentUsername = JSON.parse(currentUserStr).username;
+    } catch(e){}
+  }
+
+  lectures.forEach(l => {
+    const hasJoined = l.joined.includes(currentUsername);
+    const card = document.createElement('div');
+    card.className = 'lecture-card';
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <span style="font-size:0.68rem; background:rgba(212,175,55,0.15); color:var(--gold); padding:2px 6px; border-radius:4px; font-weight:600;">MENTORSHIP</span>
+          <h3 style="font-size:1rem; margin-top:0.4rem; font-family:'Cormorant Garamond',serif; font-weight:600; color:var(--text);">${l.topic}</h3>
+        </div>
+        <div style="font-size:0.8rem; font-weight:600; color:var(--gold);">&#9889; ${l.fee} SC</div>
+      </div>
+      <div style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.75rem; color:var(--muted);">Hosted by <strong style="color:var(--text);">${l.mentor}</strong></span>
+        ${hasJoined ? `
+          <button class="btn btn-ghost" style="padding:6px 12px; font-size:0.75rem; color:var(--gold);" disabled>Enrolled ✓</button>
+        ` : `
+          <button class="btn btn-gold" style="padding:6px 12px; font-size:0.75rem;" onclick="joinLecture('${l.id}')">Enroll Now</button>
+        `}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function openCreateLectureModal(){ document.getElementById('createLectureModal').classList.add('open'); }
+function closeCreateLectureModal(){ document.getElementById('createLectureModal').classList.remove('open'); }
+
+async function confirmCreateLecture() {
+  const topic = document.getElementById('lTopicInp').value.trim();
+  const fee = parseInt(document.getElementById('lFeeInp').value) || 0;
+  const token = localStorage.getItem('sn_auth_token');
+
+  if(!topic || !token) { alert('Lecture topic description is required.'); return; }
+
+  try {
+    const response = await fetch(`${API_URL}/community/lectures`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ topic, fee })
+    });
+    const data = await response.json();
+
+    if(data.error) {
+      alert(data.message || 'Failed to schedule Mentorship Lecture.');
+    } else {
+      closeCreateLectureModal();
+      showToast('📖', `Mentorship Lecture scheduled successfully!`);
+      await loadLectures();
+    }
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+async function joinLecture(lectureId) {
+  const token = localStorage.getItem('sn_auth_token');
+  if(!token) return;
+
+  try {
+    const response = await fetch(`${API_URL}/community/lectures/${lectureId}/join`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await response.json();
+
+    if(data.error) {
+      alert(data.message || 'Failed to enroll in lecture.');
+    } else {
+      showToast('🏆', 'Enrolled in Mentorship Lecture!');
+      if(window.syncCoinsWithBackend) await window.syncCoinsWithBackend();
+      await loadLectures();
+    }
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+/* ─── QUEST BOARD ─── */
+let activeGuildQuestTab = 'active';
+const defaultQuests = [
+  {id: 1, title: 'Write 10,000 words this week', reward: 500, target: 10000, current: 4800, type: 'words', completed: false},
+  {id: 2, title: 'Publish 3 chapters under Heavenly Sect', reward: 150, target: 3, current: 1, type: 'chapters', completed: false}
+];
+let guildQuests = JSON.parse(localStorage.getItem('sn_guild_quests') || 'null') || defaultQuests;
+
+function toggleGuildTab() {
+  if (activeGuildTab === 'chat') {
+    activeGuildTab = 'quests';
+    document.getElementById('chatMessages').style.display = 'none';
+    document.querySelector('.chat-input-area').style.display = 'none';
+    document.getElementById('guildQuestBoard').style.display = 'block';
+    document.getElementById('btnToggleGuildTab').textContent = '💬 Chat Channel';
+    renderGuildQuests();
+  } else {
+    activeGuildTab = 'chat';
+    document.getElementById('chatMessages').style.display = 'flex';
+    document.querySelector('.chat-input-area').style.display = 'block';
+    document.getElementById('guildQuestBoard').style.display = 'none';
+    document.getElementById('btnToggleGuildTab').textContent = '📜 Quest Board';
+  }
+}
+
+function switchQuestTab(status, el) {
+  document.querySelectorAll('.quest-tab-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  activeGuildQuestTab = status;
+  renderGuildQuests();
+}
+
+function renderGuildQuests() {
+  const container = document.getElementById('questsList');
+  container.innerHTML = '';
+  
+  const filtered = guildQuests.filter(q => activeGuildQuestTab === 'active' ? !q.completed : q.completed);
+  if(filtered.length === 0) {
+    container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:3rem; font-size:0.85rem;">No quests here. Check back later!</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(q => {
+    const pct = Math.min(100, Math.round((q.current / q.target) * 100));
+    return `
+      <div class="quest-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <h4 style="color:var(--text); font-size:0.9rem;">${q.title}</h4>
+            <span style="font-size:0.7rem; color:var(--muted);">${q.current.toLocaleString()} / ${q.target.toLocaleString()} progress</span>
+          </div>
+          <span style="color:var(--gold); font-size:0.8rem; font-weight:600;">⚡ ${q.reward} SC</span>
+        </div>
+        <div class="quest-progress-bar">
+          <div class="quest-progress-fill" style="width:${pct}%;"></div>
+        </div>
+        ${!q.completed ? `
+          <div style="display:flex; justify-content:flex-end; margin-top:0.8rem;">
+            <button class="btn btn-gold" style="padding:4px 8px; font-size:0.7rem;" onclick="contributeQuest(${q.id})">Contribute Progress</button>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function openCreateQuestModal(){ document.getElementById('createQuestModal').classList.add('open'); }
+function closeCreateQuestModal(){ document.getElementById('createQuestModal').classList.remove('open'); }
+
+function confirmCreateQuest() {
+  const title = document.getElementById('qTitleInp').value.trim();
+  const reward = parseInt(document.getElementById('qRewardInp').value) || 0;
+  if(!title || reward <= 0) return;
+
+  const newQ = {
+    id: Date.now(),
+    title,
+    reward,
+    target: 10,
+    current: 0,
+    type: 'custom',
+    completed: false
+  };
+
+  guildQuests.unshift(newQ);
+  localStorage.setItem('sn_guild_quests', JSON.stringify(guildQuests));
+  closeCreateQuestModal();
+  renderGuildQuests();
+  showToast('📜', `Quest set successfully! ${reward} SC deducted to fund reward.`);
+}
+
+function contributeQuest(questId) {
+  const qIdx = guildQuests.findIndex(q => q.id === questId);
+  if(qIdx === -1) return;
+  
+  const q = guildQuests[qIdx];
+  if(q.completed) return;
+  
+  const amt = 1000;
+  q.current = Math.min(q.target, q.current + amt);
+  
+  if(q.current >= q.target) {
+    q.completed = true;
+    coinBalance += q.reward;
+    setCoinsBalance(coinBalance);
+    showToast('🏆', `Quest Completed! +${q.reward} SC distributed to you.`);
+  } else {
+    showToast('📈', `Contributed +${amt} progress to quest.`);
+  }
+  
+  localStorage.setItem('sn_guild_quests', JSON.stringify(guildQuests));
+  renderGuildQuests();
+}
+
+/* ─── TOAST ─── */
+let toastTimer;
+function showToast(ico,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('tIco').innerHTML=ico;
+  document.getElementById('tMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Click outside panels closes modals
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// Init
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadGuilds();
+  await loadMessages();
+});
+</script>
+</body>
+</html>

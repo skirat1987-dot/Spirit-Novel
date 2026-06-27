@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spirit Account Portal — Spirit-Novel</title>
+  <meta name="description" content="Sign in or register your Spirit Account to access premium chapters, join guilds, and publish your own web novels.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="widgets.css">
+  <script src="widgets.js"></script>
+
+  <style>
+    :root {
+      --bg: #0c0807;
+      --bg-card: rgba(26, 18, 16, 0.75);
+      --maroon: #6a1b29;
+      --maroon-light: #892837;
+      --gold: #c8a261;
+      --gold-light: #eeddb5;
+      --text: #fbf8f3;
+      --muted: #c9bcba;
+      --border: rgba(200, 162, 97, 0.16);
+      --border-focus: rgba(200, 162, 97, 0.5);
+      --glow: 0 0 25px rgba(200, 162, 97, 0.2);
+      --shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+      --tr: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Magical Particles Background */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(106, 27, 41, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(200, 162, 97, 0.08) 0%, transparent 45%),
+        url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0l2 10 8-8-8 8-2 10-2-10-8-8 8 8zM0 40l2 10 8-8-8 8-2 10-2-10-8-8 8 8z' fill='%23c8a261' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      height: 62px;
+      background: linear-gradient(135deg, #070504, #120c0a);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+    }
+    .logo-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ─── MAIN PORTAL CONTAINER ─── */
+    .portal-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      z-index: 1;
+    }
+
+    .portal-card {
+      width: 100%;
+      max-width: 460px;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: var(--tr);
+    }
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--maroon), var(--gold), var(--maroon));
+    }
+
+    /* Tab Headers */
+    .portal-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 2.2rem;
+      gap: 1.5rem;
+    }
+    .tab-btn {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--muted);
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid transparent;
+      transition: var(--tr);
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      color: var(--gold-light);
+      border-color: var(--gold);
+      text-shadow: 0 0 10px rgba(200, 162, 97, 0.3);
+    }
+
+    .form-section {
+      display: none;
+    }
+    .form-section.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Form Fields */
+    .portal-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .portal-card p.subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.8rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+    .input-group input {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      outline: none;
+      transition: var(--tr);
+    }
+    .input-group input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 12px rgba(200, 162, 97, 0.1);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Checkbox Row */
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.8rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .checkbox-wrap input {
+      accent-color: var(--gold);
+    }
+
+    /* Buttons */
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #120e0d;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+      transition: var(--tr);
+      text-align: center;
+      box-shadow: var(--glow);
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(200, 162, 97, 0.35);
+    }
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* Message Boxes */
+    .alert-box {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      display: none;
+      line-height: 1.4;
+    }
+    .alert-error {
+      background: rgba(106, 27, 41, 0.15);
+      border: 1px solid rgba(106, 27, 41, 0.4);
+      color: #ff8b9e;
+      display: block;
+    }
+    .alert-success {
+      background: rgba(76, 175, 80, 0.15);
+      border: 1px solid rgba(76, 175, 80, 0.4);
+      color: #81c784;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar Header -->
+  <header class="topbar">
+    <a href="Index.html" class="logo">
+      <img src="logomy.png" alt="Spirit-Novel Logo">
+      <span class="logo-name">Spirit-Novel</span>
+    </a>
+  </header>
+
+  <!-- Portal Container -->
+  <div class="portal-wrap">
+    <div class="portal-card">
+      
+      <!-- Tab Headers -->
+      <div class="portal-tabs" id="portalTabsContainer">
+        <div class="tab-btn active" onclick="switchTab('login')">Sign In</div>
+        <div class="tab-btn" onclick="switchTab('register')">Spirit Account</div>
+      </div>
+
+      <!-- Feedback Alerts -->
+      <div id="alertBox" class="alert-box"></div>
+
+      <!-- ─── LOGIN FORM ─── -->
+      <div id="loginSection" class="form-section active">
+        <h3>Welcome back</h3>
+        <p class="subtitle">Ascend your mind and resume reading your stories.</p>
+        
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="input-group">
+            <label for="loginIdentifier">Email or Username</label>
+            <input type="text" id="loginIdentifier" placeholder="Enter your email or username" required>
+          </div>
+          <div class="input-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required>
+          </div>
+          <div class="form-options">
+            <label class="checkbox-wrap">
+              <input type="checkbox" checked> Remember session
+            </label>
+            <a href="#" style="color:var(--gold); transition:var(--tr);">Forgot Scroll Key?</a>
+          </div>
+          <button type="submit" class="btn-submit">Aura Lock Sign In</button>
+        </form>
+      </div>
+
+      <!-- ─── REGISTER FORM ─── -->
+      <div id="registerSection" class="form-section">
+        <h3>Create Spirit Account</h3>
+        <p class="subtitle">Enroll in the Magical Academy of Storytelling.</p>
+        
+        <form id="registerForm" onsubmit="handleRegister(event)">
+          <div class="input-group">
+            <label for="regEmail">Email Address</label>
+            <input type="email" id="regEmail" placeholder="yourname@domain.com" required>
+          </div>
+          <div class="input-group">
+            <label for="regMobile">Mobile Number</label>
+            <input type="tel" id="regMobile" placeholder="e.g. 9876543210" required>
+          </div>
+          <div class="input-group">
+            <label for="regUsername">Username (Optional)</label>
+            <input type="text" id="regUsername" placeholder="e.g. Daoist_Mage">
+          </div>
+          <div class="input-group">
+            <label for="regPassword">Create Password</label>
+            <input type="password" id="regPassword" placeholder="Minimum 6 characters" required>
+          </div>
+          <div class="input-group">
+            <label for="regConfirmPassword">Confirm Password</label>
+            <input type="password" id="regConfirmPassword" placeholder="Re-enter password" required>
+          </div>
+          <div class="input-group" style="margin-top: 1.2rem; margin-bottom: 1.5rem;">
+            <label class="checkbox-wrap" style="text-transform: none; letter-spacing: 0; font-size: 0.82rem; font-weight: normal; display: flex; align-items: flex-start; gap: 8px;">
+              <input type="checkbox" id="regTermsAgree" required style="margin-top: 3px;">
+              <span>I agree to the <a href="Spirit_Novel_Terms_and_Conditions.pdf" target="_blank" style="color: var(--gold); text-decoration: underline; font-weight: 500;">Terms and Conditions</a> of Spirit-Novel Academy.</span>
+            </label>
+          </div>
+          <button type="submit" class="btn-submit">Form Spirit Contract</button>
+        </form>
+      </div>
+
+      <!-- ─── OTP VERIFICATION VIEW ─── -->
+      <div id="otpSection" class="form-section">
+        <h3>Verify Credentials</h3>
+        <p class="subtitle" style="margin-bottom: 1.2rem;">Enter the 6-digit OTP code sent simultaneously to your email and mobile.</p>
+        
+        <div style="background: rgba(200, 162, 97, 0.05); border: 1px solid var(--border); padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.8rem; color: var(--gold-light); margin-bottom: 1.5rem; text-align: left;">
+          📬 Sent to: <strong id="otpEmailTarget" style="color: #fff;"></strong>
+        </div>
+
+        <form id="otpForm" onsubmit="handleVerifyOtp(event)">
+          <div class="input-group">
+            <label for="otpCode">6-Digit Verification OTP</label>
+            <input type="text" id="otpCode" placeholder="e.g. 123456" required pattern="\d{6}" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 6px; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 8px 12px; outline: none; width: 100%; font-family: monospace;">
+          </div>
+          <button type="submit" class="btn-submit" style="margin-top: 1.5rem;">Verify & Register Account</button>
+          <button type="button" class="btn-submit" onclick="cancelOtp()" style="margin-top: 0.6rem; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--text);">Cancel</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Client Script for Account Operations -->
+  <script>
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000/api'
+  : 'https://api.noverspirit.qd.je/api';
+
+    function switchTab(tab) {
+      const loginSection = document.getElementById('loginSection');
+      const registerSection = document.getElementById('registerSection');
+      const tabs = document.querySelectorAll('.tab-btn');
+      const alertBox = document.getElementById('alertBox');
+
+      // Clear alerts
+      alertBox.style.display = 'none';
+
+      if (tab === 'login') {
+        loginSection.classList.add('active');
+        registerSection.classList.remove('active');
+        tabs[0].classList.add('active');
+        tabs[1].classList.remove('active');
+      } else {
+        loginSection.classList.remove('active');
+        registerSection.classList.add('active');
+        tabs[0].classList.remove('active');
+        tabs[1].classList.add('active');
+      }
+    }
+
+    function showAlert(message, type = 'error') {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.textContent = message;
+      alertBox.className = 'alert-box ' + (type === 'error' ? 'alert-error' : 'alert-success');
+      alertBox.style.display = 'block';
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const loginIdentifier = document.getElementById('loginIdentifier').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const alertBox = document.getElementById('alertBox');
+      alertBox.style.display = 'none';
+
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ loginIdentifier, password })
+        });
+        const data = await response.json();
+
+        if (data.error) {
+          showAlert(data.message || 'Verification failed. Incorrect credentials.');
+        } else {
+          // Save session
+          localStorage.setItem('sn_auth_token', data.token);
+          localStorage.setItem('sn_user', JSON.stringify(data.user));
+          
+          showAlert(data.message, 'success');
+          
+          // Redirect back to profile page or home page
+          setTimeout(() => {
+            window.location.href = 'profile.html';
+          }, 1000);
+        }
+      } catch (err) {
+        showAlert('Could not establish contact with the Spirit Gate (Backend offline).');
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const email = document.getElementById('regEmail').value.trim();
+      const mobile = document.getElementById('regMobile').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+      const agree = document.getElementById('regTermsAgree').checked;
+      const alertBox = document.getElementById('alertBox');
+      alertBox.style.display = 'none';
+
+      if (!agree) {
+        showAlert('You must read and agree to the Terms and Conditions to register.');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showAlert('Confirm password does not match created password.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, mobile, username, password, confirmPassword })
+        });
+        const data = await response.json();
+
+        if (data.error) {
+          showAlert(data.message || 'Registration failed.');
+        } else {
+          // Store email context for verification
+          document.getElementById('otpEmailTarget').textContent = email;
+          
+          // Prepopulate OTP for easy development testing
+          if (data.debugOtp) {
+            document.getElementById('otpCode').value = data.debugOtp;
+          }
+
+          // Transition to OTP screen
+          document.getElementById('registerSection').classList.remove('active');
+          document.getElementById('otpSection').classList.add('active');
+          document.getElementById('portalTabsContainer').style.display = 'none';
+
+          showAlert(data.message, 'success');
+        }
+      } catch (err) {
+        showAlert('Could not establish contact with the Spirit Gate (Backend offline).');
+      }
+    }
+
+    async function handleVerifyOtp(e) {
+      e.preventDefault();
+      const email = document.getElementById('otpEmailTarget').textContent;
+      const otp = document.getElementById('otpCode').value.trim();
+      const alertBox = document.getElementById('alertBox');
+      alertBox.style.display = 'none';
+
+      try {
+        const response = await fetch(`${API_URL}/auth/verify-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp })
+        });
+        const data = await response.json();
+
+        if (data.error) {
+          showAlert(data.message || 'Verification failed.');
+        } else {
+          // Save credentials
+          localStorage.setItem('sn_auth_token', data.token);
+          localStorage.setItem('sn_user', JSON.stringify(data.user));
+
+          showAlert(data.message, 'success');
+
+          // Redirect to profile
+          setTimeout(() => {
+            window.location.href = 'profile.html';
+          }, 1500);
+        }
+      } catch (err) {
+        showAlert('Could not verify OTP. Backend connection lost.');
+      }
+    }
+
+    function cancelOtp() {
+      // Clear alert and return to signup form
+      document.getElementById('alertBox').style.display = 'none';
+      document.getElementById('otpSection').classList.remove('active');
+      document.getElementById('registerSection').classList.add('active');
+      document.getElementById('portalTabsContainer').style.display = 'flex';
+    }
+
+    // Auto-select registration if requested in URL
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'register') {
+        switchTab('register');
+      }
+    });
+  </script>
+</body>
+</html>
